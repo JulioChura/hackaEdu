@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Student Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13a4ec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101c22",
+              "success": "#50E3C2",
+              "warning": "#F5A623",
+            },
+            fontFamily: {
+              "display": ["Lexend", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="w-64 flex-shrink-0 bg-white dark:bg-background-dark dark:border-r dark:border-slate-800 p-4 flex flex-col justify-between shadow-[0_0_15px_rgba(0,0,0,0.05)]">
+<div class="flex flex-col gap-8">
+<div class="flex items-center gap-2 p-2">
+<span class="material-symbols-outlined text-primary text-3xl">school</span>
+<h1 class="text-[#111618] dark:text-white text-xl font-bold">EduSys</h1>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex gap-3 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Student avatar placeholder" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBooyhQCDf7hQRCudnz3dSHWUCWqzTcQoOCfB0LVE0Bc8hBMuzfYkfgzPyd6G9s511B-A_TqlMhWGvVjNN12MDovJ0JNRfpbqr3OvPG7iRPk78oPZajKup7sz8MZOvidIuQFrfDzAeNEo_54YaeaiffGZQgwSrijVGiIoPM6VcprmVQLjAucxqT2PTp6y2kliOONN8wSunFCyy7upnTWQ6JwwLNU8R0KXd4Jfe_p_zMWqnkFTHieYBX6-pizbDJZwIJdILLpCZ8dWI");'></div>
+<div class="flex flex-col">
+<h2 class="text-[#111618] dark:text-gray-200 text-base font-medium leading-normal">Alex Morgan</h2>
+<p class="text-[#617c89] dark:text-gray-400 text-sm font-normal leading-normal">Estudiante</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 dark:bg-primary/30" href="#">
+<span class="material-symbols-outlined fill text-primary dark:text-primary">dashboard</span>
+<p class="text-primary dark:text-primary text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined text-[#111618] dark:text-gray-300">bar_chart</span>
+<p class="text-[#111618] dark:text-gray-300 text-sm font-medium leading-normal">Mis Resultados</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined text-[#111618] dark:text-gray-300">person</span>
+<p class="text-[#111618] dark:text-gray-300 text-sm font-medium leading-normal">Mi Perfil</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined text-[#111618] dark:text-gray-300">help</span>
+<p class="text-[#111618] dark:text-gray-300 text-sm font-medium leading-normal">Ayuda</p>
+</a>
+</nav>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined text-[#111618] dark:text-gray-300">settings</span>
+<p class="text-[#111618] dark:text-gray-300 text-sm font-medium leading-normal">Configuración</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined text-[#111618] dark:text-gray-300">logout</span>
+<p class="text-[#111618] dark:text-gray-300 text-sm font-medium leading-normal">Cerrar Sesión</p>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-8 overflow-y-auto">
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Center Content Column -->
+<div class="xl:col-span-2 flex flex-col gap-6">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between gap-3">
+<p class="text-[#111618] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Mi Dashboard</p>
+</div>
+<!-- SegmentedButtons -->
+<div class="flex">
+<div class="flex h-10 flex-1 items-center justify-center rounded-lg bg-gray-200/80 dark:bg-slate-800 p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-slate-700 has-[:checked]:shadow-sm has-[:checked]:text-[#111618] dark:has-[:checked]:text-white text-[#617c89] dark:text-gray-400 text-sm font-medium leading-normal transition-all duration-200">
+<span class="truncate">Todos</span>
+<input checked="" class="invisible w-0" name="test_filter" type="radio" value="Todos"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-slate-700 has-[:checked]:shadow-sm has-[:checked]:text-[#111618] dark:has-[:checked]:text-white text-[#617c89] dark:text-gray-400 text-sm font-medium leading-normal transition-all duration-200">
+<span class="truncate">Pendientes</span>
+<input class="invisible w-0" name="test_filter" type="radio" value="Pendientes"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-slate-700 has-[:checked]:shadow-sm has-[:checked]:text-[#111618] dark:has-[:checked]:text-white text-[#617c89] dark:text-gray-400 text-sm font-medium leading-normal transition-all duration-200">
+<span class="truncate">Completados</span>
+<input class="invisible w-0" name="test_filter" type="radio" value="Completados"/>
+</label>
+</div>
+</div>
+<!-- SectionHeader -->
+<h2 class="text-[#111618] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] pt-5">Tus Próximas Evaluaciones</h2>
+<!-- Cards List -->
+<div class="flex flex-col gap-4">
+<div class="flex items-stretch justify-between gap-4 rounded-xl bg-white dark:bg-slate-800/50 p-4 shadow-[0_4px_10px_rgba(0,0,0,0.03)] dark:shadow-none">
+<div class="flex flex-[2_2_0px] flex-col gap-4">
+<div class="flex flex-col gap-1">
+<p class="text-warning text-sm font-medium leading-normal">Pendiente</p>
+<p class="text-[#111618] dark:text-white text-base font-bold leading-tight">Examen de Álgebra - Unidad 3</p>
+<p class="text-[#617c89] dark:text-gray-400 text-sm font-normal leading-normal">Fecha de vencimiento: 25 de Octubre</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-medium leading-normal w-fit hover:bg-primary/90 transition-colors">
+<span class="truncate">Empezar Test</span>
+</button>
+</div>
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg flex-1" data-alt="Abstract image for Algebra subject with geometric shapes" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCYgfQJwtV56Ff2MDyY7R-wacmF1_qa4q2frSTGlEFYcsKGNfX1Nhpe8j0XzKx9BL1Mnc7XMtnLjQRIsIiUT0sYCdH8Ahrm_Wf-7LJ-RJzIbHXlU_xFssl_4bCuOac2-bg5IQZG8UD-xfFF_w6Vl3mgBZvCVqMt36UNDWGtryJEh2vpOtw6rlQzdEknEig5D6vJNKGGFHBmEbv4Z5zSEqS8aU2sTA3C3OEZ-oRLLxTJ0UuKtoAMxVtL60eMGM082Xl7gUl0E6LjYg4");'></div>
+</div>
+<div class="flex items-stretch justify-between gap-4 rounded-xl bg-white dark:bg-slate-800/50 p-4 shadow-[0_4px_10px_rgba(0,0,0,0.03)] dark:shadow-none">
+<div class="flex flex-[2_2_0px] flex-col gap-4">
+<div class="flex flex-col gap-1">
+<p class="text-success text-sm font-medium leading-normal">Completado</p>
+<p class="text-[#111618] dark:text-white text-base font-bold leading-tight">Prueba de Biología Celular</p>
+<p class="text-[#617c89] dark:text-gray-400 text-sm font-normal leading-normal">Calificación: 9.2 / 10</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-slate-700 text-[#111618] dark:text-white text-sm font-medium leading-normal w-fit hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors">
+<span class="truncate">Ver Resultados</span>
+</button>
+</div>
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg flex-1" data-alt="Abstract image for Biology subject with cellular patterns" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC-wimqecoyUcuOmIrW3x-IA-_l-Yy-Jv-KKiYWC-GyUUlS-ku5ABFxM080LXvZDAKY8xuOV_odggZWx9w1EMdLzaqnpcT2FB9FEgwEEGLQa5zUgad0wYX7ix72o_d6jL1sKs8a3MES_umofSk1LtNQKNLWT1K36cIzyCZjGhFjt9vUQrpmSVGMXPSIZqb7c96020IWfDD9pRlGiCKUkjmYpbFY9KfjKuzhVsrDQRoBgi-SVo08mpGKJy_Y6IfX-sgUrfTwjaARlEg");'></div>
+</div>
+<div class="flex items-stretch justify-between gap-4 rounded-xl bg-white dark:bg-slate-800/50 p-4 shadow-[0_4px_10px_rgba(0,0,0,0.03)] dark:shadow-none">
+<div class="flex flex-[2_2_0px] flex-col gap-4">
+<div class="flex flex-col gap-1">
+<p class="text-warning text-sm font-medium leading-normal">Pendiente</p>
+<p class="text-[#111618] dark:text-white text-base font-bold leading-tight">Cuestionario de Historia Universal</p>
+<p class="text-[#617c89] dark:text-gray-400 text-sm font-normal leading-normal">Fecha de vencimiento: 28 de Octubre</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-medium leading-normal w-fit hover:bg-primary/90 transition-colors">
+<span class="truncate">Empezar Test</span>
+</button>
+</div>
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg flex-1" data-alt="Abstract image for History subject with ancient textures" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA8qn3O1zBXlFLGJRxkFa8hpm9BjgQqSm_Uw-DPL4S3-_hZrMebJSljO014zHiYPIUL4YVp4_qFCZBsBh6jDJM78zQutxYLkdfO6RFRrbSqMWRn8HDR_gy4QddZxlqkYQozli5uI_fXy40JG6GqUbW6N8j7Ylwq0EhH_6YbSdYfG8w9acz73hAAdshxSmbdKEpeW4fGfk-TAgCNoLAI_qriKCO0rU-zf7VS1i32vEVJDSYerZDZUjHRtMqMleZoSfuAtyuGlWFe-OI");'></div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar Column -->
+<aside class="xl:col-span-1 flex flex-col gap-6">
+<h2 class="text-[#111618] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">Tu Progreso</h2>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 bg-white dark:bg-slate-800/50 rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.03)] dark:shadow-none">
+<span class="material-symbols-outlined text-primary text-3xl">task_alt</span>
+<p class="text-[#111618] dark:text-white text-2xl font-bold mt-2">12</p>
+<p class="text-[#617c89] dark:text-gray-400 text-sm">Tests Completados</p>
+</div>
+<div class="p-4 bg-white dark:bg-slate-800/50 rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.03)] dark:shadow-none">
+<span class="material-symbols-outlined text-success text-3xl">grade</span>
+<p class="text-[#111618] dark:text-white text-2xl font-bold mt-2">8.9</p>
+<p class="text-[#617c89] dark:text-gray-400 text-sm">Promedio General</p>
+</div>
+</div>
+<div class="p-6 bg-white dark:bg-slate-800/50 rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.03)] dark:shadow-none flex flex-col gap-4">
+<h3 class="text-[#111618] dark:text-white font-bold">Estado de Asignaciones</h3>
+<div class="relative w-40 h-40 mx-auto">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<path class="stroke-current text-gray-200 dark:text-slate-700" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3"></path>
+<path class="stroke-current text-success" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="75, 100" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-bold text-[#111618] dark:text-white">75%</span>
+<span class="text-sm text-[#617c89] dark:text-gray-400">Completado</span>
+</div>
+</div>
+<div class="flex justify-center gap-4 text-sm">
+<div class="flex items-center gap-2"><div class="size-3 rounded-full bg-success"></div><span class="text-[#617c89] dark:text-gray-400">Completados</span></div>
+<div class="flex items-center gap-2"><div class="size-3 rounded-full bg-gray-200 dark:bg-slate-700"></div><span class="text-[#617c89] dark:text-gray-400">Pendientes</span></div>
+</div>
+</div>
+<div class="p-6 bg-white dark:bg-slate-800/50 rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.03)] dark:shadow-none flex flex-col gap-4">
+<h3 class="text-[#111618] dark:text-white font-bold">Rendimiento por Materia</h3>
+<div class="space-y-4">
+<div class="w-full">
+<div class="flex justify-between items-center mb-1 text-sm text-[#617c89] dark:text-gray-400">
+<span>Álgebra</span>
+<span>95%</span>
+</div>
+<div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 95%"></div>
+</div>
+</div>
+<div class="w-full">
+<div class="flex justify-between items-center mb-1 text-sm text-[#617c89] dark:text-gray-400">
+<span>Biología</span>
+<span>82%</span>
+</div>
+<div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 82%"></div>
+</div>
+</div>
+<div class="w-full">
+<div class="flex justify-between items-center mb-1 text-sm text-[#617c89] dark:text-gray-400">
+<span>Historia</span>
+<span>76%</span>
+</div>
+<div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 76%"></div>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+</div>
+</div>
+</body></html>

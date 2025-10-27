@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Análisis de Reportes - Sistema de Evaluación</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13a4ec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101c22",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Lexend', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111618] dark:text-gray-200">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-800 px-6 md:px-10 py-3 bg-white dark:bg-background-dark sticky top-0 z-10">
+<div class="flex items-center gap-4 text-[#111618] dark:text-white">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6_330)">
+<path clip-rule="evenodd" d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z" fill="currentColor" fill-rule="evenodd"></path>
+</g>
+<defs>
+<clippath id="clip0_6_330">
+<rect fill="white" height="48" width="48"></rect>
+</clippath>
+</defs>
+</svg>
+</div>
+<h2 class="text-[#111618] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Sistema de Evaluación</h2>
+</div>
+<div class="flex flex-1 justify-end items-center gap-4">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-gray-100 dark:bg-gray-800 text-[#111618] dark:text-gray-200 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDW2KBCh0PzlIHs2RKfr7FpdGH5BzDGlFKyCxopfF9kxKFE3nCn5wgxQ2Ra7NNttOh12ag50soaBtU1DkZw27wVEv1PNxJX_fwebgF8cjZZtIeOxxokOUmUFrtVVNglFlwtCmpX5OWvnG70k0kGhUQeN8lxck9Ac7oN9oDm3B5z6Rs2uqGjbahok0jLJ3zV2Q4bToM1qVrZ9lAXHQa5sd6N__YcXizoxur8syHx5JyeIVrBJxnhxYErOQ_hCnFfzV_mNCrWV6S4JXg");'></div>
+</div>
+</header>
+<main class="px-4 sm:px-6 lg:px-10 flex flex-1 justify-center py-8">
+<div class="layout-content-container flex flex-col w-full max-w-6xl flex-1 gap-6">
+<!-- Breadcrumbs & Heading -->
+<div class="flex flex-col gap-4">
+<div class="flex flex-wrap gap-2">
+<a class="text-[#617c89] dark:text-gray-400 text-sm font-medium leading-normal hover:text-primary" href="#">Inicio</a>
+<span class="text-[#617c89] dark:text-gray-400 text-sm font-medium leading-normal">/</span>
+<a class="text-[#617c89] dark:text-gray-400 text-sm font-medium leading-normal hover:text-primary" href="#">Reportes</a>
+<span class="text-[#617c89] dark:text-gray-400 text-sm font-medium leading-normal">/</span>
+<span class="text-[#111618] dark:text-white text-sm font-medium leading-normal">Análisis Detallado</span>
+</div>
+<div class="flex flex-wrap justify-between items-center gap-4">
+<div class="flex min-w-72 flex-col gap-2">
+<p class="text-[#111618] dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">Análisis de Reportes</p>
+<p class="text-[#617c89] dark:text-gray-400 text-base font-normal leading-normal">Visualiza el análisis detallado de los reportes de los estudiantes.</p>
+</div>
+<div class="flex flex-wrap gap-3 justify-start">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-gray-200/80 dark:bg-gray-800 text-[#111618] dark:text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="material-symbols-outlined text-base">share</span>
+<span class="truncate">Compartir</span>
+</button>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="material-symbols-outlined text-base">download</span>
+<span class="truncate">Exportar Reporte</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Filters -->
+<div class="flex gap-3 p-3 overflow-x-auto bg-white dark:bg-background-dark/80 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-100 dark:bg-gray-800/80 pl-3 pr-2">
+<p class="text-[#111618] dark:text-gray-200 text-sm font-medium leading-normal">Estudiante: Todos</p>
+<span class="material-symbols-outlined text-base text-[#617c89] dark:text-gray-400">expand_more</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-100 dark:bg-gray-800/80 pl-3 pr-2">
+<p class="text-[#111618] dark:text-gray-200 text-sm font-medium leading-normal">Grupo: Todos</p>
+<span class="material-symbols-outlined text-base text-[#617c89] dark:text-gray-400">expand_more</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-100 dark:bg-gray-800/80 pl-3 pr-2">
+<p class="text-[#111618] dark:text-gray-200 text-sm font-medium leading-normal">Tema: Todos</p>
+<span class="material-symbols-outlined text-base text-[#617c89] dark:text-gray-400">expand_more</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-100 dark:bg-gray-800/80 pl-3 pr-2">
+<p class="text-[#111618] dark:text-gray-200 text-sm font-medium leading-normal">Fecha: Últimos 30 días</p>
+<span class="material-symbols-outlined text-base text-[#617c89] dark:text-gray-400">expand_more</span>
+</button>
+</div>
+<!-- Main Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Main Chart Column -->
+<div class="lg:col-span-2 flex flex-col gap-6">
+<!-- Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="p-6 bg-white dark:bg-background-dark/80 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<h3 class="text-sm font-medium text-[#617c89] dark:text-gray-400 mb-2">Comprensión Promedio</h3>
+<p class="text-3xl font-bold text-primary">85%</p>
+</div>
+<div class="p-6 bg-white dark:bg-background-dark/80 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<h3 class="text-sm font-medium text-[#617c89] dark:text-gray-400 mb-2">Tasa de Finalización</h3>
+<p class="text-3xl font-bold text-[#111618] dark:text-white">92%</p>
+</div>
+<div class="p-6 bg-white dark:bg-background-dark/80 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<h3 class="text-sm font-medium text-[#617c89] dark:text-gray-400 mb-2">Temas con Dificultad</h3>
+<p class="text-3xl font-bold text-[#111618] dark:text-white">3</p>
+</div>
+</div>
+<!-- Main Chart -->
+<div class="p-6 bg-white dark:bg-background-dark/80 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<h3 class="text-lg font-bold text-[#111618] dark:text-white mb-4">Comprensión por Tema</h3>
+<img class="w-full h-auto rounded-lg" data-alt="Gráfico de barras mostrando la comprensión por tema: Álgebra 90%, Geometría 75%, Cálculo 60%, Estadística 88%, Trigonometría 70%" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoq1mnObzHpARw82Ha6m1DnGsedEkctnP_2JDsOs2iasTxkzXhyODCbmf958FD2B0KbxcAbltzBCdJLrJyih1-cUpy1N8mwfxdHHiCX7LS3_PZrVNAdBCCMunm3ICPwnrjKZf3tZEOj8mc1rwhYKUXL1ztQ80Lexg3WhUKbjqGUxjD6f6v6S---CB-UnnpXfD8-0SHyvnSEoj1Kbs4sGFD4a8Y97gtIoAerkAJgN5w1MANBfYxpayYkf6h-ti-1oblAZvD2KntP1s"/>
+</div>
+</div>
+<!-- Side Column -->
+<div class="flex flex-col gap-6">
+<!-- AI Feedback -->
+<div class="p-6 bg-white dark:bg-background-dark/80 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<div class="flex items-center gap-3 mb-4">
+<div class="flex items-center justify-center size-8 bg-primary/20 rounded-full text-primary">
+<span class="material-symbols-outlined text-xl">auto_awesome</span>
+</div>
+<h3 class="text-lg font-bold text-[#111618] dark:text-white">Feedback por IA</h3>
+</div>
+<p class="text-sm text-[#617c89] dark:text-gray-400 leading-relaxed">El estudiante muestra un dominio excelente en Álgebra y Estadística. Se recomienda reforzar los conceptos de Cálculo, enfocándose en derivadas. Un plan de estudio adicional en esta área podría mejorar significativamente el rendimiento general.</p>
+</div>
+<!-- Breakdown Chart -->
+<div class="p-6 bg-white dark:bg-background-dark/80 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<h3 class="text-lg font-bold text-[#111618] dark:text-white mb-4">Distribución de Respuestas</h3>
+<img class="w-full h-auto max-w-[250px] mx-auto" data-alt="Gráfico de pastel mostrando la distribución de respuestas: 70% Correctas, 20% Parciales, 10% Incorrectas" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAOSFlz09xQo_m_8i2ehAea7LmFpo5Gyuv_QG8PDXViIxDTlZBf_qF1MXgBCnFs731P4Dz1X1_CBXpKt2-vgxL8jnvl-4fn3xuBRK10FZeoQb7PXvf04wvCWpMK55uK7JjyVPPnxrWjnzEtPe4f8hQ7WQzRg-lZuTmlhLe0aAO-MB_dYgPrgtIoNLUCWb7MZ7yOOsSiGxFGgUBB65v19KsE6FHopsz75JBboyhLbd8z32PgwB19OZ2CXSavrqvGRTfOKkn7gENZYc"/>
+</div>
+</div>
+</div>
+<!-- Answers Table -->
+<div class="bg-white dark:bg-background-dark/80 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
+<div class="p-6">
+<h3 class="text-lg font-bold text-[#111618] dark:text-white">Desglose de Respuestas</h3>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-sm text-left">
+<thead class="bg-gray-50 dark:bg-gray-800 text-xs text-[#617c89] dark:text-gray-400 uppercase">
+<tr>
+<th class="px-6 py-3" scope="col">Pregunta</th>
+<th class="px-6 py-3" scope="col">Tu Respuesta</th>
+<th class="px-6 py-3" scope="col">Respuesta Correcta</th>
+<th class="px-6 py-3 text-right" scope="col">Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-t border-gray-200 dark:border-gray-800">
+<td class="px-6 py-4 font-medium text-[#111618] dark:text-white">1. ¿Cuál es la derivada de x²?</td>
+<td class="px-6 py-4 text-[#617c89] dark:text-gray-400">2x</td>
+<td class="px-6 py-4 text-[#617c89] dark:text-gray-400">2x</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">Correcta</span>
+</td>
+</tr>
+<tr class="border-t border-gray-200 dark:border-gray-800">
+<td class="px-6 py-4 font-medium text-[#111618] dark:text-white">2. Resolver para x: 2x + 5 = 15</td>
+<td class="px-6 py-4 text-[#617c89] dark:text-gray-400">x = 5</td>
+<td class="px-6 py-4 text-[#617c89] dark:text-gray-400">x = 5</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">Correcta</span>
+</td>
+</tr>
+<tr class="border-t border-gray-200 dark:border-gray-800">
+<td class="px-6 py-4 font-medium text-[#111618] dark:text-white">3. ¿Qué es un triángulo isósceles?</td>
+<td class="px-6 py-4 text-[#617c89] dark:text-gray-400">Un triángulo con 2 lados iguales</td>
+<td class="px-6 py-4 text-[#617c89] dark:text-gray-400">Un triángulo con al menos 2 lados iguales</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300">Parcial</span>
+</td>
+</tr>
+<tr class="border-t border-gray-200 dark:border-gray-800">
+<td class="px-6 py-4 font-medium text-[#111618] dark:text-white">4. ¿Cuál es la integral de 3x²?</td>
+<td class="px-6 py-4 text-[#617c89] dark:text-gray-400">3x³</td>
+<td class="px-6 py-4 text-[#617c89] dark:text-gray-400">x³ + C</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300">Incorrecta</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>
