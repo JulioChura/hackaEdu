@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Crear Nuevo Test</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#4A90E2",
+            "secondary": "#F5A623",
+            "background-light": "#F8F9FA",
+            "background-dark": "#101c22",
+            "text-light": "#333333",
+            "text-dark": "#F8F9FA",
+            "text-secondary-light": "#617c89",
+            "text-secondary-dark": "#a0aec0",
+            "border-light": "#E0E0E0",
+            "border-dark": "#3a4a58",
+            "surface-light": "#ffffff",
+            "surface-dark": "#1a2a33",
+          },
+          fontFamily: {
+            "display": ["Lexend", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "0.75rem",
+            "xl": "1rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="w-64 flex-shrink-0 bg-surface-light dark:bg-surface-dark border-r border-border-light dark:border-border-dark">
+<div class="flex h-full flex-col justify-between p-4">
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-3 px-2">
+<div class="flex items-center justify-center size-8 bg-primary rounded-lg text-white font-bold text-xl">
+              E
+            </div>
+<span class="text-lg font-bold text-text-light dark:text-text-dark">EvaluaSys</span>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-text-light dark:text-text-dark/80 hover:bg-primary/10 rounded" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<p class="text-sm font-medium">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white bg-primary rounded" href="#">
+<span class="material-symbols-outlined text-xl">note_add</span>
+<p class="text-sm font-medium">Crear Test</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-text-light dark:text-text-dark/80 hover:bg-primary/10 rounded" href="#">
+<span class="material-symbols-outlined text-xl">description</span>
+<p class="text-sm font-medium">Mis Tests</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-text-light dark:text-text-dark/80 hover:bg-primary/10 rounded" href="#">
+<span class="material-symbols-outlined text-xl">school</span>
+<p class="text-sm font-medium">Resultados</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-text-light dark:text-text-dark/80 hover:bg-primary/10 rounded" href="#">
+<span class="material-symbols-outlined text-xl">analytics</span>
+<p class="text-sm font-medium">Analytics</p>
+</a>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-1 border-t border-border-light dark:border-border-dark pt-4">
+<div class="flex items-center gap-3 px-3 py-2 text-text-light dark:text-text-dark/80 hover:bg-primary/10 rounded cursor-pointer">
+<span class="material-symbols-outlined text-xl">settings</span>
+<p class="text-sm font-medium">Settings</p>
+</div>
+<div class="flex gap-3 p-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Profile picture of Professor Name" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAiYmC0hczdWR_9Be4dU3uphQON57yOHXK8Z_RIXFF4y7i4TIJbcoWUU9JIqskY9BAiyLsmA64VEeMZ8jdbTNPon8WQjZ0Liy5amWx-1dZbzk3gFYqDxr8S3HmCILFNiwvbNuNZGZloNKdgZ50tFYaHrQwTln-H1-fHs89cKxiz3yt_85WzvyLrHrPTA8Bdd9mjPjs0cb3OxMCSXRCVjTdbqMLW1-Om2xUyR2XWp4YdSrcfMYWsvLAwrYMDLjT_Xo4irTxgIcFyfhQ");'></div>
+<div class="flex flex-col">
+<h1 class="text-text-light dark:text-text-dark text-sm font-medium">Professor Name</h1>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-xs">prof.name@university.edu</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-8 overflow-y-auto">
+<div class="max-w-4xl mx-auto">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between gap-4 mb-8">
+<div class="flex flex-col gap-2">
+<h1 class="text-text-light dark:text-text-dark text-3xl font-bold tracking-tight">Crear Nuevo Test</h1>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-base">Elige un método para empezar a crear tu evaluación.</p>
+</div>
+</div>
+<!-- Option Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+<!-- Manual Creation Card -->
+<div class="flex flex-col items-stretch justify-start rounded-xl border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark transition-shadow hover:shadow-lg">
+<div class="p-6 flex flex-col items-stretch justify-center gap-3 grow">
+<div class="flex items-center gap-4">
+<div class="bg-primary/10 text-primary p-3 rounded-lg">
+<span class="material-symbols-outlined text-3xl">edit_document</span>
+</div>
+<p class="text-text-light dark:text-text-dark text-lg font-bold">Crear Test Manualmente</p>
+</div>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm leading-relaxed">Esta opción te da control total para añadir y editar cada pregunta una por una.</p>
+</div>
+<div class="border-t border-border-light dark:border-border-dark p-4">
+<button class="w-full flex items-center justify-center gap-2 cursor-pointer rounded-lg h-10 px-4 bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors">
+<span>Empezar</span>
+<span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- AI Assisted Card -->
+<div class="flex flex-col items-stretch justify-start rounded-xl border-2 border-primary bg-surface-light dark:bg-surface-dark shadow-lg">
+<div class="p-6 flex flex-col items-stretch justify-center gap-3 grow">
+<div class="flex items-center gap-4">
+<div class="bg-secondary/10 text-secondary p-3 rounded-lg">
+<span class="material-symbols-outlined text-3xl">auto_awesome</span>
+</div>
+<p class="text-text-light dark:text-text-dark text-lg font-bold">Crear Test Asistido por IA</p>
+</div>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm leading-relaxed">Genera un test automáticamente basado en los parámetros que especifiques.</p>
+</div>
+<div class="border-t border-primary/20 p-4">
+<button class="w-full flex items-center justify-center gap-2 cursor-pointer rounded-lg h-10 px-4 bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors">
+<span>Configurar</span>
+<span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- AI Form Module -->
+<div class="bg-surface-light dark:bg-surface-dark p-6 sm:p-8 rounded-xl border border-border-light dark:border-border-dark">
+<!-- SectionHeader & BodyText -->
+<div class="mb-6">
+<h2 class="text-text-light dark:text-text-dark text-xl font-bold">Parámetros para la Generación IA</h2>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm mt-1">Completa los siguientes campos para que la IA genere el test a tu medida.</p>
+</div>
+<!-- Form -->
+<form class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+<!-- Tema del Test -->
+<div class="sm:col-span-2">
+<label class="block text-sm font-medium mb-1.5 text-text-light dark:text-text-dark" for="topic">Tema del Test</label>
+<input class="w-full rounded border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark focus:ring-primary focus:border-primary text-sm" id="topic" name="topic" placeholder="Ej: La Revolución Francesa" type="text"/>
+</div>
+<!-- Nivel de Dificultad -->
+<div>
+<label class="block text-sm font-medium mb-1.5 text-text-light dark:text-text-dark" for="difficulty">Nivel de Dificultad</label>
+<select class="w-full rounded border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark focus:ring-primary focus:border-primary text-sm" id="difficulty" name="difficulty">
+<option>Fácil</option>
+<option>Intermedio</option>
+<option>Difícil</option>
+</select>
+</div>
+<!-- Número de Preguntas -->
+<div>
+<label class="block text-sm font-medium mb-1.5 text-text-light dark:text-text-dark" for="num_questions">Número de Preguntas</label>
+<input class="w-full rounded border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark focus:ring-primary focus:border-primary text-sm" id="num_questions" name="num_questions" type="number" value="10"/>
+</div>
+<!-- Tipo de Pregunta -->
+<div class="sm:col-span-2">
+<label class="flex items-center gap-1 text-sm font-medium mb-1.5 text-text-light dark:text-text-dark" for="question_type">
+<span>Tipo de Pregunta</span>
+<div class="relative group">
+<span class="material-symbols-outlined text-base text-text-secondary-light dark:text-text-secondary-dark cursor-help">help_outline</span>
+<span class="absolute bottom-full mb-2 w-48 bg-gray-800 text-white text-xs rounded py-1 px-2 text-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                    Selecciona el formato de las preguntas. 'Mixto' combinará varios tipos.
+                  </span>
+</div>
+</label>
+<select class="w-full rounded border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark focus:ring-primary focus:border-primary text-sm" id="question_type" name="question_type">
+<option>Opción Múltiple</option>
+<option>Verdadero / Falso</option>
+<option>Respuesta Corta</option>
+<option>Mixto</option>
+</select>
+</div>
+<!-- CTA Button -->
+<div class="sm:col-span-2 pt-4">
+<button class="w-full sm:w-auto flex items-center justify-center gap-2 cursor-pointer rounded-lg h-11 px-6 bg-primary text-white text-base font-medium hover:bg-primary/90 transition-colors" type="submit">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span>Generar Test</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+</main>
+</div>
+</body></html>
