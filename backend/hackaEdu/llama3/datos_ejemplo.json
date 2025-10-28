@@ -1,0 +1,55 @@
+{
+  "evaluacion_id": 456,
+  "alumno_id": 123,
+  "sesion": {
+    "nombre": "Mi Lenguaje Corporal",
+    "tema": "Comunicación y Expresión Oral",
+    "objetivo": "Desarrollar habilidades básicas de expresión oral mediante el reconocimiento y uso del lenguaje corporal",
+    "nivel_educativo": "5to grado primaria"
+  },
+  "criterios": [
+    {
+      "criterio_id": 1,
+      "nombre_criterio": "Reconocimiento de Gestos Básicos",
+      "descripcion": "Identifica gestos comunes en la comunicación y explica su función",
+      "peso": 4.0
+    },
+    {
+      "criterio_id": 2,
+      "nombre_criterio": "Expresión de Emociones con el Cuerpo",
+      "descripcion": "Relaciona expresiones corporales con emociones básicas",
+      "peso": 5.0
+    },
+    {
+      "criterio_id": 3,
+      "nombre_criterio": "Postura al Hablar",
+      "descripcion": "Comprende la importancia de la postura en la comunicación efectiva",
+      "peso": 4.5
+    }
+  ],
+  "respuestas": [
+    {
+      "respuesta_id": 1,
+      "pregunta": "Nombra 3 gestos que usamos al hablar y explica para qué sirven",
+      "texto_respuesta": "Los gestos que usamos son: mover las manos para explicar cosas, asentir con la cabeza cuando estamos de acuerdo y sonreír cuando estamos contentos. Sirven para que nos entiendan mejor.",
+      "criterios_vinculados": [1, 2]
+    },
+    {
+      "respuesta_id": 2,
+      "pregunta": "¿Cómo mostramos con nuestro cuerpo cuando estamos contentos o tristes?",
+      "texto_respuesta": "Cuando estamos contentos saltamos y reímos, y cuando estamos tristes bajamos la cabeza y no miramos a los ojos. También nuestros hombros se caen cuando estamos tristes.",
+      "criterios_vinculados": [2]
+    },
+    {
+      "respuesta_id": 3,
+      "pregunta": "¿Por qué es importante tener buena postura cuando hablamos con otras personas?",
+      "texto_respuesta": "Es importante tener buena postura porque así las personas nos toman más en serio y podemos respirar mejor para hablar más claro.",
+      "criterios_vinculados": [3]
+    }
+  ],
+  "alumno": {
+    "alumno_id": 123,
+    "nombre": "Miguel Torres",
+    "grado": "5to grado"
+  }
+}
