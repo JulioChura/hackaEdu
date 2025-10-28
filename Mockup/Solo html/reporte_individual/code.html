@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reporte de Estudiante - ReConéctate IA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13a4ec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101c22",
+              "level-initial": "#f87171", // Red-400
+              "level-developing": "#fbbf24", // Amber-400
+              "level-satisfactory": "#4ade80", // Green-400
+              "level-advanced": "#60a5fa" // Blue-400
+            },
+            fontFamily: {
+              "display": ["Lexend", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="sticky top-0 z-10 w-full bg-white/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800">
+<div class="mx-auto flex max-w-[1280px] items-center justify-between whitespace-nowrap px-10 py-3">
+<div class="flex items-center gap-4 text-slate-800 dark:text-slate-200">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fill-rule="evenodd"></path>
+<path clip-rule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-slate-800 dark:text-slate-200 text-lg font-bold leading-tight tracking-[-0.015em]">ReConéctate IA</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="hidden md:flex items-center gap-9">
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal" href="#">Cursos</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal" href="#">Estudiantes</a>
+<a class="text-primary dark:text-primary text-sm font-bold leading-normal" href="#">Reportes</a>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">
+<span class="material-symbols-outlined text-xl">settings</span>
+</button>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<div class="ml-2 bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar de usuario" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBuiryYLsIDiMEIvPla3keXFpaL2lnTTmeGm6frqiMotjpXWh2WP6-DSvQhtK_I8Mb4PunFgpxT5atcDf2BKqrXcBgnTnSWzvwL0yB_EGFzSK2fAMiZTZG5KHd4NAYFoKC5Hp_4cOpfLJe-GWDcz7xl2T44ebDI8SV0TntAQyCzfknB9dMBU6szUxJui_D7lSFjyog3Enmudk_WDgxZMAKT9ja2rySDQMTRjW8g65R_Zofomm7qncxmOceTLwauu6Yb8zkEh9Zeru0");'></div>
+</div>
+</div>
+</div>
+</header>
+<main class="flex flex-1 justify-center py-8 px-4 sm:px-6 lg:px-8">
+<div class="layout-content-container flex flex-col w-full max-w-4xl flex-1 gap-8">
+<!-- Page Header -->
+<div>
+<div class="flex flex-wrap gap-2">
+<a class="text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary" href="#">Análisis de Literatura</a>
+<span class="text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal">/</span>
+<a class="text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary" href="#">El Realismo Mágico</a>
+<span class="text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal">/</span>
+<span class="text-slate-800 dark:text-slate-200 text-sm font-medium leading-normal">Sesión 3</span>
+</div>
+<div class="flex flex-wrap justify-between items-start gap-4 mt-2">
+<div class="flex flex-col gap-1">
+<p class="text-slate-800 dark:text-slate-100 text-4xl font-black leading-tight tracking-[-0.033em]">Sofía Pérez</p>
+<p class="text-slate-600 dark:text-slate-400 text-base font-normal leading-normal">Reporte de Desempeño Individual</p>
+</div>
+<button class="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-base">picture_as_pdf</span>
+                            Exportar a PDF
+                        </button>
+</div>
+</div>
+<!-- Stats -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="flex flex-1 flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+<p class="text-slate-600 dark:text-slate-400 text-sm font-medium leading-normal">Puntuación Total</p>
+<p class="text-slate-900 dark:text-slate-50 tracking-light text-3xl font-bold leading-tight">85/100</p>
+</div>
+<div class="flex flex-1 flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+<p class="text-slate-600 dark:text-slate-400 text-sm font-medium leading-normal">Nivel General</p>
+<div class="flex items-center">
+<span class="text-sm font-medium text-white bg-level-satisfactory px-3 py-1 rounded-full">Satisfactorio</span>
+</div>
+</div>
+<div class="flex flex-1 flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+<p class="text-slate-600 dark:text-slate-400 text-sm font-medium leading-normal">Fecha de Envío</p>
+<p class="text-slate-900 dark:text-slate-50 tracking-light text-3xl font-bold leading-tight">25 Oct, 2023</p>
+</div>
+</div>
+<!-- Criterios -->
+<section>
+<h2 class="text-slate-800 dark:text-slate-100 text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Evaluación por Criterio</h2>
+<div class="flex flex-col gap-6">
+<!-- Card Criterio -->
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
+<div class="flex flex-wrap items-center justify-between gap-4">
+<h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Claridad del Argumento</h3>
+<span class="text-sm font-medium text-white bg-level-advanced px-3 py-1 rounded-full">Avanzado</span>
+</div>
+<div class="mt-4 flex items-center gap-4">
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Puntuación: <span class="font-bold text-slate-700 dark:text-slate-200">5/5</span></p>
+<div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5">
+<div class="bg-level-advanced h-2.5 rounded-full" style="width: 100%"></div>
+</div>
+</div>
+<div class="mt-6 space-y-4">
+<div>
+<h4 class="text-sm font-semibold text-slate-600 dark:text-slate-400">Justificación IA:</h4>
+<p class="text-slate-700 dark:text-slate-300 mt-1">El estudiante demuestra una comprensión excepcional al formular un argumento central claro y bien definido desde el inicio, manteniéndolo consistentemente a lo largo de toda la respuesta.</p>
+</div>
+<div>
+<h4 class="text-sm font-semibold text-slate-600 dark:text-slate-400">Evidencia:</h4>
+<blockquote class="mt-1 p-4 rounded-lg bg-slate-100 dark:bg-slate-700 border-l-4 border-primary">
+<p class="text-slate-700 dark:text-slate-300 italic">"...la principal característica del realismo mágico en la obra es la fusión inseparable de lo cotidiano con eventos fantásticos, presentados sin sorpresa..."</p>
+</blockquote>
+</div>
+<div>
+<h4 class="text-sm font-semibold text-slate-600 dark:text-slate-400">Pregunta Relacionada:</h4>
+<div class="mt-1 p-4 rounded-lg bg-slate-100 dark:bg-slate-700">
+<p class="text-slate-700 dark:text-slate-300">Explica cuál es la característica principal del realismo mágico en "Cien años de soledad".</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Card Criterio -->
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
+<div class="flex flex-wrap items-center justify-between gap-4">
+<h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Uso de Evidencia</h3>
+<span class="text-sm font-medium text-white bg-level-developing px-3 py-1 rounded-full">En Desarrollo</span>
+</div>
+<div class="mt-4 flex items-center gap-4">
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Puntuación: <span class="font-bold text-slate-700 dark:text-slate-200">2/5</span></p>
+<div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5">
+<div class="bg-level-developing h-2.5 rounded-full" style="width: 40%"></div>
+</div>
+</div>
+<div class="mt-6 space-y-4">
+<div>
+<h4 class="text-sm font-semibold text-slate-600 dark:text-slate-400">Justificación IA:</h4>
+<p class="text-slate-700 dark:text-slate-300 mt-1">El estudiante menciona ejemplos de la obra, pero no los conecta de manera explícita y detallada para sostener su argumento principal. La evidencia es general y carece de análisis profundo.</p>
+</div>
+<div>
+<h4 class="text-sm font-semibold text-slate-600 dark:text-slate-400">Evidencia:</h4>
+<blockquote class="mt-1 p-4 rounded-lg bg-slate-100 dark:bg-slate-700 border-l-4 border-primary">
+<p class="text-slate-700 dark:text-slate-300 italic">"...por ejemplo, cuando llueven flores amarillas o la ascensión de Remedios, la bella."</p>
+</blockquote>
+</div>
+<div>
+<h4 class="text-sm font-semibold text-slate-600 dark:text-slate-400">Pregunta Relacionada:</h4>
+<div class="mt-1 p-4 rounded-lg bg-slate-100 dark:bg-slate-700">
+<p class="text-slate-700 dark:text-slate-300">Proporciona dos ejemplos específicos del libro que ilustren esta característica y explica cómo lo hacen.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Diagnostico y Recomendaciones -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<section>
+<h2 class="text-slate-800 dark:text-slate-100 text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Diagnóstico General</h2>
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 space-y-4">
+<p class="text-slate-700 dark:text-slate-300">Sofía demuestra una sólida comprensión conceptual del tema, como se evidencia en su clara definición del argumento principal. Su principal área de mejora reside en la habilidad para seleccionar y analizar evidencia textual específica que respalde sus afirmaciones. Se observa una tendencia a mencionar ejemplos sin profundizar en cómo estos ilustran sus puntos, lo que limita la fuerza de su análisis.</p>
+<div class="flex flex-col gap-2">
+<p class="font-semibold text-slate-800 dark:text-slate-200">Fortalezas:</p>
+<ul class="list-disc list-inside text-slate-700 dark:text-slate-300 space-y-1">
+<li>Claridad en la formulación de tesis.</li>
+<li>Comprensión de conceptos literarios clave.</li>
+</ul>
+<p class="font-semibold text-slate-800 dark:text-slate-200 mt-2">Áreas de Mejora:</p>
+<ul class="list-disc list-inside text-slate-700 dark:text-slate-300 space-y-1">
+<li>Análisis profundo de la evidencia textual.</li>
+<li>Conexión entre evidencia y argumento.</li>
+</ul>
+</div>
+</div>
+</section>
+<section>
+<h2 class="text-slate-800 dark:text-slate-100 text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Recomendaciones</h2>
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 space-y-4">
+<div>
+<h3 class="font-bold text-primary">Para el Estudiante:</h3>
+<ul class="list-disc list-inside text-slate-700 dark:text-slate-300 mt-2 space-y-1">
+<li>Al citar, pregúntate: "¿Cómo demuestra esta frase exactamente mi punto?". Añade una o dos oraciones explicando esa conexión.</li>
+<li>Intenta usar el método "Afirmación-Evidencia-Análisis" para cada párrafo de desarrollo.</li>
+</ul>
+</div>
+<div class="pt-4 border-t border-slate-200 dark:border-slate-700">
+<h3 class="font-bold text-emerald-500">Para el Profesor:</h3>
+<ul class="list-disc list-inside text-slate-700 dark:text-slate-300 mt-2 space-y-1">
+<li>Proponer un ejercicio de "close reading" centrado en un pasaje corto para modelar el análisis de evidencia.</li>
+<li>Recomendar una sesión de tutoría individual para revisar la estructura de un párrafo argumentativo.</li>
+</ul>
+</div>
+</div>
+</section>
+</div>
+<!-- Gráfico y Respuestas -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<section>
+<h2 class="text-slate-800 dark:text-slate-100 text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Gráfico de Comparación</h2>
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
+<img data-alt="Gráfico de radar comparando las puntuaciones de Sofía con el promedio de la clase en varios criterios de evaluación." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXbofdXfqEeju_uU9bMGhvgFbrH_drdsl7CfMZPqtvq3wemjsvSVCBfA1sNe-mUaPWdMm2991xhNsMu0LR2GxpK8GhKlTZfKG-M42ERS48m7ct5e6kkCAw14lK3sjqxBJkwnjLROKwOnP5lDLO6Q6F_J8nlfhMGcAJdrHc6sf8agNVOVrPwnhk_GtiL-2PJdVh-Rad_dBh-trMuOEAHhZ2R2M0GB_FuBOJ-1yhgwdk66g1QNQ3-4mgVsNGww5TcnA6prpbBuWSx9s"/>
+</div>
+</section>
+<section>
+<h2 class="text-slate-800 dark:text-slate-100 text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Respuestas del Estudiante</h2>
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2">
+<details class="group">
+<summary class="flex cursor-pointer list-none items-center justify-between p-4 font-medium text-slate-800 dark:text-slate-200">
+<span>Pregunta 1: Característica principal...</span>
+<span class="transition-transform duration-200 group-open:rotate-180">
+<span class="material-symbols-outlined">expand_more</span>
+</span>
+</summary>
+<div class="p-4 border-t border-slate-200 dark:border-slate-700">
+<p class="text-slate-700 dark:text-slate-300">
+<mark class="bg-primary/20 rounded px-1">La principal característica del realismo mágico en la obra es la fusión inseparable de lo cotidiano con eventos fantásticos, presentados sin sorpresa</mark>, como si fueran parte normal de la realidad de Macondo. Esto se ve en toda la novela.
+                                    </p>
+</div>
+</details>
+<details class="group">
+<summary class="flex cursor-pointer list-none items-center justify-between p-4 font-medium text-slate-800 dark:text-slate-200">
+<span>Pregunta 2: Ejemplos específicos...</span>
+<span class="transition-transform duration-200 group-open:rotate-180">
+<span class="material-symbols-outlined">expand_more</span>
+</span>
+</summary>
+<div class="p-4 border-t border-slate-200 dark:border-slate-700">
+<p class="text-slate-700 dark:text-slate-300">
+                                        Dos ejemplos son la lluvia de flores y la ascensión de Remedios. <mark class="bg-level-developing/20 rounded px-1">Por ejemplo, cuando llueven flores amarillas o la ascensión de Remedios, la bella.</mark> Estos eventos son mágicos pero la gente del pueblo los trata como algo casi normal.
+                                    </p>
+</div>
+</details>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

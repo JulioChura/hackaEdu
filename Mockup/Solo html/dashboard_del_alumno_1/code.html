@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard del Alumno - ReConéctate IA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#2A62C8",
+              "secondary": "#30C296",
+              "background-light": "#F8F9FA",
+              "background-dark": "#101c22",
+              "text-primary": "#343A40",
+              "text-secondary": "#6c757d",
+            },
+            fontFamily: {
+              "display": ["Lexend", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 sm:px-8 md:px-12 lg:px-20 xl:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-700 px-4 sm:px-6 lg:px-10 py-3">
+<div class="flex items-center gap-4 text-text-primary dark:text-slate-200">
+<div class="size-6 text-primary">
+<svg fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
+<path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+</svg>
+</div>
+<h2 class="text-text-primary dark:text-slate-200 text-lg font-bold leading-tight tracking-[-0.015em]">ReConéctate IA</h2>
+</div>
+<div class="flex items-center gap-4 sm:gap-6">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 focus:ring-4 focus:ring-primary/30 transition-colors">
+<span class="truncate">Cerrar Sesión</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar de Miguel Torres" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDQBzlUmFptlUA8N8iiXZrplrCDcLNOKsZy8QLqNmmHsJu0WpaPG2O4mdA0IJ_sLJL0lVF3WSMEjnfP9SFE-jS3BE_ZAD4wzt7mAWeZLDWPB0PnHivloD1TtktTVVQCFRmD6PhzKbLGTpZLYWZOD5PNlGUI01QoPkcTUL3JDEOzXyL-HBMcK4MSjLmCvqaNoo17dDl-AbId9AII-kSY5kRkx8CqfR3as65GSHraA9Q5K7fixBIR7ODQbzhiJFU5S1cqhwzRrmV93cM");'></div>
+</div>
+</header>
+<main class="flex-1 p-4 sm:p-6 lg:p-10">
+<div class="flex flex-wrap justify-between gap-3 mb-8">
+<p class="text-text-primary dark:text-slate-100 text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">¡Hola de nuevo, Miguel!</p>
+</div>
+<section class="mb-12">
+<div class="bg-white dark:bg-background-dark/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+<h2 class="text-text-primary dark:text-slate-200 text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Únete a un curso</h2>
+<div class="flex flex-col sm:flex-row sm:items-end gap-4">
+<label class="flex flex-col min-w-40 flex-1">
+<p class="text-text-primary dark:text-slate-300 text-base font-medium leading-normal pb-2">Código del curso</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-primary dark:text-slate-200 focus:outline-0 border border-slate-300 dark:border-slate-600 bg-background-light dark:bg-slate-700 focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/30 h-12 placeholder:text-text-secondary dark:placeholder:text-slate-400 p-3 text-base font-normal leading-normal transition-colors" placeholder="Ingresa el código del curso" value=""/>
+</label>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 focus:ring-4 focus:ring-primary/30 transition-colors">
+<span class="truncate">Unirse</span>
+</button>
+</div>
+</div>
+</section>
+<section>
+<h2 class="text-text-primary dark:text-slate-200 text-[22px] font-bold leading-tight tracking-[-0.015em] pb-5">Mis Cursos</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="bg-white dark:bg-background-dark/50 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col p-5 group transition-shadow hover:shadow-lg">
+<div class="flex justify-between items-start mb-4">
+<h3 class="text-lg font-bold text-text-primary dark:text-slate-200 leading-tight">Ciencias Naturales</h3>
+<div class="flex items-center gap-2 bg-secondary/10 text-secondary dark:bg-secondary/20 dark:text-secondary/90 rounded-full px-3 py-1 text-xs font-bold">
+<span class="material-symbols-outlined !text-sm">schedule</span>
+<span>3 pendientes</span>
+</div>
+</div>
+<div class="flex-grow space-y-2 mb-5">
+<p class="text-sm text-text-secondary dark:text-slate-400">Prof. Ana López</p>
+<p class="text-sm text-text-secondary dark:text-slate-400">Secundaria, 2º Grado</p>
+</div>
+<button class="flex w-full min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 px-5 bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary/90 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">
+<span class="truncate">Ver curso</span>
+</button>
+</div>
+<div class="bg-white dark:bg-background-dark/50 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col p-5 group transition-shadow hover:shadow-lg">
+<div class="flex justify-between items-start mb-4">
+<h3 class="text-lg font-bold text-text-primary dark:text-slate-200 leading-tight">Matemáticas Avanzadas</h3>
+<div class="flex items-center gap-2 bg-secondary/10 text-secondary dark:bg-secondary/20 dark:text-secondary/90 rounded-full px-3 py-1 text-xs font-bold">
+<span class="material-symbols-outlined !text-sm">schedule</span>
+<span>5 pendientes</span>
+</div>
+</div>
+<div class="flex-grow space-y-2 mb-5">
+<p class="text-sm text-text-secondary dark:text-slate-400">Prof. Carlos Ruiz</p>
+<p class="text-sm text-text-secondary dark:text-slate-400">Secundaria, 2º Grado</p>
+</div>
+<button class="flex w-full min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 px-5 bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary/90 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">
+<span class="truncate">Ver curso</span>
+</button>
+</div>
+<div class="bg-white dark:bg-background-dark/50 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col p-5 group transition-shadow hover:shadow-lg">
+<div class="flex justify-between items-start mb-4">
+<h3 class="text-lg font-bold text-text-primary dark:text-slate-200 leading-tight">Historia Universal</h3>
+<div class="flex items-center gap-2 bg-secondary/10 text-secondary dark:bg-secondary/20 dark:text-secondary/90 rounded-full px-3 py-1 text-xs font-bold">
+<span class="material-symbols-outlined !text-sm">schedule</span>
+<span>1 pendiente</span>
+</div>
+</div>
+<div class="flex-grow space-y-2 mb-5">
+<p class="text-sm text-text-secondary dark:text-slate-400">Prof. Elena Gómez</p>
+<p class="text-sm text-text-secondary dark:text-slate-400">Secundaria, 2º Grado</p>
+</div>
+<button class="flex w-full min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 px-5 bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary/90 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">
+<span class="truncate">Ver curso</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+</div>
+</div>
+</div>
+</div>
+</body></html>

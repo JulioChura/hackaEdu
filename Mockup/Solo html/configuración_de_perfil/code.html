@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Configuración de Perfil - ReConéctate IA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#4A90E2",
+              "secondary": "#50E3C2",
+              "background-light": "#F8F9FA",
+              "background-dark": "#101c22",
+              "text-light": "#333333",
+              "text-dark": "#F8F9FA",
+              "border-light": "#E0E0E0",
+              "border-dark": "#4A5568"
+            },
+            fontFamily: {
+              "display": ["Lexend", "sans-serif"]
+            },
+            borderRadius: { "DEFAULT": "0.75rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="w-64 flex-shrink-0 bg-white dark:bg-background-dark p-6 border-r border-border-light dark:border-border-dark flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-3 mb-8">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12" data-alt="User's profile picture" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC05uZIYExlQqPBI7bsMIiko3QhsQDZjmxkpPTiqzipuRYzrLwuIki3AOuQR05K9VWxvsZZpITk5oo2Boe0l32NpILn9WptNHWlApe6FcjhoOMkqdURhfB1nyKmdeM5ezBbtPj2R3OK2vPOzQwg-He-_BQJTSjd01bNHaMd5rpqvbHjQqKmCuw39WG3LK3L4G40y7dmXMOlEfnmL8I6ktsvI3XikKV3iZjn5MWFaXT913ITb3zu9t56K3I_YkBjFv3XJUoJkRXeB4Y');"></div>
+<div class="flex flex-col">
+<h1 class="text-text-light dark:text-text-dark text-base font-bold leading-normal">Carlos Vera</h1>
+<p class="text-primary text-sm font-medium leading-normal">Profesor</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary dark:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-2xl">person</span>
+<p class="text-sm font-semibold leading-normal">Mi Perfil</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5" href="#">
+<span class="material-symbols-outlined text-2xl text-text-light/80 dark:text-text-dark/80">lock</span>
+<p class="text-sm font-medium leading-normal">Seguridad</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5" href="#">
+<span class="material-symbols-outlined text-2xl text-text-light/80 dark:text-text-dark/80">notifications</span>
+<p class="text-sm font-medium leading-normal">Notificaciones</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5" href="#">
+<span class="material-symbols-outlined text-2xl text-text-light/80 dark:text-text-dark/80">school</span>
+<p class="text-sm font-medium leading-normal">Información Académica</p>
+</a>
+</nav>
+</div>
+<button class="flex w-full items-center justify-center gap-2.5 rounded-lg border border-border-light dark:border-border-dark px-4 py-2.5 text-sm font-medium text-text-light/80 dark:text-text-dark/80 hover:bg-black/5 dark:hover:bg-white/5">
+<span class="material-symbols-outlined">logout</span>
+<span>Cerrar Sesión</span>
+</button>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-8 sm:p-10 md:p-12">
+<div class="max-w-4xl mx-auto">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between gap-3 pb-8">
+<p class="text-text-light dark:text-text-dark text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Mi Perfil</p>
+</div>
+<!-- Card: Personal Information -->
+<div class="mb-8">
+<div class="flex flex-col items-stretch justify-start rounded-xl bg-white dark:bg-[#1A2831] shadow-sm border border-border-light dark:border-border-dark">
+<div class="flex w-full min-w-72 grow flex-col items-stretch justify-center gap-1 p-6">
+<p class="text-text-light dark:text-text-dark text-lg font-bold leading-tight tracking-[-0.015em]">Información Personal</p>
+<div class="flex items-center gap-3 justify-between">
+<p class="text-text-light/70 dark:text-text-dark/70 text-base font-normal leading-normal">Actualiza tu foto e información personal aquí.</p>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-medium leading-normal shadow-sm hover:bg-primary/90 transition-colors">
+<span class="truncate">Subir nueva foto</span>
+</button>
+</div>
+</div>
+<hr class="border-border-light dark:border-border-dark"/>
+<form class="p-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
+<!-- TextField: Full Name -->
+<label class="flex flex-col min-w-40 flex-1">
+<p class="text-text-light dark:text-text-dark text-base font-medium leading-normal pb-2">Nombre completo</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-light dark:text-text-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-background-light dark:bg-[#101c22] focus:border-primary h-12 placeholder:text-text-light/50 dark:placeholder:text-text-dark/50 px-4 text-base font-normal leading-normal" value="Carlos Vera"/>
+</label>
+<!-- TextField: Email -->
+<label class="flex flex-col min-w-40 flex-1">
+<p class="text-text-light dark:text-text-dark text-base font-medium leading-normal pb-2">Correo electrónico</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-light/60 dark:text-text-dark/60 focus:outline-0 border border-border-light dark:border-border-dark bg-background-light/50 dark:bg-background-dark/20 h-12 placeholder:text-text-light/50 px-4 text-base font-normal leading-normal cursor-not-allowed" readonly="" value="carlos.vera@instituto.edu"/>
+</label>
+<!-- TextField: Institution -->
+<label class="flex flex-col min-w-40 flex-1">
+<p class="text-text-light dark:text-text-dark text-base font-medium leading-normal pb-2">Institución</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-light dark:text-text-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-background-light dark:bg-[#101c22] focus:border-primary h-12 placeholder:text-text-light/50 dark:placeholder:text-text-dark/50 px-4 text-base font-normal leading-normal" value="Instituto de Tecnología Avanzada"/>
+</label>
+<!-- TextField: Specialty -->
+<label class="flex flex-col min-w-40 flex-1">
+<p class="text-text-light dark:text-text-dark text-base font-medium leading-normal pb-2">Especialidad</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-light dark:text-text-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-background-light dark:bg-[#101c22] focus:border-primary h-12 placeholder:text-text-light/50 dark:placeholder:text-text-dark/50 px-4 text-base font-normal leading-normal" value="Inteligencia Artificial Aplicada"/>
+</label>
+</div>
+</form>
+<div class="flex justify-end items-center gap-3 p-6 bg-black/5 dark:bg-white/5 border-t border-border-light dark:border-border-dark rounded-b-xl">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-transparent text-text-light/80 dark:text-text-dark/80 text-sm font-medium leading-normal hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+<span class="truncate">Cancelar</span>
+</button>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-medium leading-normal shadow-sm hover:bg-primary/90 transition-colors">
+<span class="truncate">Guardar Cambios</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

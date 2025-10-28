@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Crear Nueva Sesión de Evaluación</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#13a4ec",
+            "secondary": "#22c55e", // verde para la IA
+            "background-light": "#f6f7f8",
+            "background-dark": "#101c22",
+          },
+          fontFamily: {
+            "display": ["Lexend", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .drag-handle {
+      cursor: grab;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-800 dark:text-slate-200">
+<div class="relative flex min-h-screen w-full flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+<div class="w-full max-w-4xl rounded-xl bg-white dark:bg-slate-900/70 dark:backdrop-blur-xl shadow-2xl overflow-hidden flex flex-col">
+<header class="p-6 border-b border-slate-200 dark:border-slate-800">
+<h2 class="text-slate-900 dark:text-white tracking-light text-2xl font-bold leading-tight">Crear Nueva Sesión de Evaluación</h2>
+</header>
+<div class="p-4 sm:p-6">
+<div class="flex h-12 flex-1 items-center justify-center rounded-xl bg-slate-100 dark:bg-background-dark p-1.5">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal transition-all duration-300">
+<span class="truncate">1. Información Básica</span>
+<input class="invisible w-0" name="wizard-step" type="radio" value="1. Información Básica"/>
+</label>
+<div class="w-4 h-px bg-slate-300 dark:bg-slate-700 mx-1"></div>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal transition-all duration-300">
+<span class="truncate">2. Criterios de Evaluación</span>
+<input class="invisible w-0" name="wizard-step" type="radio" value="2. Criterios de Evaluación"/>
+</label>
+<div class="w-4 h-px bg-slate-300 dark:bg-slate-700 mx-1"></div>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-primary has-[:checked]:shadow-md has-[:checked]:text-white text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal transition-all duration-300">
+<span class="truncate">3. Preguntas</span>
+<input checked="" class="invisible w-0" name="wizard-step" type="radio" value="3. Preguntas"/>
+</label>
+</div>
+</div>
+<main class="flex-grow p-4 sm:p-6 overflow-y-auto" style="max-height: 60vh;">
+<div class="space-y-6" id="step-3">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+<div>
+<h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100">Preguntas</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400">Total de preguntas: 3</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-secondary hover:bg-secondary/90 transition-colors shadow-sm inline-flex items-center gap-2">
+<span class="material-symbols-outlined text-base">auto_awesome</span>
+Generar con IA
+</button>
+<button class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors inline-flex items-center gap-2">
+<span class="material-symbols-outlined text-base">add</span>
+Agregar Pregunta
+</button>
+</div>
+</div>
+<div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 space-y-4">
+<p class="text-base font-medium text-slate-800 dark:text-slate-200">Generar preguntas con IA</p>
+<textarea class="form-textarea flex w-full min-w-0 flex-1 resize-y overflow-hidden rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary placeholder:text-slate-400 dark:placeholder:text-slate-500 px-4 py-2 text-base font-normal leading-normal" placeholder="Describe el tema, subtema o tipo de preguntas que deseas. Por ejemplo: '3 preguntas de opción múltiple sobre el ciclo del agua'." rows="3"></textarea>
+<div class="flex justify-end">
+<button class="px-5 py-2 rounded-lg text-sm font-semibold text-white bg-primary hover:bg-primary/90 transition-colors shadow-sm inline-flex items-center gap-2">
+<span class="material-symbols-outlined text-base">spark</span>
+Generar
+</button>
+</div>
+</div>
+<div class="space-y-4">
+<div class="bg-white dark:bg-slate-800 p-4 rounded-lg border border-slate-200 dark:border-slate-700 flex gap-4">
+<span class="material-symbols-outlined drag-handle text-slate-400 dark:text-slate-500 mt-2">drag_indicator</span>
+<div class="flex-grow space-y-3">
+<textarea class="form-textarea flex w-full min-w-0 flex-1 resize-y overflow-hidden rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:border-primary placeholder:text-slate-400 dark:placeholder:text-slate-500 px-4 py-2 text-base font-normal leading-normal" rows="2">¿Cuál es el propósito principal del autor en el texto "La Aventura del Conocimiento"?</textarea>
+<div class="flex items-center justify-between">
+<select class="form-select w-48 appearance-none flex min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:border-primary h-10 bg-no-repeat bg-right-2.5 placeholder:text-slate-400 px-3 text-sm font-normal leading-normal" style="background-image: url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27none%27 viewBox=%270 0 20 20%27%3e%3cpath stroke=%27%2364748b%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%271.5%27 d=%27M6 8l4 4 4-4%27/%3e%3c/svg%3e');">
+<option selected="" value="abierta">Respuesta Abierta</option>
+<option value="multiple">Opción Múltiple</option>
+<option value="vf">Verdadero/Falso</option>
+</select>
+<button class="text-slate-500 hover:text-red-500 dark:text-slate-400 dark:hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-secondary/50 dark:border-secondary/30 flex gap-4">
+<span class="material-symbols-outlined drag-handle text-slate-400 dark:text-slate-500 mt-2">drag_indicator</span>
+<div class="flex-grow space-y-3">
+<div class="flex items-center gap-2 text-sm text-secondary-700 dark:text-secondary-300 font-medium">
+<span class="material-symbols-outlined text-base">auto_awesome</span>
+<p>Generada con IA</p>
+</div>
+<textarea class="form-textarea flex w-full min-w-0 flex-1 resize-y overflow-hidden rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary placeholder:text-slate-400 dark:placeholder:text-slate-500 px-4 py-2 text-base font-normal leading-normal" rows="2">Explica con tus propias palabras la diferencia entre clima y tiempo.</textarea>
+<div class="flex items-center justify-between">
+<select class="form-select w-48 appearance-none flex min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary h-10 bg-no-repeat bg-right-2.5 placeholder:text-slate-400 px-3 text-sm font-normal leading-normal" style="background-image: url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27none%27 viewBox=%270 0 20 20%27%3e%3cpath stroke=%27%2364748b%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%271.5%27 d=%27M6 8l4 4 4-4%27/%3e%3c/svg%3e');">
+<option selected="" value="abierta">Respuesta Abierta</option>
+<option value="multiple">Opción Múltiple</option>
+<option value="vf">Verdadero/Falso</option>
+</select>
+<button class="text-slate-500 hover:text-red-500 dark:text-slate-400 dark:hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800 p-4 rounded-lg border border-slate-200 dark:border-slate-700 flex gap-4">
+<span class="material-symbols-outlined drag-handle text-slate-400 dark:text-slate-500 mt-2">drag_indicator</span>
+<div class="flex-grow space-y-3">
+<textarea class="form-textarea flex w-full min-w-0 flex-1 resize-y overflow-hidden rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:border-primary placeholder:text-slate-400 dark:placeholder:text-slate-500 px-4 py-2 text-base font-normal leading-normal" rows="2">Identifica la idea secundaria que apoya la tesis principal del primer párrafo.</textarea>
+<div class="flex items-center justify-between">
+<select class="form-select w-48 appearance-none flex min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:border-primary h-10 bg-no-repeat bg-right-2.5 placeholder:text-slate-400 px-3 text-sm font-normal leading-normal" style="background-image: url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27none%27 viewBox=%270 0 20 20%27%3e%3cpath stroke=%27%2364748b%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%271.5%27 d=%27M6 8l4 4 4-4%27/%3e%3c/svg%3e');">
+<option selected="" value="abierta">Respuesta Abierta</option>
+<option value="multiple">Opción Múltiple</option>
+<option value="vf">Verdadero/Falso</option>
+</select>
+<button class="text-slate-500 hover:text-red-500 dark:text-slate-400 dark:hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="flex flex-wrap items-center justify-between p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+<button class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 bg-transparent hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Guardar borrador</button>
+<div class="flex items-center gap-4">
+<button class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">Atrás</button>
+<button class="px-6 py-2 rounded-lg text-sm font-semibold text-white bg-primary hover:bg-primary/90 transition-colors shadow-sm">Finalizar</button>
+</div>
+</footer>
+</div>
+</div>
+</body></html>

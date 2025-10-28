@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ReConéctate IA - Reportes Generales</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#13a4ec",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101c22",
+          },
+          fontFamily: {
+            "display": ["Lexend", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-800 dark:text-slate-200">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="w-64 flex-shrink-0 bg-white dark:bg-gray-900/50 border-r border-slate-200 dark:border-slate-800">
+<div class="flex h-full flex-col justify-between p-4">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3 px-2 py-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Logotipo de ReConéctate IA, un cerebro estilizado con nodos conectados" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDyW9fOihTZLePNOKaXPaaZhPrb8ajQ1jL1sefVmYxeBym-Tn2sN1lWX59BVNplDz-S4EO86pESfqoPsV1mqQb59IBUvDJm0RSfb6o21eIfBcfrG8DYoOn0o8U_8bL8TcLSXbq6x1y51bk-3C0nu6vhwpnS9Sl-DuX-G0P8O5CNbCkPRO2L3ovUpTmEvknzt54B4SLcW32ewUw5ME1_LHMNwTysZSzmQ1qRArqzrhfLFt_6vERBraKLalbktBze-i5prP72ZrfK0Mk");'></div>
+<div class="flex flex-col">
+<h1 class="text-slate-900 dark:text-white text-base font-bold leading-normal">ReConéctate IA</h1>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal">Plataforma Educativa</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded" href="#">
+<span class="material-symbols-outlined">import_contacts</span>
+<p class="text-sm font-medium leading-normal">Cursos</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-300" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<p class="text-sm font-medium leading-normal">Reportes</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded" href="#">
+<span class="material-symbols-outlined">school</span>
+<p class="text-sm font-medium leading-normal">Estudiantes</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Configuración</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<p class="text-sm font-medium leading-normal">Ayuda</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-6 lg:p-8">
+<div class="w-full max-w-7xl mx-auto">
+<!-- PageHeading -->
+<header class="flex flex-wrap justify-between items-center gap-4 mb-6">
+<div class="flex flex-col gap-2">
+<h1 class="text-slate-900 dark:text-white text-3xl font-black leading-tight tracking-tight">Reportes Generales</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base font-normal leading-normal">Vista consolidada del rendimiento de los estudiantes.</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+<span class="material-symbols-outlined text-base">download</span>
+              Exportar
+            </button>
+<button class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary border border-primary rounded hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-base">add</span>
+              Crear Reporte
+            </button>
+</div>
+</header>
+<!-- Filter Toolbar -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 p-4 bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-lg">
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-medium text-slate-500 dark:text-slate-400" for="date-range">Rango de Fechas</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-lg">calendar_today</span>
+<input class="w-full pl-9 pr-3 py-2 text-sm bg-background-light dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded focus:ring-2 focus:ring-primary/50 focus:border-primary" id="date-range" placeholder="Últimos 30 días" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-medium text-slate-500 dark:text-slate-400" for="courses">Cursos</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-lg">import_contacts</span>
+<select class="w-full pl-9 pr-8 py-2 text-sm bg-background-light dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded focus:ring-2 focus:ring-primary/50 focus:border-primary appearance-none" id="courses">
+<option>Todos los cursos</option>
+<option>Matemáticas Avanzadas</option>
+<option>Introducción a la Ciencia</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-lg pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-medium text-slate-500 dark:text-slate-400" for="grades">Grados
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-lg">layers</span>
+<select class="w-full pl-9 pr-8 py-2 text-sm bg-background-light dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded focus:ring-2 focus:ring-primary/50 focus:border-primary appearance-none" id="grades">
+<option>Todos los grados</option>
+<option>5to Grado</option>
+<option>6to Grado</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-lg pointer-events-none">expand_more</span>
+</div>
+</label></div>
+<button class="w-full self-end px-4 py-2 text-sm font-medium text-white bg-primary border border-primary rounded hover:bg-primary/90 transition-colors">
+            Aplicar Filtros
+          </button>
+</div>
+<!-- Stats -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
+<p class="text-slate-600 dark:text-slate-300 text-base font-medium leading-normal">Total de Estudiantes</p>
+<p class="text-slate-900 dark:text-white tracking-tight text-3xl font-bold leading-tight">1,250</p>
+<p class="text-green-600 dark:text-green-500 text-sm font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-base">arrow_upward</span>+5.2%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
+<p class="text-slate-600 dark:text-slate-300 text-base font-medium leading-normal">Cursos Activos</p>
+<p class="text-slate-900 dark:text-white tracking-tight text-3xl font-bold leading-tight">48</p>
+<p class="text-green-600 dark:text-green-500 text-sm font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-base">arrow_upward</span>+2 este mes</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
+<p class="text-slate-600 dark:text-slate-300 text-base font-medium leading-normal">Promedio General</p>
+<p class="text-slate-900 dark:text-white tracking-tight text-3xl font-bold leading-tight">85.2%</p>
+<p class="text-red-600 dark:text-red-500 text-sm font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-base">arrow_downward</span>-1.5%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
+<p class="text-slate-600 dark:text-slate-300 text-base font-medium leading-normal">Sesiones Completadas</p>
+<p class="text-slate-900 dark:text-white tracking-tight text-3xl font-bold leading-tight">5,430</p>
+<p class="text-green-600 dark:text-green-500 text-sm font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-base">arrow_upward</span>+12%</p>
+</div>
+</div>
+<!-- Charts -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+<div class="flex flex-col gap-2 rounded-xl border border-slate-200 dark:border-slate-800 p-6 bg-white dark:bg-slate-900/50">
+<p class="text-slate-800 dark:text-slate-100 text-base font-medium leading-normal">Evolución del Promedio General</p>
+<div class="flex items-baseline gap-2">
+<p class="text-slate-900 dark:text-white tracking-tight text-3xl font-bold leading-tight truncate">85.2%</p>
+<p class="text-green-600 dark:text-green-500 text-sm font-medium leading-normal">+2.1%</p>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal">Últimos 6 meses</p>
+<div class="flex min-h-[220px] flex-1 flex-col gap-8 py-4">
+<svg fill="none" height="100%" preserveaspectratio="none" viewbox="0 0 475 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V149H0V109Z" fill="url(#paint0_linear_chart)"></path>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="#13a4ec" stroke-linecap="round" stroke-width="3"></path>
+<defs><lineargradient gradientunits="userSpaceOnUse" id="paint0_linear_chart" x1="236" x2="236" y1="1" y2="149"><stop stop-color="#13a4ec" stop-opacity="0.2"></stop><stop offset="1" stop-color="#13a4ec" stop-opacity="0"></stop></lineargradient></defs>
+</svg>
+<div class="flex justify-around">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Ene</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Feb</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Mar</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Abr</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">May</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Jun</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl border border-slate-200 dark:border-slate-800 p-6 bg-white dark:bg-slate-900/50">
+<p class="text-slate-800 dark:text-slate-100 text-base font-medium leading-normal">Distribución de Niveles de Comprensión</p>
+<p class="text-slate-900 dark:text-white tracking-tight text-3xl font-bold leading-tight truncate">1,250 Estudiantes</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal">Total en la plataforma</p>
+<div class="grid min-h-[220px] grid-flow-col gap-6 grid-rows-[1fr_auto] items-end justify-items-center py-4 px-3">
+<div class="w-full h-full flex flex-col justify-end group">
+<div class="bg-red-400/80 dark:bg-red-500/80 group-hover:bg-red-400 dark:group-hover:bg-red-500 transition-all rounded-t" style="height: 20%;"></div>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Inicial</p>
+<div class="w-full h-full flex flex-col justify-end group">
+<div class="bg-yellow-400/80 dark:bg-yellow-500/80 group-hover:bg-yellow-400 dark:group-hover:bg-yellow-500 transition-all rounded-t" style="height: 45%;"></div>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">En Desarrollo</p>
+<div class="w-full h-full flex flex-col justify-end group">
+<div class="bg-green-400/80 dark:bg-green-500/80 group-hover:bg-green-400 dark:group-hover:bg-green-500 transition-all rounded-t" style="height: 80%;"></div>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Logrado</p>
+</div>
+</div>
+</div>
+<!-- Data Tables Section -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Top Performing Courses -->
+<div class="flex flex-col rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 overflow-hidden">
+<div class="p-6">
+<h3 class="text-slate-800 dark:text-slate-100 text-base font-medium leading-normal">Cursos con Mejor Desempeño</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Top 5 cursos por promedio de calificación.</p>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-sm text-left">
+<thead class="text-xs text-slate-500 dark:text-slate-400 uppercase bg-slate-50 dark:bg-slate-800/50">
+<tr>
+<th class="px-6 py-3" scope="col">Curso</th>
+<th class="px-6 py-3 text-right" scope="col">Promedio</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b dark:border-slate-800">
+<th class="px-6 py-4 font-medium text-slate-900 dark:text-white whitespace-nowrap" scope="row">Álgebra Lineal</th>
+<td class="px-6 py-4 text-right text-green-600 dark:text-green-500 font-semibold">95.8%</td>
+</tr>
+<tr class="border-b dark:border-slate-800">
+<th class="px-6 py-4 font-medium text-slate-900 dark:text-white whitespace-nowrap" scope="row">Biología Celular</th>
+<td class="px-6 py-4 text-right text-green-600 dark:text-green-500 font-semibold">92.1%</td>
+</tr>
+<tr class="border-b dark:border-slate-800">
+<th class="px-6 py-4 font-medium text-slate-900 dark:text-white whitespace-nowrap" scope="row">Historia Universal</th>
+<td class="px-6 py-4 text-right text-green-600 dark:text-green-500 font-semibold">90.5%</td>
+</tr>
+<tr class="border-b dark:border-slate-800">
+<th class="px-6 py-4 font-medium text-slate-900 dark:text-white whitespace-nowrap" scope="row">Química Orgánica</th>
+<td class="px-6 py-4 text-right text-green-600 dark:text-green-500 font-semibold">89.9%</td>
+</tr>
+<tr>
+<th class="px-6 py-4 font-medium text-slate-900 dark:text-white whitespace-nowrap" scope="row">Programación Básica</th>
+<td class="px-6 py-4 text-right text-green-600 dark:text-green-500 font-semibold">88.7%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Lowest Performing Courses -->
+<div class="flex flex-col rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 overflow-hidden">
+<div class="p-6">
+<h3 class="text-slate-800 dark:text-slate-100 text-base font-medium leading-normal">Cursos con Peor Desempeño</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Top 5 cursos por promedio de calificación.</p>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-sm text-left">
+<thead class="text-xs text-slate-500 dark:text-slate-400 uppercase bg-slate-50 dark:bg-slate-800/50">
+<tr>
+<th class="px-6 py-3" scope="col">Curso</th>
+<th class="px-6 py-3 text-right" scope="col">Promedio</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b dark:border-slate-800">
+<th class="px-6 py-4 font-medium text-slate-900 dark:text-white whitespace-nowrap" scope="row">Cálculo Integral</th>
+<td class="px-6 py-4 text-right text-red-600 dark:text-red-500 font-semibold">61.2%</td>
+</tr>
+<tr class="border-b dark:border-slate-800">
+<th class="px-6 py-4 font-medium text-slate-900 dark:text-white whitespace-nowrap" scope="row">Física Cuántica</th>
+<td class="px-6 py-4 text-right text-red-600 dark:text-red-500 font-semibold">64.5%</td>
+</tr>
+<tr class="border-b dark:border-slate-800">
+<th class="px-6 py-4 font-medium text-slate-900 dark:text-white whitespace-nowrap" scope="row">Literatura Clásica</th>
+<td class="px-6 py-4 text-right text-red-600 dark:text-red-500 font-semibold">68.0%</td>
+</tr>
+<tr class="border-b dark:border-slate-800">
+<th class="px-6 py-4 font-medium text-slate-900 dark:text-white whitespace-nowrap" scope="row">Filosofía Moderna</th>
+<td class="px-6 py-4 text-right text-yellow-600 dark:text-yellow-500 font-semibold">70.3%</td>
+</tr>
+<tr>
+<th class="px-6 py-4 font-medium text-slate-900 dark:text-white whitespace-nowrap" scope="row">Economía Avanzada</th>
+<td class="px-6 py-4 text-right text-yellow-600 dark:text-yellow-500 font-semibold">71.8%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
