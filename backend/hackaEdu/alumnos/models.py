@@ -1,18 +1,18 @@
 from django.db import models
+from django.contrib.auth.models import User
+from profesores.models import NivelEducativo, Curso
 
 class Alumno(models.Model):
-    nombre = models.CharField(max_length=100)
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
+    nivel = models.ForeignKey(NivelEducativo, on_delete=models.CASCADE)
+    grado_actual = models.CharField(max_length=50)
+    colegio = models.CharField(max_length=200)
+    nombre_tutor = models.CharField(max_length=200)
+    telefono_emergencia = models.CharField(max_length=15)
 
-    def __str__(self):
-        return self.nombre
-
-
-class Evaluacion(models.Model):
+class Inscripcion(models.Model):
     alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
-    rubrica = models.TextField()
-    respuesta_alumno = models.TextField()
-    resultado_ia = models.TextField()
-    fecha = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Evaluación de {self.alumno.nombre} - {self.fecha.strftime('%Y-%m-%d')}"
+    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
+    codigo_acceso = models.CharField(max_length=20)
+    fecha_inscripcion = models.DateTimeField(auto_now_add=True)
+    estado = models.CharField(max_length=20)

@@ -1,0 +1,22 @@
+# --- Django / Python ---
+env/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+
+# --- Archivos de entorno ---
+*.env
+
+# --- Archivos del sistema ---
+.DS_Store
+Thumbs.db
+
+# --- Node / Frontend ---
+node_modules/
+dist/
+build/

@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'llama3',
     'alumnos',
+    'profesores',
+    'evaluacion',
+    'reportes',
+    'usuario',
     'rest_framework',
 ]
 
