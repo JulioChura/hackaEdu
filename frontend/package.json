@@ -1,0 +1,9 @@
+{
+  "name": "hackaedu-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "npx http-server ./public -p 3000",
+    "serve": "npx http-server ./public -p 3000"
+  }
+}

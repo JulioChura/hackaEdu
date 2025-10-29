@@ -1,0 +1,84 @@
+:root{
+	--bg:#f6f8fb;
+	--card:#ffffff;
+	--muted:#6b7280;
+	--accent:#2563eb;
+	--success:#16a34a;
+	--danger:#ef4444;
+}
+
+*{box-sizing:border-box}
+body{
+	font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;
+	margin:0;
+	color:#0f172a;
+		/* soft gradient for base */
+		background: linear-gradient(180deg, #fbfdff 0%, #eef5fb 100%);
+		position:relative;
+}
+
+header{
+	padding:20px 32px;
+	display:flex;
+	justify-content:space-between;
+	align-items:center;
+	background:linear-gradient(90deg,#fff,#fbfdff);
+	border-bottom:1px solid rgba(15,23,42,0.05);
+}
+
+header h1{font-size:20px;margin:0}
+header nav a{color:var(--accent);text-decoration:none;margin-left:12px}
+
+main{max-width:1100px;margin:28px auto;padding:0 20px}
+
+.card{
+	background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.75));
+	border-radius:12px;
+	padding:20px;
+	box-shadow:0 8px 28px rgba(15,23,42,0.06);
+	margin-bottom:20px;
+	border: 1px solid rgba(15,23,42,0.03);
+}
+
+/* decorative blurred shapes */
+.bg-decor-1{
+	position:fixed;right:-120px;top:-80px;width:420px;height:420px;pointer-events:none;z-index:0;
+	background: radial-gradient(circle at 30% 30%, rgba(37,99,235,0.12), rgba(99,102,241,0.06) 40%, transparent 60%);
+	filter: blur(40px);transform:rotate(15deg);
+}
+.bg-decor-2{
+	position:fixed;left:-160px;bottom:-60px;width:520px;height:520px;pointer-events:none;z-index:0;
+	background: linear-gradient(180deg, rgba(16,185,129,0.06), rgba(99,102,241,0.02));
+	filter: blur(60px);
+}
+
+main{position:relative;z-index:1}
+
+h2{font-size:18px;margin:0 0 12px 0}
+
+.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+label{font-size:14px;color:var(--muted)}
+input[type="number"], input[type="text"], select, textarea{
+	padding:8px 10px;border-radius:8px;border:1px solid rgba(15,23,42,0.08);min-width:120px
+}
+
+button{
+	background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;
+	box-shadow:0 6px 12px rgba(37,99,235,0.12);
+}
+
+button.secondary{background:#fff;color:var(--accent);border:1px solid rgba(37,99,235,0.12);box-shadow:none}
+
+/* make pre blocks lighter and friendlier */
+pre{
+	background:#f3f6f9;color:#0f172a;padding:14px;border-radius:8px;overflow:auto;white-space:pre-wrap;
+	border-left:4px solid rgba(37,99,235,0.12);
+}
+
+.muted{color:var(--muted)}
+
+@media (max-width:720px){
+	header{padding:12px}
+	main{padding:0 12px}
+	.controls{flex-direction:column;align-items:flex-start}
+}

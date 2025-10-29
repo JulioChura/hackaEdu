@@ -1,0 +1,75 @@
+{
+	"info": {
+		"name": "ReConéctate IA - Backend API",
+		"description": "API para evaluación de respuestas con IA local (Llama 3.2)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Verificar Ollama",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/llama3/verificar-ia/",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8000",
+					"path": ["api", "llama3", "verificar-ia", ""]
+				},
+				"description": "Verifica que Ollama esté corriendo y que el modelo llama3.2:3b esté instalado"
+			},
+			"response": []
+		},
+		{
+			"name": "2. Generar Prompt (Debug)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"evaluacion_id\": 1,\n    \"alumno_id\": 1\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/llama3/prueba-prompt/",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8000",
+					"path": ["api", "llama3", "prueba-prompt", ""]
+				},
+				"description": "Genera el prompt que se enviará a la IA, sin ejecutarla. Útil para debug."
+			},
+			"response": []
+		},
+		{
+			"name": "3. Evaluar Respuestas (IA)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"evaluacion_id\": 1,\n    \"alumno_id\": 1\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/llama3/evaluar-respuestas/",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8000",
+					"path": ["api", "llama3", "evaluar-respuestas", ""]
+				},
+				"description": "ENDPOINT PRINCIPAL: Evalúa las respuestas del alumno usando IA.\n\nTarda 10-30 segundos.\n\nDevuelve:\n- ReporteIA creado\n- Evaluaciones por criterio\n- Diagnóstico general\n- Fortalezas y áreas de mejora"
+			},
+			"response": []
+		}
+	]
+}

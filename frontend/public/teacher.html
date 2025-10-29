@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profesor - Hack4Edu</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="favicon.ico" />
+</head>
+<body>
+  <header>
+    <h1>Profesor - Hack4Edu</h1>
+    <a href="/">Volver</a>
+  </header>
+
+  <main>
+  <div class="bg-decor-1"></div>
+  <div class="bg-decor-2"></div>
+    <div class="card" id="ia-status">
+      <h2>Estado de IA</h2>
+      <div class="controls">
+        <button id="check-ia">Verificar IA</button>
+      </div>
+      <div style="height:12px"></div>
+      <pre id="ia-output" class="muted">Presiona "Verificar IA" para comprobar disponibilidad.</pre>
+    </div>
+
+    <div class="card" id="prompt-generator">
+      <h2>Generar Prompt (debug)</h2>
+      <div class="controls">
+        <label>Evaluación ID: <input id="eval-id" type="number" value="1" /></label>
+        <label>Alumno ID: <input id="alumno-id" type="number" value="1" /></label>
+        <button id="gen-prompt" class="secondary">Generar prompt</button>
+      </div>
+      <div style="height:12px"></div>
+      <pre id="prompt-output" class="muted">Prompt generado aparecerá aquí.</pre>
+    </div>
+
+    <div class="card" id="run-eval">
+      <h2>Ejecutar evaluación</h2>
+      <div class="controls">
+        <label>Evaluación ID: <input id="eval-id-2" type="number" value="1" /></label>
+        <label>Alumno ID: <input id="alumno-id-2" type="number" value="1" /></label>
+        <button id="run-eval-btn">Ejecutar</button>
+      </div>
+      <div style="height:12px"></div>
+      <pre id="eval-output" class="muted">Resultados aparecerán aquí (puede tardar).</pre>
+    </div>
+  </main>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+# Cargar variables de entorno desde .env
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,9 +49,11 @@ INSTALLED_APPS = [
     'reportes',
     'usuario',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -75,10 +82,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'hackaEdu.wsgi.application'
 
+AUTH_USER_MODEL = 'usuario.Usuario'
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -127,3 +133,23 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ===================================
+# CONFIGURACIÓN DE IA PARA EVALUACIONES
+# ===================================
+
+# API Key de Groq (principal)
+GROQ_API_KEY = os.getenv('GROQ_API_KEY', '')
+
+# Modo de IA: 'groq', 'ollama', 'auto' (auto intenta groq primero, luego ollama)
+IA_MODE = os.getenv('IA_MODE', 'auto')
+
+# Configuración de Ollama (fallback)
+OLLAMA_URL = os.getenv('OLLAMA_URL', 'http://localhost:11434')
+OLLAMA_MODEL = os.getenv('OLLAMA_MODEL', 'deepseek-r1:8b')
+
+# Modelo de Groq
+GROQ_MODEL = os.getenv('GROQ_MODEL', 'llama-3.3-70b-versatile')
+
+# CORS - allow all origins for local development (disable/restrict in production)
+CORS_ALLOW_ALL_ORIGINS = True
