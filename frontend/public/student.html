@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alumno - Hack4Edu</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="favicon.ico" />
+</head>
+<body>
+  <header>
+    <h1>Alumno - Hack4Edu</h1>
+  <a href="../">Volver</a>
+  </header>
+
+  <main>
+    <div class="bg-decor-1"></div>
+    <div class="bg-decor-2"></div>
+    <div class="card">
+      <h2>Tomar sesión (demo)</h2>
+      <p class="muted">Esta página es una plantilla de prueba. Puedes pegar respuestas de ejemplo en el textarea y enviarlas cuando se implemente el endpoint.</p>
+      <div style="height:12px"></div>
+      <label>Evaluación ID: <input id="eval-id-s" type="number" value="1" /></label>
+      <label>Alumno ID: <input id="alumno-id-s" type="number" value="1" /></label>
+      <div style="height:8px"></div>
+      <textarea id="respuestas" rows="6" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(15,23,42,0.06)" placeholder="Respuesta por pregunta en formato libre..."></textarea>
+      <div style="height:8px"></div>
+      <button id="submit-resp">Enviar respuestas (pendiente)</button>
+    </div>
+
+  <script>
+    // placeholder
+    console.log('Alumno demo loaded');
+    document.getElementById('submit-resp').addEventListener('click', () => {
+      alert('Endpoint de envío aún no implementado.');
+    });
+  </script>
+</body>
+</html>

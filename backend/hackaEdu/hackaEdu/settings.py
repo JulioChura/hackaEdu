@@ -49,9 +49,11 @@ INSTALLED_APPS = [
     'reportes',
     'usuario',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -148,3 +150,6 @@ OLLAMA_MODEL = os.getenv('OLLAMA_MODEL', 'deepseek-r1:8b')
 
 # Modelo de Groq
 GROQ_MODEL = os.getenv('GROQ_MODEL', 'llama-3.3-70b-versatile')
+
+# CORS - allow all origins for local development (disable/restrict in production)
+CORS_ALLOW_ALL_ORIGINS = True
