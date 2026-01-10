@@ -35,7 +35,7 @@
           ></div>
           <div class="flex flex-col">
             <h1 class="text-text-primary-light dark:text-text-primary-dark text-base font-semibold">Laura Hernández</h1>
-            <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Profesora</p>
+            <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Teacher</p>
           </div>
         </div>
         <nav class="flex flex-col gap-2 mt-4">
@@ -45,15 +45,15 @@
           </a>
           <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-gray-200 dark:bg-blue-800 text-blue-900 dark:text-gray-100" href="#">
             <span class="material-symbols-outlined !font-bold">school</span>
-            <p class="text-sm font-semibold">Cursos</p>
+            <p class="text-sm font-semibold">Classrooms</p>
           </a>
           <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-200 dark:hover:bg-blue-800" href="#">
             <span class="material-symbols-outlined text-text-primary-light dark:text-text-primary-dark">groups</span>
-            <p class="text-text-primary-light dark:text-text-primary-dark text-sm font-medium">Estudiantes</p>
+            <p class="text-text-primary-light dark:text-text-primary-dark text-sm font-medium">Students</p>
           </a>
           <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-200 dark:hover:bg-blue-800" href="#">
             <span class="material-symbols-outlined text-text-primary-light dark:text-text-primary-dark">bar_chart</span>
-            <p class="text-text-primary-light dark:text-text-primary-dark text-sm font-medium">Reportes</p>
+            <p class="text-text-primary-light dark:text-text-primary-dark text-sm font-medium">Reports</p>
           </a>
         </nav>
       </div>
@@ -61,11 +61,11 @@
       <div class="mt-auto flex flex-col gap-1">
         <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800" href="#">
           <span class="material-symbols-outlined text-text-primary-light dark:text-text-primary-dark">settings</span>
-          <p class="text-text-primary-light dark:text-text-primary-dark text-sm font-medium">Configuración</p>
+          <p class="text-text-primary-light dark:text-text-primary-dark text-sm font-medium">Settings</p>
         </a>
         <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800" href="#">
           <span class="material-symbols-outlined text-text-primary-light dark:text-text-primary-dark">help</span>
-          <p class="text-text-primary-light dark:text-text-primary-dark text-sm font-medium">Ayuda</p>
+          <p class="text-text-primary-light dark:text-text-primary-dark text-sm font-medium">Help</p>
         </a>
       </div>
     </aside>

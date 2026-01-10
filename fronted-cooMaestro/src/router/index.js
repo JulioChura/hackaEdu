@@ -5,17 +5,18 @@ const Home = () => import('../views/Home.vue')
 
 // Teacher views
 const TeacherDashboard = () => import('../views/teacher/dashboard/TeacherDashboard.vue')
-const TeacherCourses = () => import('../views/teacher/courses/TeacherCourses.vue')
+const TeacherClassrooms = () => import('../views/teacher/classrooms/TeacherClassrooms.vue')
+const TeacherClassroomView = () => import('../views/teacher/classroom/TeacherClassroomView.vue')
 
 // Teacher layout (parent for teacher routes)
 const TeacherLayout = () => import('../views/teacher/Teacher.vue')
 
 // Student views (placeholders)
 const StudentDashboard = () => import('../views/student/dashboard/StudentDashboard.vue')
-const StudentCourses = () => import('../views/student/courses/StudentCourses.vue')
+const StudentClassrooms = () => import('../views/student/classrooms/StudentClassrooms.vue')
 
-// Generic courses page (optional)
-const Courses = () => import('../views/teacher/courses/TeacherCourses.vue')
+// Generic classrooms page (optional)
+const Classrooms = () => import('../views/teacher/classrooms/TeacherClassrooms.vue')
 
 const routes = [
   // Public / auth
@@ -30,8 +31,8 @@ const routes = [
     children: [
       { path: '', redirect: { name: 'TeacherDashboard' } },
       { path: 'dashboard', name: 'TeacherDashboard', component: TeacherDashboard, meta: { role: 'teacher' } },
-      { path: 'courses', name: 'TeacherCourses', component: TeacherCourses, meta: { role: 'teacher' } },
-      { path: 'courses/:id', name: 'TeacherCourseDetail', component: TeacherCourses, meta: { role: 'teacher' }, props: true },
+      { path: 'classrooms', name: 'TeacherClassrooms', component: TeacherClassrooms, meta: { role: 'teacher' } },
+      { path: 'classrooms/:id', name: 'TeacherClassroomDetail', component: TeacherClassroomView, meta: { role: 'teacher' }, props: true },
     ],
   },
 
@@ -43,13 +44,13 @@ const routes = [
     children: [
       { path: '', redirect: { name: 'StudentDashboard' } },
       { path: 'dashboard', name: 'StudentDashboard', component: StudentDashboard, meta: { role: 'student' } },
-      { path: 'courses', name: 'StudentCourses', component: StudentCourses, meta: { role: 'student' } },
-      { path: 'courses/:id', name: 'StudentCourseDetail', component: StudentCourses, meta: { role: 'student' }, props: true },
+      { path: 'classrooms', name: 'StudentClassrooms', component: StudentClassrooms, meta: { role: 'student' } },
+      { path: 'classrooms/:id', name: 'StudentClassroomDetail', component: StudentClassrooms, meta: { role: 'student' }, props: true },
     ],
   },
 
-  // Generic/public courses listing
-  { path: '/courses', name: 'Courses', component: Courses },
+  // Generic/public classrooms listing
+  { path: '/classrooms', name: 'Classrooms', component: Classrooms },
 
   // Fallback -> home
   { path: '/:pathMatch(.*)*', redirect: '/' },
