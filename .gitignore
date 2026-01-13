@@ -45,3 +45,10 @@ dist/
 backend/hackaEdu/db.sqlite3
 backend/.env
 backend/*.env
+
+# Documentación de referencia (no versionable)
+INICIO_RAPIDO.md
+ARQUITECTURA.md
+ER_DIAGRAM_VISUAL.md
+CHECKLIST.md
+backend/hackaEdu/README_BACKEND.md*.md
