@@ -1,5 +1,4 @@
 <script setup>
-import TeacherSideBar from './shared/components/TeacherSideBar.vue'
 </script>
 
 <template>

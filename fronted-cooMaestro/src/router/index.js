@@ -1,59 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
-// Public / Auth
-const Home = () => import('../views/Home.vue')
-
-// Teacher views
-const TeacherDashboard = () => import('../views/teacher/dashboard/TeacherDashboard.vue')
-const TeacherClassrooms = () => import('../views/teacher/classrooms/TeacherClassrooms.vue')
-const TeacherClassroomView = () => import('../views/teacher/classroom/TeacherClassroomView.vue')
-
-// Teacher layout (parent for teacher routes)
-const TeacherLayout = () => import('../views/teacher/Teacher.vue')
-
-// Student views (placeholders)
-const StudentDashboard = () => import('../views/student/dashboard/StudentDashboard.vue')
-const StudentClassrooms = () => import('../views/student/classrooms/StudentClassrooms.vue')
-
-// Generic classrooms page (optional)
-const Classrooms = () => import('../views/teacher/classrooms/TeacherClassrooms.vue')
-
+import HomePage from '../views/HomePage.vue'
 const routes = [
-  // Public / auth
-  { path: '/', name: 'Home', component: Home },
-
-  // Teacher area
   {
-    path: '/teacher',
-    name: 'Teacher',
-    component: TeacherLayout,
-    meta: { requiresAuth: true, role: 'teacher' },
-    children: [
-      { path: '', redirect: { name: 'TeacherDashboard' } },
-      { path: 'dashboard', name: 'TeacherDashboard', component: TeacherDashboard, meta: { role: 'teacher' } },
-      { path: 'classrooms', name: 'TeacherClassrooms', component: TeacherClassrooms, meta: { role: 'teacher' } },
-      { path: 'classrooms/:id', name: 'TeacherClassroomDetail', component: TeacherClassroomView, meta: { role: 'teacher' }, props: true },
-    ],
+    path: '/',
+    name: 'Home',
+    component: HomePage,
   },
-
-  // Student area
-  {
-    path: '/student',
-    name: 'Student',
-    meta: { requiresAuth: true, role: 'student' },
-    children: [
-      { path: '', redirect: { name: 'StudentDashboard' } },
-      { path: 'dashboard', name: 'StudentDashboard', component: StudentDashboard, meta: { role: 'student' } },
-      { path: 'classrooms', name: 'StudentClassrooms', component: StudentClassrooms, meta: { role: 'student' } },
-      { path: 'classrooms/:id', name: 'StudentClassroomDetail', component: StudentClassrooms, meta: { role: 'student' }, props: true },
-    ],
-  },
-
-  // Generic/public classrooms listing
-  { path: '/classrooms', name: 'Classrooms', component: Classrooms },
-
-  // Fallback -> home
-  { path: '/:pathMatch(.*)*', redirect: '/' },
 ]
 
 const router = createRouter({
