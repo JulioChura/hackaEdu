@@ -286,8 +286,8 @@ URL: http://localhost:8000/admin/
 3. Llenar:
    ├─ Provider: Google
    ├─ Name: Google OAuth
-   ├─ Client id: 801054122554-plmjb874ob8kg6u9o4tuve962fb5fdu1.apps.googleusercontent.com
-   ├─ Secret key: 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
+   ├─ Client id: xxxx
+   ├─ Secret key: xxxxxx
    └─ Sites: Seleccionar "localhost:8000"
 │
 4. Click "Save"
