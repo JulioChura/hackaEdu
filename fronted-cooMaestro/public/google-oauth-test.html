@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prueba rápida Google OAuth + API</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; background: #f7f7fb; color: #333; }
+    .card { max-width: 720px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    h1 { margin-top: 0; }
+    button, input[type="text"] { font-size: 15px; padding: 10px 14px; border-radius: 6px; border: 1px solid #ddd; }
+    button { cursor: pointer; background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; border: none; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+    .log { white-space: pre-wrap; background: #0b1728; color: #d8ffe0; padding: 12px; border-radius: 8px; height: 200px; overflow: auto; font-family: Consolas, monospace; }
+    a { color: #667eea; }
+    label { font-weight: bold; display: block; margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Prueba rápida: Google OAuth + API</h1>
+    <p>Flujo: <strong>Inicia sesión con Google</strong> → backend crea sesión → pulsas "Convertir a JWT" → guardamos tokens → llamas a <code>/api/auth/users/profile/</code>.</p>
+
+    <h3>1) Iniciar login con Google</h3>
+    <p>Se abrirá la ventana de Google. Tras autorizar, volverás al backend y luego deberás pulsar "Convertir a JWT".</p>
+    <div class="row">
+      <a href="http://localhost:8000/api/auth/google/login/" target="_blank" rel="noopener">
+        <button type="button">Continuar con Google</button>
+      </a>
+      <button id="btn-convert" type="button">Convertir a JWT</button>
+    </div>
+
+    <h3>2) Tokens</h3>
+    <div class="row">
+      <div style="flex:1; min-width:260px;">
+        <label>Access token</label>
+        <input id="access" type="text" style="width:100%;" placeholder="Se llenará al convertir a JWT" />
+      </div>
+      <div style="flex:1; min-width:260px;">
+        <label>Refresh token</label>
+        <input id="refresh" type="text" style="width:100%;" placeholder="Se llenará al convertir a JWT" />
+      </div>
+    </div>
+    <div class="row">
+      <button id="btn-profile" type="button">Llamar /api/auth/users/profile/</button>
+    </div>
+
+    <h3>Log</h3>
+    <div id="log" class="log"></div>
+  </div>
+
+  <script>
+    const logEl = document.getElementById('log');
+    const accessEl = document.getElementById('access');
+    const refreshEl = document.getElementById('refresh');
+    const btnConvert = document.getElementById('btn-convert');
+    const btnProfile = document.getElementById('btn-profile');
+
+    const API_BASE = 'http://localhost:8000';
+
+    function log(msg) {
+      const now = new Date().toISOString();
+      logEl.textContent = `[${now}] ${msg}\n` + logEl.textContent;
+    }
+
+    async function convertToJwt() {
+      log('Llamando /api/auth/convert-token/ ...');
+      try {
+        const resp = await fetch(`${API_BASE}/api/auth/convert-token/`, {
+          method: 'GET',
+          credentials: 'include' // importante: usa la cookie de sesión
+        });
+        if (!resp.ok) {
+          const err = await resp.text();
+          throw new Error(`HTTP ${resp.status}: ${err}`);
+        }
+        const data = await resp.json();
+        accessEl.value = data.access;
+        refreshEl.value = data.refresh;
+        localStorage.setItem('access_token', data.access);
+        localStorage.setItem('refresh_token', data.refresh);
+        log('✅ Convertido a JWT. Tokens guardados en localStorage.');
+      } catch (e) {
+        log('❌ Error al convertir a JWT: ' + e.message);
+      }
+    }
+
+    async function callProfile() {
+      const token = accessEl.value.trim() || localStorage.getItem('access_token');
+      if (!token) {
+        log('⚠️ No hay access token. Primero convierte a JWT.');
+        return;
+      }
+      log('Llamando /api/auth/users/profile/ ...');
+      try {
+        const resp = await fetch(`${API_BASE}/api/auth/users/profile/`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const text = await resp.text();
+        log(`Respuesta (${resp.status}):\n${text}`);
+      } catch (e) {
+        log('❌ Error llamando profile: ' + e.message);
+      }
+    }
+
+    btnConvert.addEventListener('click', convertToJwt);
+    btnProfile.addEventListener('click', callProfile);
+  </script>
+</body>
+</html>

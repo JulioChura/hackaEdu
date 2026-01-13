@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: hackaEdu-db
+    environment:
+      POSTGRES_DB: hackaEdu
+      POSTGRES_USER: hackaEdu_user
+      POSTGRES_PASSWORD: hackaEdu_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hackaEdu_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    container_name: hackaEdu-api
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py seed_data &&
+             python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    environment:
+      DEBUG: "True"
+      SECRET_KEY: "django-insecure-dev-key-change-in-production"
+      DATABASE_URL: "postgresql://hackaEdu_user:hackaEdu_pass@db:5432/hackaEdu"
+      ANTHROPIC_API_KEY: ""
+      ALLOWED_HOSTS: "localhost,127.0.0.1,web"
+      CORS_ALLOWED_ORIGINS: "http://localhost:3000,http://localhost:5173"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: hackaEdu-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+
+networks:
+  default:
+    name: hackaEdu-network
