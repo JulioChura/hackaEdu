@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'logros',
     'niveles',
     'usuarios',
+    'ranking',
     
     # Third party
     'corsheaders',
@@ -114,8 +115,6 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',

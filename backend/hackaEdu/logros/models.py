@@ -9,7 +9,7 @@ class Logro(models.Model):
     descripcion = models.TextField('descripción')
     criterios = models.JSONField('criterios para desbloqueo', default=dict, blank=True)  # Ej: {"lecturas_minimas": 5, "promedio_minimo": 70}
     puntos_recompensa = models.IntegerField('puntos recompensa', default=10)
-    icono = models.CharField('icono', max_length=100, blank=True)  # Ej: "medal", "star"
+    icono = models.CharField('icono', max_length=10, blank=True)  # Ej: "🎯", "📚", "🏆"
     fecha_creacion = models.DateTimeField('fecha creación', auto_now_add=True)
     
     class Meta:
