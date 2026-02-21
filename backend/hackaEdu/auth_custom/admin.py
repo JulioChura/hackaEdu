@@ -5,9 +5,10 @@ from .models import CustomUser
 
 class CustomUserAdmin(UserAdmin):
     # Campos para mostrar en admin
-    list_display = ('email', 'nombre', 'apellido', 'is_staff', 'is_active')
+    list_display = ('email', 'nombre', 'apellido', 'is_staff', 'is_active', 'date_joined')
     search_fields = ('email', 'nombre', 'apellido')
     ordering = ('email',)
+    readonly_fields = ('date_joined', 'last_login')
     
     # Campos para formulario de edición
     fieldsets = (

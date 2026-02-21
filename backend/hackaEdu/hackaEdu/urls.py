@@ -25,6 +25,9 @@ urlpatterns = [
     # API Authentication
     path('auth/', include('auth_custom.urls')),
     
+    # API Contenido (Categorías, Modalidades, Lecturas)
+    path('contenido/', include('contenido.urls')),
+    
     # Allauth (para social auth si es necesario)
     path('accounts/', include('allauth.urls')),
 ]

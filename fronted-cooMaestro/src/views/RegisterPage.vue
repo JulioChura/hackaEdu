@@ -100,6 +100,44 @@
                 <input v-model="form.confirmPassword" class="w-full h-12 pl-12 pr-4 rounded-xl border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition duration-200 ease-in-out focus:shadow-lg" id="confirmPassword" placeholder="••••••••" type="password" required />
               </div>
             </div>
+            <!-- Preferencias de categorías -->
+            <div class="space-y-3 pt-2">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-xl">bookmark</span>
+                <label class="text-sm font-semibold text-gray-800">
+                  ¿Qué temas te interesan? 
+                  <span class="text-slate-500 font-normal text-xs">(opcional, puedes seleccionar varios)</span>
+                </label>
+              </div>
+              <div v-if="loadingCategories" class="text-center py-4">
+                <svg class="animate-spin h-6 w-6 mx-auto text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                </svg>
+              </div>
+              <div v-else-if="categoriesError" class="text-center py-4 text-red-500 text-sm">
+                {{ categoriesError }}
+              </div>
+              <div v-else-if="categories.length > 0" class="flex flex-wrap gap-2">
+                <button
+                  v-for="category in categories"
+                  :key="category?.codigo || Math.random()"
+                  type="button"
+                  @click="category?.codigo && toggleCategory(category.codigo)"
+                  :class="[
+                    'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border-2',
+                    category?.codigo && selectedCategories.includes(category.codigo)
+                      ? 'bg-primary text-white border-primary shadow-md shadow-primary/25 scale-105'
+                      : 'bg-white text-slate-700 border-slate-200 hover:border-primary hover:text-primary hover:shadow-sm'
+                  ]"
+                >
+                  {{ category?.nombre || 'Categoría sin nombre' }}
+                </button>
+              </div>
+              <div v-else class="text-center py-4 text-slate-500 text-sm">
+                No hay categorías disponibles en este momento
+              </div>
+            </div>
             <div class="flex items-start gap-3 py-2">
               <input v-model="form.terms" class="mt-1 h-5 w-5 rounded border-slate-300 text-primary focus:ring-primary dark:border-slate-600 dark:bg-slate-800 cursor-pointer" id="terms" type="checkbox" required />
               <label class="text-sm text-gray-800 dark:text-slate-400 leading-relaxed cursor-pointer" for="terms">
@@ -128,9 +166,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { authService } from '../services/auth.service'
+import { categoriesService } from '../services/categories.service'
 
 const router = useRouter()
 const form = ref({
@@ -145,6 +184,45 @@ const loading = ref(false)
 const error = ref('')
 const success = ref(false)
 const showPassword = ref(false)
+
+// Categorías
+const categories = ref([])
+const selectedCategories = ref([])
+const loadingCategories = ref(false)
+const categoriesError = ref('')
+
+// Cargar categorías al montar el componente
+onMounted(async () => {
+  loadingCategories.value = true
+  categoriesError.value = ''
+  try {
+    const response = await categoriesService.getAll()
+    console.log('Categories response:', response)
+    // DRF ViewSets retornan datos paginados: {count, results, next, previous}
+    const data = response.data.results || response.data
+    if (data && Array.isArray(data)) {
+      categories.value = data.filter(cat => cat !== null && cat !== undefined)
+      console.log('Loaded categories:', categories.value)
+    } else {
+      categoriesError.value = 'Error: formato de respuesta inválido'
+      console.error('Invalid response format:', response)
+    }
+  } catch (e) {
+    console.error('Error loading categories:', e)
+    categoriesError.value = 'No se pudieron cargar las categorías. Por favor, intenta más tarde.'
+  } finally {
+    loadingCategories.value = false
+  }
+})
+
+const toggleCategory = (codigo) => {
+  const index = selectedCategories.value.indexOf(codigo)
+  if (index > -1) {
+    selectedCategories.value.splice(index, 1)
+  } else {
+    selectedCategories.value.push(codigo)
+  }
+}
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value
@@ -176,7 +254,8 @@ const handleRegister = async () => {
       email: form.value.email,
       password: form.value.password,
       password_confirm: form.value.confirmPassword,
-      telefono: ''
+      telefono: '',
+      categorias_preferidas: selectedCategories.value
     })
     
     success.value = true

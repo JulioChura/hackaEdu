@@ -1,9 +1,27 @@
+"""
+REUTILIZABLE EN OTROS PROYECTOS: Sí (parcialmente)
+
+Los serializers están diseñados para:
+  - UserSerializer & UserDetailSerializer: Generales, reutilizables
+  - RegisterSerializer: Específico del registro, reutilizable con CustomUser
+  - ChangePasswordSerializer: Reutilizable en cualquier sistema de auth
+
+IMPORTANTE: Los signals now manejan la creación de datos iniciales
+             (ProgresionNivel, RachaUsuario, Ranking)
+"""
+
 from rest_framework import serializers
 from .models import CustomUser
+from django.apps import apps
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Serializador básico del usuario"""
+    """
+    Reutilizable: Sí
+    
+    Serializador básico del usuario. Expone solo los campos esenciales.
+    Úsalo para listar usuarios, perfiles públicos, etc.
+    """
     class Meta:
         model = CustomUser
         fields = ('id', 'email', 'nombre', 'apellido', 'telefono', 'avatar', 'fecha_nacimiento')
@@ -11,7 +29,13 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserDetailSerializer(UserSerializer):
-    """Serializador detallado del usuario"""
+    """
+    Reutilizable: Sí
+    
+    Serializador detallado del usuario con información extra.
+    Incluye datos de Google si tiene cuenta vinculada.
+    Úsalo para: perfil del usuario logueado, endpoints /me/
+    """
     google_profile = serializers.SerializerMethodField()
     
     class Meta(UserSerializer.Meta):
@@ -30,13 +54,48 @@ class UserDetailSerializer(UserSerializer):
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    """Serializador para registro de usuarios"""
+    """
+    Reutilizable: Sí
+    
+    Serializador para registro de usuarios por formulario.
+    
+    CAMPOS ADICIONALES (v2):
+      - categorias_preferidas: Lista de IDs de categorías de interés
+      - dificultad_inicial: Dificultad inicial (BASIC, INTERMEDIATE, ADVANCED, EXPERT)
+    
+    IMPORTANTE: La creación de ProgresionNivel, RachaUsuario y Ranking
+                   ahora se maneja automáticamente mediante signals
+                   (ver: auth_custom/signals.py)
+    
+    Flujo:
+      1. Valida email no duplicado
+      2. Valida contraseñas coincidan
+      3. Crea CustomUser
+      4. Signal post_save se dispara → crea datos iniciales
+      5. Crea PreferenciasUsuario con categorías y dificultad
+    """
     password = serializers.CharField(write_only=True, min_length=8)
     password_confirm = serializers.CharField(write_only=True)
+    
+    # Preferencias adicionales
+    categorias_preferidas = serializers.ListField(
+        child=serializers.CharField(),
+        required=False,
+        help_text='Lista de códigos de categorías de interés (ej: ["ciencia", "tecnologia"])'
+    )
+    dificultad_inicial = serializers.ChoiceField(
+        choices=['BASIC', 'INTERMEDIATE', 'ADVANCED', 'EXPERT'],
+        default='BASIC',
+        required=False,
+        help_text='Dificultad inicial: BASIC, INTERMEDIATE, ADVANCED, EXPERT'
+    )
 
     class Meta:
         model = CustomUser
-        fields = ('email', 'nombre', 'apellido', 'password', 'password_confirm', 'telefono')
+        fields = (
+            'email', 'nombre', 'apellido', 'password', 'password_confirm', 'telefono',
+            'categorias_preferidas', 'dificultad_inicial'
+        )
 
     def validate(self, data):
         if data['password'] != data.pop('password_confirm'):
@@ -44,11 +103,24 @@ class RegisterSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        from usuarios.models import ProgresionNivel
-        from ranking.models import RachaUsuario, Ranking
-        from niveles.models import NivelCEFR
+        """
+        Crea el usuario y sus preferencias.
         
-        # 1. Crear usuario
+        El signal 'crear_datos_iniciales_usuario' en signals.py
+        crea automáticamente:
+          - ProgresionNivel (comienza en A1)
+          - RachaUsuario
+          - Ranking
+          - PreferenciasUsuario (inicialmente vacío)
+        
+        Luego aquí actualizamos PreferenciasUsuario con las preferencias
+        capturadas en el registro.
+        """
+        # Extraer preferencias antes de crear el usuario
+        categorias_codigos = validated_data.pop('categorias_preferidas', [])
+        dificultad_inicial = validated_data.pop('dificultad_inicial', 'BASIC')
+        
+        # Crear el usuario
         user = CustomUser.objects.create_user(
             email=validated_data['email'],
             password=validated_data['password'],
@@ -57,26 +129,37 @@ class RegisterSerializer(serializers.ModelSerializer):
             telefono=validated_data.get('telefono', ''),
         )
         
-        # 2. Crear progresión inicial (nivel A1)
-        nivel_inicial = NivelCEFR.objects.get(codigo='A1')
-        ProgresionNivel.objects.create(
-            usuario=user,
-            nivel_actual=nivel_inicial,
-            puntos_acumulativos=0,
-            puntos_en_nivel=0
-        )
-        
-        # 3. Crear racha
-        RachaUsuario.objects.create(usuario=user)
-        
-        # 4. Crear ranking
-        Ranking.objects.create(usuario=user)
+        # El signal ya creó PreferenciasUsuario, ahora lo actualizamos
+        try:
+            from usuarios.models import PreferenciasUsuario
+            from contenido.models import Categoria
+            
+            preferencias = PreferenciasUsuario.objects.get(usuario=user)
+            preferencias.dificultad_inicial = dificultad_inicial
+            preferencias.save()
+            
+            # Agregar categorías
+            if categorias_codigos:
+                categorias = Categoria.objects.filter(codigo__in=categorias_codigos)
+                preferencias.categorias_preferidas.set(categorias)
+        except Exception as e:
+            print(f"⚠️ Error al actualizar preferencias: {e}")
         
         return user
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-    """Serializador para cambiar contraseña"""
+    """
+    Reutilizable: Sí
+    
+    Serializador para cambiar contraseña de usuario logueado.
+    Requiere autenticación (JWT, sesión, etc.)
+    
+    Validaciones:
+      1. Contraseña actual debe ser correcta
+      2. Nueva contraseña tiene min 8 caracteres
+      3. Confirmación de nueva contraseña debe coincidir
+    """
     old_password = serializers.CharField(write_only=True, required=True)
     new_password = serializers.CharField(write_only=True, required=True, min_length=8)
     new_password_confirm = serializers.CharField(write_only=True, required=True)

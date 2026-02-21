@@ -6,7 +6,7 @@ from .views import (
     RegisterView,
     UserViewSet
 )
-from .views_social import google_login, convert_token
+from .integrations.views_social import google_login, convert_token
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')

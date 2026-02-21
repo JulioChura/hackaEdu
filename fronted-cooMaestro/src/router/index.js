@@ -3,6 +3,7 @@ import HomePage from '../views/HomePage.vue'
 import LoginPage from '../views/LoginPage.vue'
 // ...existing code...
 import RegisterPage from '../views/RegisterPage.vue'
+import { useAuthStore } from '../stores/auth.store'
 const routes = [
   {
     path: '/',
@@ -24,7 +25,7 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: () => import('../views/Dashboard.vue'), 
-    meta: { requiresAuth: false }, // Set to true when auth is implemented
+    meta: { requiresAuth: true }, // Set to true when auth is implemented
   }
 ]
 
@@ -33,25 +34,23 @@ const router = createRouter({
   routes,
 })
 
-// Optional: global guard example (auth/role) — actual auth check to be implemented in app
-router.beforeEach((to, from, next) => {
-  // In development we allow navigation without auth so you can work on routes
-  if (import.meta.env && import.meta.env.DEV) return next()
-
+// Authentication guard
+router.beforeEach((to, from) => {
+  const authStore = useAuthStore()
   const requiresAuth = to.meta?.requiresAuth
-  const roleRequired = to.meta?.role
 
-  // If route requires auth, you should check your auth state (placeholder logic)
-  if (requiresAuth) {
-    // Example placeholder: read role from localStorage (replace with real store)
-    const userRole = localStorage.getItem('role') || null
-    const isAuthenticated = !!userRole
-
-    if (!isAuthenticated) return next({ name: 'Home' })
-    if (roleRequired && userRole !== roleRequired) return next({ name: 'Home' })
+  // If route requires authentication
+  if (requiresAuth && !authStore.isLoggedIn) {
+    // Redirect to login page
+    return { name: 'Login', query: { redirect: to.fullPath } }
   }
 
-  next()
+  // If user is authenticated and tries to access login/register, redirect to dashboard
+  if ((to.name === 'Login' || to.name === 'Register') && authStore.isLoggedIn) {
+    return { name: 'Dashboard' }
+  }
+
+  return true
 })
 
 export default router
