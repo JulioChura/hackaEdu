@@ -20,6 +20,12 @@ const routes = [
     name: 'Register',
     component: RegisterPage,
   },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('../views/Dashboard.vue'), 
+    meta: { requiresAuth: false }, // Set to true when auth is implemented
+  }
 ]
 
 const router = createRouter({
