@@ -29,6 +29,11 @@ class ProgresionNivel(models.Model):
     
     usuario = models.OneToOneField('auth_custom.CustomUser', on_delete=models.CASCADE, related_name='progresion', verbose_name='usuario')
     nivel_actual = models.ForeignKey('niveles.NivelCEFR', on_delete=models.PROTECT, verbose_name='nivel actual')
+    
+    # SISTEMA DOBLE DE PUNTOS
+    puntos_acumulativos = models.IntegerField('puntos acumulativos globales', default=0)  # Para ranking global
+    puntos_en_nivel = models.IntegerField('puntos en nivel actual', default=0)  # Para ascenso de nivel
+    
     lecturas_completadas_en_nivel = models.IntegerField('lecturas completadas en nivel', default=0)
     promedio_puntos_en_nivel = models.DecimalField('promedio puntos en nivel', max_digits=5, decimal_places=2, default=0)
     criterios_dominados = models.JSONField('criterios dominados', default=dict, blank=True)

@@ -85,11 +85,11 @@ class Ranking(models.Model):
     
     @property
     def puntos_totales(self):
-        """Obtiene los puntos totales del usuario desde ProgresionNivel"""
+        """Obtiene los puntos totales acumulativos del usuario desde ProgresionNivel"""
         from usuarios.models import ProgresionNivel
         try:
             progresion = ProgresionNivel.objects.get(usuario=self.usuario)
-            return progresion.puntos_totales
+            return progresion.puntos_acumulativos
         except ProgresionNivel.DoesNotExist:
             return 0
     

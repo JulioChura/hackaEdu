@@ -44,6 +44,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
+        from usuarios.models import ProgresionNivel
+        from ranking.models import RachaUsuario, Ranking
+        from niveles.models import NivelCEFR
+        
+        # 1. Crear usuario
         user = CustomUser.objects.create_user(
             email=validated_data['email'],
             password=validated_data['password'],
@@ -51,6 +56,22 @@ class RegisterSerializer(serializers.ModelSerializer):
             apellido=validated_data['apellido'],
             telefono=validated_data.get('telefono', ''),
         )
+        
+        # 2. Crear progresión inicial (nivel A1)
+        nivel_inicial = NivelCEFR.objects.get(codigo='A1')
+        ProgresionNivel.objects.create(
+            usuario=user,
+            nivel_actual=nivel_inicial,
+            puntos_acumulativos=0,
+            puntos_en_nivel=0
+        )
+        
+        # 3. Crear racha
+        RachaUsuario.objects.create(usuario=user)
+        
+        # 4. Crear ranking
+        Ranking.objects.create(usuario=user)
+        
         return user
 
 

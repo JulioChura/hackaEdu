@@ -39,6 +39,13 @@ class Modalidad(models.Model):
 class Lectura(models.Model):
     """Lecturas creadas por profesores - Modelo Relacional"""
     
+    DIFICULTAD_CHOICES = [
+        ('BASIC', 'Basic (1-2)'),
+        ('INTERMEDIATE', 'Intermediate (3-4)'),
+        ('ADVANCED', 'Advanced (5-6)'),
+        ('EXPERT', 'Expert (7+)'),
+    ]
+    
     usuario_creador = models.ForeignKey('auth_custom.CustomUser', on_delete=models.CASCADE, related_name='lecturas_creadas', verbose_name='usuario creador')
     nivel_cefr = models.ForeignKey('niveles.NivelCEFR', on_delete=models.PROTECT, verbose_name='nivel CEFR')
     categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, verbose_name='categoría')
@@ -47,6 +54,11 @@ class Lectura(models.Model):
     titulo = models.CharField('título', max_length=255)
     contenido = models.TextField('contenido')
     palabras_count = models.IntegerField('contador de palabras', default=0)
+    
+    # PUNTUACIÓN Y DIFICULTAD
+    dificultad = models.CharField('dificultad', max_length=20, choices=DIFICULTAD_CHOICES, default='BASIC')
+    puntos_base = models.IntegerField('puntos base', default=1, help_text='Puntos base por pregunta (se multiplica por dificultad)')
+    
     imagen_url = models.URLField('URL de imagen', blank=True, null=True, help_text='Imagen personalizada (scraping futuro). Si está vacía, usa genérica de categoría')
     
     fecha_creacion = models.DateTimeField('fecha de creación', auto_now_add=True)
@@ -88,9 +100,12 @@ class Pregunta(models.Model):
     
     texto = models.TextField('texto de pregunta')
     tipo = models.CharField('tipo', max_length=20, choices=TIPO_CHOICES, default='MULTIPLE')
-    opciones = models.JSONField('opciones', default=list, blank=True)  # Para multiple choice: ["opción1", "opción2", ...]
+    opciones = models.JSONField('opciones', default=list, blank=True, help_text='Para MULTIPLE: ["opción1", "opción2", "opción3", "opción4"] (máximo 4)')
     respuesta_correcta = models.CharField('respuesta correcta', max_length=500)
     explicacion = models.TextField('explicación', blank=True)
+    
+    # PUNTUACIÓN
+    puntos_directos = models.IntegerField('puntos directos', default=1, help_text='Puntos base * multiplicador de dificultad = puntos finales')
     
     orden = models.IntegerField('orden', default=0)
     
