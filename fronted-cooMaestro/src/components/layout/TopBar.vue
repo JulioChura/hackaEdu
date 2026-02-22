@@ -43,23 +43,46 @@
 
       <div class="h-6 md:h-8 w-[1px] bg-gray-200 dark:bg-zinc-800 hidden sm:block"></div>
 
-      <!-- User Profile Mini -->
-      <div class="flex items-center gap-2 md:gap-3">
-        <div class="text-right hidden md:block">
-          <p class="text-xs font-bold leading-none">{{ userData.fullName }}</p>
-          <p class="text-[10px] text-medium-gray mt-1">{{ userData.userLevelTitle }}</p>
-        </div>
-        <div 
-          class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-cover bg-center border-2 border-primary/10 cursor-pointer"
-          :style="{ backgroundImage: `url(${userData.avatarUrl})` }"
-          @click="handleOpenSettings"
-        >
-          <div 
-            v-if="!userData.avatarUrl" 
-            class="w-full h-full bg-gray-300 dark:bg-zinc-700 rounded-full flex items-center justify-center"
-          >
-            <span class="material-symbols-outlined text-white text-sm">person</span>
+      <!-- User Profile Mini with Dropdown -->
+      <div class="relative">
+        <div class="flex items-center gap-2 md:gap-3 cursor-pointer" @click="toggleUserMenu">
+          <div class="text-right hidden md:block">
+            <p class="text-xs font-bold leading-none">{{ userData.fullName }}</p>
+            <p class="text-[10px] text-medium-gray mt-1">{{ userData.userLevelTitle }}</p>
           </div>
+          <div 
+            class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-cover bg-center border-2 border-primary/10"
+            :style="{ backgroundImage: `url(${userData.avatarUrl})` }"
+          >
+            <div 
+              v-if="!userData.avatarUrl" 
+              class="w-full h-full bg-gray-300 dark:bg-zinc-700 rounded-full flex items-center justify-center"
+            >
+              <span class="material-symbols-outlined text-white text-sm">person</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dropdown Menu -->
+        <div 
+          v-if="isUserMenuOpen"
+          class="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-800 rounded-xl shadow-lg border border-gray-200 dark:border-zinc-700 py-2 z-20"
+        >
+          <button
+            @click="handleOpenSettings"
+            class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 flex items-center gap-3 transition-colors"
+          >
+            <span class="material-symbols-outlined text-lg">settings</span>
+            Configuración
+          </button>
+          <div class="h-[1px] bg-gray-200 dark:bg-zinc-700 my-1"></div>
+          <button
+            @click="handleLogout"
+            class="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 transition-colors"
+          >
+            <span class="material-symbols-outlined text-lg">logout</span>
+            Cerrar Sesión
+          </button>
         </div>
       </div>
     </div>
@@ -67,7 +90,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 defineProps({
   userData: {
@@ -80,9 +103,28 @@ defineProps({
   }
 });
 
-const emit = defineEmits(['toggle-sidebar', 'search', 'open-notifications', 'open-settings']);
+const emit = defineEmits(['toggle-sidebar', 'search', 'open-notifications', 'open-settings', 'logout']);
 
 const searchQuery = ref('');
+const isUserMenuOpen = ref(false);
+
+// Cerrar menú al hacer clic fuera
+const handleClickOutside = (event) => {
+  if (isUserMenuOpen.value) {
+    const userMenu = event.target.closest('.relative');
+    if (!userMenu) {
+      isUserMenuOpen.value = false;
+    }
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
 
 const handleSearch = () => {
   emit('search', searchQuery.value);
@@ -93,6 +135,16 @@ const handleNotificationsClick = () => {
 };
 
 const handleOpenSettings = () => {
+  isUserMenuOpen.value = false;
   emit('open-settings');
+};
+
+const toggleUserMenu = () => {
+  isUserMenuOpen.value = !isUserMenuOpen.value;
+};
+
+const handleLogout = () => {
+  isUserMenuOpen.value = false;
+  emit('logout');
 };
 </script>

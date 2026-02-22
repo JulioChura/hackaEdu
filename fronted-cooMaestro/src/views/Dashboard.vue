@@ -10,6 +10,7 @@
     @open-settings="handleOpenSettings"
     @search="handleSearch"
     @open-notifications="handleNotificationsClick"
+    @logout="handleLogout"
   >
     <!-- Loading State -->
     <div v-if="isLoading" class="max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
@@ -127,6 +128,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import MainDashboard from '@/components/layout/MainDashboard.vue';
 import ProgressCard from '@/components/mainDashboard/ProgressCard.vue';
 import StreakCard from '@/components/mainDashboard/StreakCard.vue';
@@ -134,8 +136,9 @@ import CourseItem from '@/components/mainDashboard/CourseItem.vue';
 import RankingCard from '@/components/mainDashboard/RankingCard.vue';
 import AchievementsCard from '@/components/mainDashboard/AchievementsCard.vue';
 import { dashboardService } from '@/services/dashboard.service';
+import { authService } from '@/services/auth.service';
 
-
+const router = useRouter();
 const currentRoute = ref('dashboard');
 const unreadNotificationsCount = ref(3);
 const isLoading = ref(true);
@@ -248,6 +251,18 @@ const handleFindGroups = () => {
 const handleUpgradeToPro = () => {
   console.log('Upgrade to PRO');
   // TODO: Abrir modal de upgrade
+};
+
+const handleLogout = async () => {
+  try {
+    // Llamar al servicio de logout (limpia tokens)
+    authService.logout();
+    
+    // Redirigir a la página de login
+    router.push({ name: 'Login' });
+  } catch (err) {
+    console.error('Error during logout:', err);
+  }
 };
 
 // ============================================

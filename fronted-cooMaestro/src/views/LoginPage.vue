@@ -24,7 +24,7 @@ const handleLogin = async (e) => {
     })
     
     // Redirigir al dashboard después del login exitoso
-    router.push({ name: 'Home' })
+    router.push({ name: 'Dashboard' })
   } catch (error) {
     errorMessage.value = error.response?.data?.detail || 'Invalid email or password'
     console.error('Login error:', error)

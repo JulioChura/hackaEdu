@@ -3,19 +3,26 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
       <div class="flex flex-wrap justify-between items-center h-16 sm:h-20">
         <!-- Logo -->
-        <a href="#" class="flex items-center gap-2 sm:gap-3">
+        <router-link to="/" class="flex items-center gap-2 sm:gap-3">
           <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-primary flex items-center justify-center text-white">
             <span class="material-symbols-outlined text-base sm:text-lg font-bold">school</span>
           </div>
           <h1 class="text-lg sm:text-xl font-bold tracking-tight text-charcoal">HackaEdu</h1>
-        </a>
+        </router-link>
 
         <!-- Actions + Hamburger -->
         <div class="flex items-center gap-3 sm:gap-4 lg:order-2">
-          <a href="#login" class="hidden sm:block text-sm font-bold text-charcoal hover:text-primary transition-colors">
+          
+          <router-link 
+            :to="{ name: 'Login' }" 
+            class="hidden sm:block text-sm font-bold text-charcoal hover:text-primary transition-colors"
+          >
             Log In
-          </a>
-          <button class="bg-primary hover:bg-primary-dark transition-colors text-white font-bold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg shadow-sm">
+          </router-link>
+          <button 
+            @click="handleStartLearning"
+            class="bg-primary hover:bg-primary-dark transition-colors text-white font-bold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg shadow-sm"
+          >
             Start Learning
           </button>
           
@@ -75,12 +82,12 @@
             </li>
             <!-- Log In mobile only -->
             <li class="sm:hidden border-t border-gray-100 mt-2 pt-2">
-              <a 
-                href="#login" 
+              <router-link 
+                :to="{ name: 'Login' }" 
                 class="block py-2.5 px-4 text-charcoal font-bold hover:bg-primary hover:text-white transition-all rounded-lg"
               >
                 Log In
-              </a>
+              </router-link>
             </li>
           </ul>
         </div>
@@ -91,6 +98,12 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const isMenuOpen = ref(false)
+
+const handleStartLearning = () => {
+  router.push({ name: 'Register' })
+}
 </script>

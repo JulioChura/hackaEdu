@@ -23,6 +23,7 @@
         @search="handleSearch"
         @open-notifications="handleOpenNotifications"
         @open-settings="handleOpenSettings"
+        @logout="handleLogout"
       />
 
       <!-- Page Content Slot -->
@@ -66,7 +67,8 @@ const emit = defineEmits([
   'upgrade-to-pro',
   'open-settings',
   'search',
-  'open-notifications'
+  'open-notifications',
+  'logout'
 ]);
 
 const isMobileMenuOpen = ref(false);
@@ -97,5 +99,9 @@ const handleSearch = (query) => {
 
 const handleOpenNotifications = () => {
   emit('open-notifications');
+};
+
+const handleLogout = () => {
+  emit('logout');
 };
 </script>

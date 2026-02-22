@@ -259,7 +259,7 @@ const handleRegister = async () => {
     })
     
     success.value = true
-    setTimeout(() => router.push('/login'), 1500)
+    setTimeout(() => router.push({ name: 'Login' }), 1500)
   } catch (e) {
     console.error('Registration error:', e)
     error.value = e.response?.data?.detail || e.response?.data?.email?.[0] || e.message || 'Error al registrar. Intenta de nuevo.'
