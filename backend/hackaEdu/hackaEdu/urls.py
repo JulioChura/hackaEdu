@@ -25,6 +25,9 @@ urlpatterns = [
     # API Authentication
     path('auth/', include('auth_custom.urls')),
     
+    # API Usuarios (Dashboard endpoints)
+    path('usuarios/', include('usuarios.urls')),
+    
     # API Contenido (Categorías, Modalidades, Lecturas)
     path('contenido/', include('contenido.urls')),
     
