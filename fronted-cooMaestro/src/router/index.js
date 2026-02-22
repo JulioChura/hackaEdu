@@ -26,6 +26,24 @@ const routes = [
     name: 'Dashboard',
     component: () => import('../views/Dashboard.vue'), 
     meta: { requiresAuth: true }, // Set to true when auth is implemented
+  },
+  {
+    path: '/lecture/:id',
+    name: 'LectureTake',
+    component: () => import('../views/LecturePage.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/achievements',
+    name: 'Achievements',
+    component: () => import('../views/AchievementsPage.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/ranking',
+    name: 'Ranking',
+    component: () => import('../views/RankingPage.vue'),
+    meta: { requiresAuth: true },
   }
 ]
 
