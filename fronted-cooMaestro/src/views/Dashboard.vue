@@ -186,15 +186,12 @@ onMounted(async () => {
   await fetchFullDashboard();
 });
 
-// ============================================
 // EVENT HANDLERS
 // ============================================
 
 const handleNavigate = (routeName) => {
   currentRoute.value = routeName;
-  console.log('Navigate to:', routeName);
-  // TODO: Implementar navegación con Vue Router
-  // router.push({ name: routeName });
+  router.push({ name: routeName });
 };
 
 const handleSearch = (query) => {

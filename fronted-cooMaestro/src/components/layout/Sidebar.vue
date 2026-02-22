@@ -141,31 +141,25 @@ const emit = defineEmits(['navigate', 'upgrade-to-pro', 'open-settings', 'close-
 
 const menuItems = [
   {
-    routeName: 'dashboard',
+    routeName: 'Dashboard',
     routePath: '/dashboard',
     label: 'Dashboard',
     icon: 'dashboard'
   },
   {
-    routeName: 'my-courses',
-    routePath: '/my-courses',
-    label: 'My Courses',
-    icon: 'book_5'
+    routeName: 'AllLectures',
+    routePath: '/lectures',
+    label: 'Readings',
+    icon: 'auto_stories'
   },
   {
-    routeName: 'progress',
-    routePath: '/progress',
-    label: 'Progress',
-    icon: 'analytics'
-  },
-  {
-    routeName: 'achievements',
+    routeName: 'Achievements',
     routePath: '/achievements',
     label: 'Achievements',
     icon: 'workspace_premium'
   },
   {
-    routeName: 'ranking',
+    routeName: 'Ranking',
     routePath: '/ranking',
     label: 'Ranking',
     icon: 'leaderboard'

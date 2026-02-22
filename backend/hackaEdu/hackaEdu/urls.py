@@ -31,6 +31,10 @@ urlpatterns = [
     # API Contenido (Categorías, Modalidades, Lecturas)
     path('contenido/', include('contenido.urls')),
     
+    # API LLM (Generar lecturas, preguntas, evaluar respuestas)
+    # TODO: Descomentar cuando se arregle el error en llm/urls.py
+    # path('api/llm/', include('llm.urls')),
+    
     # Allauth (para social auth si es necesario)
     path('accounts/', include('allauth.urls')),
 ]

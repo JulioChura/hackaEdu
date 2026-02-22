@@ -44,6 +44,12 @@ const routes = [
     name: 'Ranking',
     component: () => import('../views/RankingPage.vue'),
     meta: { requiresAuth: true },
+  },
+  {
+    path: '/lectures',
+    name: 'AllLectures',
+    component: () => import('../views/AllLecturesPage.vue'),
+    meta: { requiresAuth: true },
   }
 ]
 

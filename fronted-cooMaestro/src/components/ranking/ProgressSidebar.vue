@@ -1,4 +1,8 @@
 <script setup>
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
 const props = defineProps({
   totalPoints: {
     type: Number,
@@ -31,6 +35,10 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['practice-click'])
+
+const handlePracticeClick = () => {
+  router.push({ name: 'AllLectures' })
+}
 </script>
 
 <template>
@@ -83,7 +91,7 @@ const emit = defineEmits(['practice-click'])
 
         <!-- Practice Button -->
         <button 
-          @click="emit('practice-click')"
+          @click="handlePracticeClick"
           class="w-full bg-primary text-white py-3 sm:py-4 rounded-xl font-black text-xs sm:text-sm tracking-wide shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
         >
           <span>PRACTICAR AHORA</span>
