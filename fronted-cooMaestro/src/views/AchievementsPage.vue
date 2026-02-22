@@ -1,7 +1,23 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import MainDashboard from '@/components/layout/MainDashboard.vue'
 import AchievementsHeader from '@/components/achievements/AchievementsHeader.vue'
 import AchievementCard from '@/components/achievements/AchievementCard.vue'
+import { authService } from '@/services/auth.service'
+
+const router = useRouter()
+
+// User data for MainDashboard
+const studentData = ref({
+  userId: 1,
+  fullName: 'Student User',
+  userLevelTitle: 'B1 - Intermediate',
+  avatarUrl: '',
+  isPro: false
+})
+
+const unreadNotificationsCount = ref(3)
 
 // Mock data - TODO: Replace with API call
 const achievements = ref([
@@ -58,12 +74,64 @@ const achievements = ref([
 const userLevel = ref(4)
 const unlockedCount = ref(3)
 const totalCount = ref(7)
+
+const handleGoBack = () => {
+  router.push({ name: 'Dashboard' });
+}
+
+// MainDashboard handlers
+const handleNavigate = (routeName) => {
+  router.push({ name: routeName });
+}
+
+const handleSearchMain = (query) => {
+  console.log('Search query:', query);
+}
+
+const handleNotificationsClick = () => {
+  console.log('Open notifications');
+}
+
+const handleOpenSettings = () => {
+  console.log('Open settings');
+}
+
+const handleUpgradeToPro = () => {
+  console.log('Upgrade to PRO');
+}
+
+const handleLogout = async () => {
+  authService.logout();
+  router.push({ name: 'Login' });
+}
 </script>
 
 <template>
-  <div class="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-    <!-- Header -->
-    <AchievementsHeader 
+  <MainDashboard
+    :activeRoute="'Achievements'"
+    :userData="studentData"
+    :userRole="'Student'"
+    :userIsPro="studentData.isPro"
+    :unreadNotificationsCount="unreadNotificationsCount"
+    @navigate="handleNavigate"
+    @upgrade-to-pro="handleUpgradeToPro"
+    @open-settings="handleOpenSettings"
+    @search="handleSearchMain"
+    @open-notifications="handleNotificationsClick"
+    @logout="handleLogout"
+  >
+    <div class="max-w-7xl mx-auto">
+      <!-- Back Button -->
+      <button 
+        @click="handleGoBack"
+        class="flex items-center gap-2 mb-4 text-slate-500 hover:text-primary transition-colors group"
+      >
+        <span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">arrow_back</span>
+        <span class="text-sm font-medium">Back to Dashboard</span>
+      </button>
+
+      <!-- Header -->
+      <AchievementsHeader 
       :level="userLevel"
       :unlocked-count="unlockedCount"
       :total-count="totalCount"
@@ -77,5 +145,6 @@ const totalCount = ref(7)
         :achievement="achievement"
       />
     </div>
-  </div>
+    </div>
+  </MainDashboard>
 </template>

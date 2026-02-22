@@ -1,12 +1,25 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import ReadingEditor from '@/components/lecture/ReadingEditor.vue'
-import QuestionsList from '@/components/lecture/QuestionsList.vue'
-import ActionBar from '@/components/lecture/ActionBar.vue'
+import MainDashboard from '@/components/layout/MainDashboard.vue'
+import ReadingEditor from '@/components/testLecture/ReadingEditor.vue'
+import QuestionsList from '@/components/testLecture/QuestionsList.vue'
+import ActionBar from '@/components/testLecture/ActionBar.vue'
+import { authService } from '@/services/auth.service'
 
 const route = useRoute()
 const router = useRouter()
+
+// User data for MainDashboard
+const studentData = ref({
+  userId: 1,
+  fullName: 'Student User',
+  userLevelTitle: 'B1 - Intermediate',
+  avatarUrl: '',
+  isPro: false
+})
+
+const unreadNotificationsCount = ref(3)
 
 // State
 const loading = ref(true)
@@ -138,6 +151,32 @@ const handleExit = () => {
   router.push({ name: 'Dashboard' })
 }
 
+// MainDashboard handlers
+const handleNavigate = (routeName) => {
+  router.push({ name: routeName });
+}
+
+const handleSearchMain = (query) => {
+  console.log('Search query:', query);
+}
+
+const handleNotificationsClick = () => {
+  console.log('Open notifications');
+}
+
+const handleOpenSettings = () => {
+  console.log('Open settings');
+}
+
+const handleUpgradeToPro = () => {
+  console.log('Upgrade to PRO');
+}
+
+const handleLogout = async () => {
+  authService.logout();
+  router.push({ name: 'Login' });
+}
+
 onMounted(() => {
   loadLecture()
   startTimer()
@@ -149,14 +188,27 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div v-if="loading" class="flex items-center justify-center min-h-screen bg-background-light dark:bg-background-dark">
-    <div class="text-center">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-      <p class="text-medium-gray">Loading lecture...</p>
+  <MainDashboard
+    :activeRoute="'LectureTake'"
+    :userData="studentData"
+    :userRole="'Student'"
+    :userIsPro="studentData.isPro"
+    :unreadNotificationsCount="unreadNotificationsCount"
+    @navigate="handleNavigate"
+    @upgrade-to-pro="handleUpgradeToPro"
+    @open-settings="handleOpenSettings"
+    @search="handleSearchMain"
+    @open-notifications="handleNotificationsClick"
+    @logout="handleLogout"
+  >
+    <div v-if="loading" class="flex items-center justify-center min-h-[60vh]">
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+        <p class="text-medium-gray">Loading lecture...</p>
+      </div>
     </div>
-  </div>
 
-  <div v-else class="flex flex-col lg:flex-row min-h-screen bg-background-light dark:bg-background-dark">
+    <div v-else class="flex flex-col lg:flex-row min-h-[calc(100vh-120px)]">
     <!-- Reading Display (Left/Top) -->
     <ReadingEditor
       :title="lectureData.titulo"
@@ -174,16 +226,17 @@ onBeforeUnmount(() => {
       @select-answer="handleSelectAnswer"
     />
 
-    <!-- Action Bar (Bottom Fixed) -->
-    <ActionBar
-      :answered-count="answeredCount"
-      :total-questions="totalQuestions"
-      :show-feedback="showFeedback"
-      :is-submitting="isSubmitting"
-      @submit="handleSubmit"
-      @exit="handleExit"
-    />
-  </div>
+      <!-- Action Bar (Bottom Fixed) -->
+      <ActionBar
+        :answered-count="answeredCount"
+        :total-questions="totalQuestions"
+        :show-feedback="showFeedback"
+        :is-submitting="isSubmitting"
+        @submit="handleSubmit"
+        @exit="handleExit"
+      />
+    </div>
+  </MainDashboard>
 </template>
 
 <style scoped>

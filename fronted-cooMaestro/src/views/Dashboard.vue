@@ -220,24 +220,19 @@ const handleViewRoadmap = () => {
 };
 
 const handleSeeAllCourses = () => {
-  console.log('See all courses');
-  // TODO: Navegar a página de cursos
+  router.push({ name: 'AllLectures' });
 };
 
 const handlePlayCourse = (courseData) => {
-  console.log('Play course:', courseData);
-  // TODO: Navegar a la página del curso
-  // router.push({ name: 'course-detail', params: { id: courseData.courseId } });
+  router.push({ name: 'LectureTake', params: { id: courseData.courseId } });
 };
 
 const handleViewFullLeaderboard = () => {
-  console.log('View full leaderboard');
-  // TODO: Navegar a ranking completo
+  router.push({ name: 'Ranking' });
 };
 
 const handleShowAllBadges = () => {
-  console.log('Show all badges');
-  // TODO: Navegar a página de logros
+  router.push({ name: 'Achievements' });
 };
 
 const handleFindGroups = () => {

@@ -1,8 +1,24 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import MainDashboard from '@/components/layout/MainDashboard.vue'
 import PodiumCard from '@/components/ranking/PodiumCard.vue'
 import RankingTable from '@/components/ranking/RankingTable.vue'
 import ProgressSidebar from '@/components/ranking/ProgressSidebar.vue'
+import { authService } from '@/services/auth.service'
+
+const router = useRouter()
+
+// User data for MainDashboard
+const studentData = ref({
+  userId: 1,
+  fullName: 'Student User',
+  userLevelTitle: 'B1 - Intermediate',
+  avatarUrl: '',
+  isPro: false
+})
+
+const unreadNotificationsCount = ref(3)
 
 // Mock data - TODO: Replace with API call
 const currentUserId = ref(7)
@@ -108,11 +124,63 @@ const handlePracticeClick = () => {
   console.log('Practice clicked')
   // TODO: Navigate to practice page
 }
+
+const handleGoBack = () => {
+  router.push({ name: 'Dashboard' });
+}
+
+// MainDashboard handlers
+const handleNavigate = (routeName) => {
+  router.push({ name: routeName });
+}
+
+const handleSearchMain = (query) => {
+  console.log('Search query:', query);
+}
+
+const handleNotificationsClick = () => {
+  console.log('Open notifications');
+}
+
+const handleOpenSettings = () => {
+  console.log('Open settings');
+}
+
+const handleUpgradeToPro = () => {
+  console.log('Upgrade to PRO');
+}
+
+const handleLogout = async () => {
+  authService.logout();
+  router.push({ name: 'Login' });
+}
 </script>
 
 <template>
-  <div class="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-    <div class="flex flex-col lg:flex-row gap-6 sm:gap-8">
+  <MainDashboard
+    :activeRoute="'Ranking'"
+    :userData="studentData"
+    :userRole="'Student'"
+    :userIsPro="studentData.isPro"
+    :unreadNotificationsCount="unreadNotificationsCount"
+    @navigate="handleNavigate"
+    @upgrade-to-pro="handleUpgradeToPro"
+    @open-settings="handleOpenSettings"
+    @search="handleSearchMain"
+    @open-notifications="handleNotificationsClick"
+    @logout="handleLogout"
+  >
+    <div class="max-w-7xl mx-auto">
+      <!-- Back Button -->
+      <button 
+        @click="handleGoBack"
+        class="flex items-center gap-2 mb-4 text-slate-500 hover:text-primary transition-colors group"
+      >
+        <span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">arrow_back</span>
+        <span class="text-sm font-medium">Back to Dashboard</span>
+      </button>
+
+      <div class="flex flex-col lg:flex-row gap-6 sm:gap-8">
       <!-- Main Ranking Area -->
       <div class="flex-1 space-y-6 sm:space-y-8">
         <!-- Page Heading -->
@@ -178,7 +246,8 @@ const handlePracticeClick = () => {
         <span class="material-symbols-outlined">play_arrow</span>
       </button>
     </div>
-  </div>
+    </div>
+  </MainDashboard>
 </template>
 
 <style scoped>

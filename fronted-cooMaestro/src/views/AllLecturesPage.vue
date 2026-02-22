@@ -1,7 +1,23 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import MainDashboard from '@/components/layout/MainDashboard.vue'
 import LectureFilters from '@/components/lectures/LectureFilters.vue'
 import LectureCard from '@/components/lectures/LectureCard.vue'
+import { authService } from '@/services/auth.service'
+
+const router = useRouter()
+
+// User data for MainDashboard
+const studentData = ref({
+  userId: 1,
+  fullName: 'Student User',
+  userLevelTitle: 'B1 - Intermediate',
+  avatarUrl: '',
+  isPro: false
+})
+
+const unreadNotificationsCount = ref(3)
 
 // State
 const activeTab = ref('all')
@@ -105,62 +121,107 @@ const handleSearch = (query) => {
 }
 
 const handlePlayLecture = (lectureId) => {
-  const lecture = allLectures.value.find(l => l.id === lectureId)
-  console.log('Playing lecture:', lecture)
-  // TODO: Navigate to LecturePage with lectureId
+  router.push({ name: 'LectureTake', params: { id: lectureId } });
+}
+
+const handleGoBack = () => {
+  router.push({ name: 'Dashboard' });
+}
+
+// MainDashboard handlers
+const handleNavigate = (routeName) => {
+  router.push({ name: routeName });
+}
+
+const handleSearchMain = (query) => {
+  console.log('Search query:', query);
+}
+
+const handleNotificationsClick = () => {
+  console.log('Open notifications');
+}
+
+const handleOpenSettings = () => {
+  console.log('Open settings');
+}
+
+const handleUpgradeToPro = () => {
+  console.log('Upgrade to PRO');
+}
+
+const handleLogout = async () => {
+  authService.logout();
+  router.push({ name: 'Login' });
 }
 </script>
 
 <template>
-  <div class="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-    <!-- Header -->
-    <div class="mb-8 sm:mb-10">
-      <div class="flex items-center gap-3 mb-2 group cursor-pointer hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">arrow_back</span>
-        <h1 class="text-2xl sm:text-3xl font-bold font-display leading-tight">Explore Readings</h1>
+  <MainDashboard
+    :activeRoute="'AllLectures'"
+    :userData="studentData"
+    :userRole="'Student'"
+    :userIsPro="studentData.isPro"
+    :unreadNotificationsCount="unreadNotificationsCount"
+    @navigate="handleNavigate"
+    @upgrade-to-pro="handleUpgradeToPro"
+    @open-settings="handleOpenSettings"
+    @search="handleSearchMain"
+    @open-notifications="handleNotificationsClick"
+    @logout="handleLogout"
+  >
+    <div class="max-w-7xl mx-auto">
+      <!-- Header -->
+      <div class="mb-8 sm:mb-10">
+        <div 
+          @click="handleGoBack"
+          class="flex items-center gap-3 mb-2 group cursor-pointer hover:text-primary transition-colors"
+        >
+          <span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">arrow_back</span>
+          <h1 class="text-2xl sm:text-3xl font-bold font-display leading-tight">Explore Readings</h1>
+        </div>
+        <p class="text-slate-500 dark:text-slate-400 font-medium text-sm sm:text-base">
+          Total: {{ totalLectures }} readings
+        </p>
       </div>
-      <p class="text-slate-500 dark:text-slate-400 font-medium text-sm sm:text-base">
-        Total: {{ totalLectures }} readings
-      </p>
-    </div>
 
-    <!-- Filters Section -->
-    <div class="mb-6 sm:mb-8">
-      <LectureFilters
-        :active-tab="activeTab"
-        :selected-level="selectedLevel"
-        :search-query="searchQuery"
-        @tab-change="handleTabChange"
-        @level-change="handleLevelChange"
-        @search="handleSearch"
-      />
-    </div>
+      <!-- Filters Section -->
+      <div class="mb-6 sm:mb-8">
+        <LectureFilters
+          :active-tab="activeTab"
+          :selected-level="selectedLevel"
+          :search-query="searchQuery"
+          @tab-change="handleTabChange"
+          @level-change="handleLevelChange"
+          @search="handleSearch"
+        />
+      </div>
 
-    <!-- Lectures List -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-      <LectureCard
-        v-for="lecture in filteredLectures"
-        :key="lecture.id"
-        :lecture="lecture"
-        @play="handlePlayLecture"
-      />
+      <!-- Lectures List -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <LectureCard
+          v-for="lecture in filteredLectures"
+          :key="lecture.id"
+          :lecture="lecture"
+          @play="handlePlayLecture"
+        />
 
-      <!-- Empty State -->
-      <div v-if="filteredLectures.length === 0" class="text-center py-12">
-        <span class="material-symbols-outlined text-5xl text-slate-300 dark:text-slate-600 mx-auto block mb-4">
-          auto_stories
-        </span>
-        <p class="text-slate-500 dark:text-slate-400 font-medium">No readings found</p>
-        <p class="text-slate-400 dark:text-slate-500 text-sm mt-1">Try adjusting your filters or search</p>
+        <!-- Empty State -->
+        <div v-if="filteredLectures.length === 0" class="text-center py-12">
+          <span class="material-symbols-outlined text-5xl text-slate-300 dark:text-slate-600 mx-auto block mb-4">
+            auto_stories
+          </span>
+          <p class="text-slate-500 dark:text-slate-400 font-medium">No readings found</p>
+          <p class="text-slate-400 dark:text-slate-500 text-sm mt-1">Try adjusting your filters or search</p>
+        </div>
+      </div>
+
+      <!-- View All Button -->
+      <div v-if="filteredLectures.length > 0" class="mt-8 sm:mt-10 flex justify-center">
+        <button class="group flex items-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl text-sm font-bold hover:border-primary/50 hover:text-primary transition-all shadow-sm">
+          <span>View All {{ totalLectures }} Readings</span>
+          <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+        </button>
       </div>
     </div>
-
-    <!-- View All Button -->
-    <div v-if="filteredLectures.length > 0" class="mt-8 sm:mt-10 flex justify-center">
-      <button class="group flex items-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl text-sm font-bold hover:border-primary/50 hover:text-primary transition-all shadow-sm">
-        <span>View All {{ totalLectures }} Readings</span>
-        <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
-      </button>
-    </div>
-  </div>
+  </MainDashboard>
 </template>

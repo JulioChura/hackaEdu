@@ -108,6 +108,10 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
 const props = defineProps({
   activeRoute: {
     type: String,
@@ -171,9 +175,8 @@ const isActiveRoute = (routeName) => {
 };
 
 const handleNavigate = (routeName) => {
-  emit('navigate', routeName);
+  router.push({ name: routeName });
   emit('close-sidebar'); // Close mobile menu after navigation
-  // En el futuro: router.push({ name: routeName });
 };
 
 const handleUpgradeToPro = () => {
