@@ -16,6 +16,14 @@ class GenerateBundleSerializer(serializers.Serializer):
         choices=['A1', 'A2', 'B1', 'B2', 'C1', 'C2'],
         help_text="Nivel CEFR"
     )
+    categoria = serializers.CharField(
+        max_length=50,
+        help_text="Codigo de categoria (Categoria.codigo)"
+    )
+    modalidad = serializers.CharField(
+        max_length=50,
+        help_text="Codigo de modalidad (Modalidad.codigo)"
+    )
     cantidad_preguntas = serializers.IntegerField(
         default=5,
         min_value=1,

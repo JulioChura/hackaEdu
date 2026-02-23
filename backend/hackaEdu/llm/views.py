@@ -35,10 +35,20 @@ class LLMViewSet(viewsets.ViewSet):
 
         tema = serializer.validated_data['tema']
         nivel = serializer.validated_data['nivel']
+        categoria = serializer.validated_data['categoria']
+        modalidad = serializer.validated_data['modalidad']
         cantidad = serializer.validated_data.get('cantidad_preguntas', 5)
         skills = serializer.validated_data.get('skills', [])
         
-        resultado = LLMService.create_reading_with_questions(tema, nivel, cantidad, skills)
+        resultado = LLMService.create_reading_with_questions(
+            request.user,
+            tema,
+            nivel,
+            categoria,
+            modalidad,
+            cantidad,
+            skills
+        )
         
         if not resultado.get('success'):
             return Response(
