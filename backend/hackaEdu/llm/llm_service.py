@@ -1,256 +1,220 @@
 """
 LLM Service - Generar lectura con preguntas en una sola llamada
-Estructura limpia y mantenible
+Basado en LangChain docs - sin agents, solo model.invoke()
 """
 
 import json
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_ollama.llms import OllamaLLM
+from langchain_ollama import OllamaLLM
 
 
 class OllamaClient:
     """Cliente centralizado de Ollama"""
     
-    MODEL = "llama3.2:1b"
+    MODEL = "phi3:mini"
     
     @staticmethod
     def get_llm():
         """Obtiene instancia de Ollama"""
-        return OllamaLLM(model=OllamaClient.MODEL)
+        return OllamaLLM(model=OllamaClient.MODEL, format="json")
 
 
 class PromptBuilder:
-    """Construye prompts optimizados para cada tarea"""
+    """Construye el prompt completo para LLM"""
     
     @staticmethod
-    def reading_prompt(tema, nivel):
-        """Prompt para generar lectura"""
-        return ChatPromptTemplate.from_template(
-            """Genera una lectura en inglés sobre: {tema}
-Nivel CEFR: {nivel}
+    def bundle_prompt(tema, nivel, cantidad, skills=None):
+        """
+        Arma el prompt completo interpolado (sin placeholders)
+        
+        Todo se interpola aquí con f-string
+        """
+        skills = skills or []
+        skills_text = ""
+        if skills:
+            skills_text = f"\nEnfoca la lectura y preguntas en: {', '.join(skills)}"
+        
+        # Retornar string listo para pasar directamente a model.invoke()
+        return f"""Genera una lectura en inglés y sus preguntas.
 
-REQUISITOS:
-- 200-300 palabras
-- Texto fluido pero apropiado para el nivel
-- Vocabulario acorde
+Tema: {tema}
+Nivel CEFR: {nivel}
+{skills_text}
+
+REQUISITOS LECTURA:
+- 300-400 palabras si nivel es A1
+- 400-500 palabras si nivel es A2
+- 500-600 palabras si nivel es B1
+- 600-700 palabras si nivel es B2
+- 700-800 palabras si nivel es C1
+- 800-1000 palabras si nivel es C2
+- Texto fluido y apropiado para el nivel
+- Vocabulario acorde al nivel
 - SIN explicaciones, SOLO el texto
 
-Lectura:"""
-        ).format(tema=tema, nivel=nivel)
-    
-    @staticmethod
-    def questions_prompt(lectura, nivel, cantidad):
-        """Prompt para generar preguntas"""
-        return ChatPromptTemplate.from_template(
-            """Basado en esta lectura:
-{lectura}
-
-Genera {cantidad} preguntas en inglés - Nivel {nivel}
-
-REQUISITOS:
+REQUISITOS PREGUNTAS:
+- {cantidad} preguntas en inglés
 - Tipo: MULTIPLE CHOICE (4 opciones)
 - Respuesta correcta en posición aleatoria
 - Opciones plausibles
 
-RESPONDE EXACTAMENTE EN JSON (sin markdown):
-[
-  {{"texto": "pregunta?", "opciones": ["opt1", "opt2", "opt3", "opt4"], "respuesta_correcta": "opt_correcta"}}
-]
+RESPONDE SOLO EN JSON VALIDO:
+- Usa comillas dobles en todas las claves y valores
+- No incluyas texto fuera del JSON
+- No uses markdown
+- Si necesitas saltos de línea en "contenido", usa \"\\n\" dentro del string
+- Devuelve el JSON en una sola línea
+
+JSON esperado:
+{{
+  "lectura": {{"titulo": "...", "contenido": "...", "palabras": 123}},
+  "preguntas": [
+    {{"texto": "...?", "opciones": ["A", "B", "C", "D"], "respuesta_correcta": "B"}}
+  ]
+}}
 
 JSON:"""
-        ).format(lectura=lectura[:500], nivel=nivel, cantidad=cantidad)
 
 
 class LLMGenerator:
-    """Generador principal de contenido"""
+    """Generador de contenido con LLM"""
     
     @staticmethod
     def _safe_json_parse(text):
-        """Parsea JSON de forma segura"""
+        """
+        Parsea JSON de forma segura desde la respuesta del LLM
+        Limpia markdown si tiene ``` y extrae el JSON
+        """
         try:
+            if isinstance(text, dict):
+                return text
+            if not isinstance(text, str):
+                text = str(text)
+
             text = text.strip()
-            if text.startswith("```json"):
-                text = text[7:]
-            if text.endswith("```"):
-                text = text[:-3]
+
+            # Remover markdown ```json ... ``` o ``` ... ```
+            if "```json" in text:
+                start = text.find("```json") + 7
+                end = text.find("```", start)
+                text = text[start:end]
+            elif "```" in text:
+                start = text.find("```") + 3
+                end = text.find("```", start)
+                text = text[start:end]
+
             text = text.strip()
+
+            # Si hay texto extra, intentar extraer el JSON principal
+            if not text.startswith("{") or not text.endswith("}"):
+                start = text.find("{")
+                end = text.rfind("}")
+                if start != -1 and end != -1 and end > start:
+                    text = text[start:end + 1]
+
             return json.loads(text)
         except json.JSONDecodeError:
             return None
-    
+
     @staticmethod
-    def generate_reading(tema, nivel):
+    def _normalize_bundle(payload):
         """
-        Genera una lectura
+        Valida estructura JSON devuelto por LLM
+        Asegura que tenga lectura y preguntas correctamente
+        """
+        if not isinstance(payload, dict):
+            return None
         
-        Args:
-            tema: Tema a desarrollar
-            nivel: Nivel CEFR (A1-C2)
+        lectura = payload.get("lectura")
+        preguntas = payload.get("preguntas")
         
-        Returns:
-            dict: {"success": bool, "titulo": str, "contenido": str, "palabras": int, "error": str}
+        # Validar que ambos existan y sean del tipo correcto
+        if not isinstance(lectura, dict) or not isinstance(preguntas, list):
+            return None
+        
+        # Extraer y limpiar campos de lectura
+        titulo = str(lectura.get("titulo", "")).strip()
+        contenido = str(lectura.get("contenido", "")).strip()
+        
+        if not contenido:
+            return None
+        
+        # Si no tiene palabras, calcular
+        palabras = lectura.get("palabras")
+        if not isinstance(palabras, int) or palabras <= 0:
+            palabras = len(contenido.split())
+        
+        return {
+            "lectura": {
+                "titulo": titulo or "Lectura",
+                "contenido": contenido,
+                "palabras": palabras,
+            },
+            "preguntas": preguntas,
+        }
+
+    @staticmethod
+    def generate_bundle(tema, nivel, cantidad=5, skills=None):
+        """
+        Hace UNA SOLA llamada al LLM para generar lectura + preguntas
+        
+        Proceso:
+        1. Obtener instancia del LLM
+        2. Armar prompt completo (interpolado)
+        3. Invocar model.invoke(prompt_text)
+        4. Parsear respuesta como JSON
+        5. Normalizar estructura
+        6. Retornar resultado
         """
         try:
+            # 1. Obtener LLM
             llm = OllamaClient.get_llm()
-            prompt = PromptBuilder.reading_prompt(tema, nivel)
+
+            # 2. Armar prompt completo
+            prompt_text = PromptBuilder.bundle_prompt(tema, nivel, cantidad, skills)
+
+            # 3. Invocar el modelo - NO usar chain, solo invoke
+            response = llm.invoke(prompt_text)
             
-            chain = prompt | llm
-            contenido = chain.invoke({})
+            # 4. Parsear JSON
+            payload = LLMGenerator._safe_json_parse(response)
             
-            return {
-                "success": True,
-                "titulo": f"{tema.title()} ({nivel})",
-                "contenido": contenido.strip(),
-                "palabras": len(contenido.split())
-            }
-        except Exception as e:
-            return {
-                "success": False,
-                "error": f"Error generando lectura: {str(e)}"
-            }
-    
-    @staticmethod
-    def generate_questions(lectura, nivel, cantidad=5):
-        """
-        Genera preguntas para una lectura
-        
-        Args:
-            lectura: Texto de la lectura
-            nivel: Nivel CEFR
-            cantidad: Número de preguntas
-        
-        Returns:
-            dict: {"success": bool, "preguntas": list, "error": str}
-        """
-        try:
-            llm = OllamaClient.get_llm()
-            prompt = PromptBuilder.questions_prompt(lectura, nivel, cantidad)
-            
-            chain = prompt | llm
-            response = chain.invoke({})
-            
-            preguntas = LLMGenerator._safe_json_parse(response)
-            
-            if not preguntas:
+            if not payload:
                 return {
                     "success": False,
-                    "error": "No se pudo parsear respuesta JSON"
+                    "error": "No se pudo parsear JSON de la respuesta"
                 }
             
-            return {
-                "success": True,
-                "preguntas": preguntas
-            }
-        except Exception as e:
-            return {
-                "success": False,
-                "error": f"Error generando preguntas: {str(e)}"
-            }
-    
-    @staticmethod
-    def evaluate_answer(pregunta, respuesta_usuario, respuesta_correcta, nivel):
-        """
-        Evalúa una respuesta
-        
-        Args:
-            pregunta: Texto de la pregunta
-            respuesta_usuario: Respuesta dada
-            respuesta_correcta: Respuesta correcta
-            nivel: Nivel CEFR
-        
-        Returns:
-            dict: {"success": bool, "es_correcta": bool, "puntos": int, "feedback": str, "error": str}
-        """
-        try:
-            llm = OllamaClient.get_llm()
+            # 5. Normalizar
+            normalized = LLMGenerator._normalize_bundle(payload)
             
-            prompt = ChatPromptTemplate.from_template(
-                """Evalúa esta respuesta:
-Pregunta: {pregunta}
-Respuesta usuario: {respuesta_usuario}
-Respuesta correcta: {respuesta_correcta}
-Nivel: {nivel}
-
-Responde EXACTAMENTE en JSON:
-{{"es_correcta": true/false, "puntos": 0-10, "feedback": "explicación breve"}}
-
-JSON:"""
-            )
-            
-            chain = prompt | llm
-            response = chain.invoke({
-                "pregunta": pregunta,
-                "respuesta_usuario": respuesta_usuario,
-                "respuesta_correcta": respuesta_correcta,
-                "nivel": nivel
-            })
-            
-            resultado = LLMGenerator._safe_json_parse(response)
-            
-            if not resultado:
+            if not normalized:
                 return {
                     "success": False,
-                    "error": "No se pudo parsear evaluación"
+                    "error": "JSON no tiene estructura esperada (lectura + preguntas)"
                 }
             
+            # 6. Retornar éxito
             return {
                 "success": True,
-                "es_correcta": resultado.get("es_correcta", False),
-                "puntos": resultado.get("puntos", 0),
-                "feedback": resultado.get("feedback", "")
+                "lectura": normalized["lectura"],
+                "preguntas": normalized["preguntas"],
             }
+            
         except Exception as e:
             return {
                 "success": False,
-                "error": f"Error evaluando: {str(e)}"
+                "error": f"Error: {str(e)}"
             }
 
 
 class LLMService:
-    """Fachada principal - API simplificada"""
+    """Fachada pública del servicio LLM"""
     
     @staticmethod
-    def create_reading_with_questions(tema, nivel, cantidad_preguntas=5):
+    def create_reading_with_questions(tema, nivel, cantidad_preguntas=5, skills=None):
         """
-        Crea lectura + preguntas en una sola operación
-        
-        Args:
-            tema: Tema de interés
-            nivel: Nivel CEFR
-            cantidad_preguntas: Número de preguntas a generar
-        
-        Returns:
-            dict: {"success": bool, "lectura": {...}, "preguntas": [...], "error": str}
+        Endpoint público - delega a LLMGenerator.generate_bundle()
         """
-        # 1. Generar lectura
-        lectura_result = LLMGenerator.generate_reading(tema, nivel)
-        
-        if not lectura_result['success']:
-            return lectura_result
-        
-        lectura = lectura_result
-        
-        # 2. Generar preguntas basadas en la lectura
-        preguntas_result = LLMGenerator.generate_questions(
-            lectura['contenido'],
-            nivel,
-            cantidad_preguntas
-        )
-        
-        if not preguntas_result['success']:
-            return preguntas_result
-        
-        return {
-            "success": True,
-            "lectura": {
-                "titulo": lectura['titulo'],
-                "contenido": lectura['contenido'],
-                "palabras": lectura['palabras']
-            },
-            "preguntas": preguntas_result['preguntas']
-        }
-    
-    @staticmethod
-    def evaluate_answer(pregunta, respuesta_usuario, respuesta_correcta, nivel):
-        """Evalúa respuesta (delegado)"""
-        return LLMGenerator.evaluate_answer(pregunta, respuesta_usuario, respuesta_correcta, nivel)
+        return LLMGenerator.generate_bundle(tema, nivel, cantidad_preguntas, skills)
+
+

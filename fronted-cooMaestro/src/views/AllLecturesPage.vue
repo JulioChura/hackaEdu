@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import MainDashboard from '@/components/layout/MainDashboard.vue'
 import LectureFilters from '@/components/lectures/LectureFilters.vue'
 import LectureCard from '@/components/lectures/LectureCard.vue'
+import ReadingGenerationModal from '@/components/lectures/ReadingGenerationModal.vue'
 import { authService } from '@/services/auth.service'
 
 const router = useRouter()
@@ -23,6 +24,7 @@ const unreadNotificationsCount = ref(3)
 const activeTab = ref('all')
 const selectedLevel = ref('all')
 const searchQuery = ref('')
+const showGenerateModal = ref(false)
 
 // Mock data
 const allLectures = ref([
@@ -128,6 +130,14 @@ const handleGoBack = () => {
   router.push({ name: 'Dashboard' });
 }
 
+const handleOpenGenerateModal = () => {
+  showGenerateModal.value = true
+}
+
+const handleCloseGenerateModal = () => {
+  showGenerateModal.value = false
+}
+
 // MainDashboard handlers
 const handleNavigate = (routeName) => {
   router.push({ name: routeName });
@@ -172,12 +182,21 @@ const handleLogout = async () => {
     <div class="max-w-7xl mx-auto">
       <!-- Header -->
       <div class="mb-8 sm:mb-10">
-        <div 
-          @click="handleGoBack"
-          class="flex items-center gap-3 mb-2 group cursor-pointer hover:text-primary transition-colors"
-        >
-          <span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">arrow_back</span>
-          <h1 class="text-2xl sm:text-3xl font-bold font-display leading-tight">Explore Readings</h1>
+        <div class="flex items-center justify-between gap-4 mb-2">
+          <div
+            @click="handleGoBack"
+            class="flex items-center gap-3 group cursor-pointer hover:text-primary transition-colors"
+          >
+            <span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">arrow_back</span>
+            <h1 class="text-2xl sm:text-3xl font-bold font-display leading-tight">Explore Readings</h1>
+          </div>
+          <button
+            class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl font-bold text-sm shadow-sm hover:bg-primary/90 transition"
+            @click="handleOpenGenerateModal"
+          >
+            <span class="material-symbols-outlined text-lg">add</span>
+            New Reading
+          </button>
         </div>
         <p class="text-slate-500 dark:text-slate-400 font-medium text-sm sm:text-base">
           Total: {{ totalLectures }} readings
@@ -223,5 +242,7 @@ const handleLogout = async () => {
         </button>
       </div>
     </div>
+
+    <ReadingGenerationModal :open="showGenerateModal" @close="handleCloseGenerateModal" />
   </MainDashboard>
 </template>

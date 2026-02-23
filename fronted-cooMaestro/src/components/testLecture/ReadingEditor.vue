@@ -15,6 +15,10 @@ const props = defineProps({
   palabras: {
     type: Number,
     default: 0
+  },
+  badges: {
+    type: Array,
+    default: () => []
   }
 })
 </script>
@@ -35,6 +39,16 @@ const props = defineProps({
         <button class="p-1.5 sm:p-2 text-medium-gray hover:text-primary transition-colors" title="Bookmark">
           <span class="material-symbols-outlined text-xl sm:text-2xl">bookmark</span>
         </button>
+      </div>
+
+      <div v-if="badges.length" class="flex flex-wrap gap-2">
+        <span
+          v-for="(badge, index) in badges"
+          :key="`${badge}-${index}`"
+          class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-zinc-200"
+        >
+          {{ badge }}
+        </span>
       </div>
 
       <!-- Título -->

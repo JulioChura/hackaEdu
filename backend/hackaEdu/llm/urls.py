@@ -2,13 +2,11 @@
 LLM URLs - Rutas para endpoints de generación de contenido
 """
 
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 from .views import LLMViewSet
 
-router = DefaultRouter()
-router.register('', LLMViewSet, basename='llm')
-
 urlpatterns = [
-    path('', include(router.urls)),
+    path('create-reading-with-questions/', 
+         LLMViewSet.as_view({'post': 'create_reading_with_questions'}),
+         name='create-reading-with-questions'),
 ]

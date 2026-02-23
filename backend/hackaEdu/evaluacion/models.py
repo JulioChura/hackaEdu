@@ -17,12 +17,15 @@ class Sesion(models.Model):
     puntaje_total = models.DecimalField('puntaje total', max_digits=5, decimal_places=2, default=0)
     puntajes_por_criterio = models.JSONField('puntajes por criterio', default=dict, blank=True)
     recomendaciones_ia = models.TextField('recomendaciones IA', blank=True)
+    skills_objetivo = models.JSONField('skills objetivo', default=list, blank=True)
     
     estado = models.CharField('estado', max_length=20, choices=ESTADO_CHOICES, default='INICIADA')
     fecha = models.DateTimeField('fecha', auto_now_add=True)
     fecha_inicio = models.DateTimeField('fecha inicio', null=True, blank=True)
     fecha_fin = models.DateTimeField('fecha fin', null=True, blank=True)
     duracion_segundos = models.IntegerField('duración en segundos', default=0)
+    tiempo_total_segundos = models.IntegerField('tiempo total en segundos', default=900)
+    tiempo_restante_segundos = models.IntegerField('tiempo restante en segundos', default=900)
     
     class Meta:
         db_table = 'sesion'
