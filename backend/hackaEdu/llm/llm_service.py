@@ -10,7 +10,8 @@ Stack:
 from __future__ import annotations
 
 import logging
-from typing import Annotated, Optional
+from typing import Annotated, Optional, List
+from llm.metrics import WORDS_PER_LEVEL, DEFAULT_QUESTIONS
 
 from django.db import transaction
 from langchain_ollama import ChatOllama
@@ -45,9 +46,7 @@ DEFAULT_DISTRIBUTION: dict[str, list[str]] = {
 FALLBACK_CRITERIO = "comprensión_general"
 
 
-# ---------------------------------------------------------------------------
 # Pydantic schemas — definen la salida esperada del LLM
-# ---------------------------------------------------------------------------
 
 class LecturaSchema(BaseModel):
     """Lectura en inglés generada por el LLM."""
@@ -99,6 +98,8 @@ class BundleSchema(BaseModel):
 
     lectura: LecturaSchema
     preguntas: list[PreguntaSchema]
+    tags_applied: list[str] = Field(default_factory=list, description="Tags the model applied")
+    tags_ignored: list[str] = Field(default_factory=list, description="Tags the model decided to ignore (with reasons in LLM explanation)")
 
 
 # ---------------------------------------------------------------------------
@@ -115,6 +116,7 @@ Task: Generate a reading passage and exactly {cantidad} multiple-choice comprehe
 Topic: {tema}
 CEFR Level: {nivel}
 {skills_line}
+Tags: {tags_line}
 
 === READING PASSAGE ===
 - Write in English, fluent and natural for CEFR level {nivel}
@@ -131,6 +133,14 @@ CEFR Level: {nivel}
 - Each question must have EXACTLY 4 answer options — no more, no less
 - Answer options are plain strings, NO A. / B. / C. / D. prefixes
 - 'respuesta_correcta' must be the EXACT string of the correct option
+
+Tag handling rules (model responsibility):
+- `tags` are user preferences like 'past simple', 'vocabulary:technology', 'speaking'.
+- Try to include applicable tags in the passage text, vocabulary or questions.
+- If a tag is incompatible with the topic or would create contradictions, IGNORE that tag and list it under `tags_ignored` in the JSON with a short reason.
+- List tags that were included under `tags_applied`.
+
+The JSON response MUST include two extra arrays at top level: `tags_applied` and `tags_ignored` (each an array of strings). For ignored tags include a short reason after the tag, separated by ' - '.
 
 Respond ONLY with the JSON object. No extra text, no markdown fences.
 """
@@ -166,10 +176,7 @@ def _get_criterio(nivel_codigo: str, distribucion_db: dict, index: int) -> Crite
         or CriterioHabilidad.objects.first()
     )
 
-
-# ---------------------------------------------------------------------------
 # Public service
-# ---------------------------------------------------------------------------
 
 class LLMService:
     """Fachada pública del módulo LLM."""
@@ -183,6 +190,7 @@ class LLMService:
         modalidad_codigo: str,
         cantidad_preguntas: int = 5,
         skills: Optional[list[str]] = None,
+        tags: Optional[List[str]] = None,
     ) -> dict:
         """
         Genera una lectura en inglés con preguntas de comprensión y las persiste
@@ -193,6 +201,7 @@ class LLMService:
             o 'success': False + 'error'.
         """
         skills = skills or []
+        tags = tags or []
 
         # --- Validar referencias FK ---
         categoria = Categoria.objects.filter(codigo=categoria_codigo).first()
@@ -209,7 +218,7 @@ class LLMService:
 
         # --- Construir y ejecutar cadena LCEL ---
         try:
-            llm = ChatOllama(model="phi3:mini", temperature=0.7)
+            llm = ChatOllama(model="qwen2.5:3b", temperature=0.7)
             structured_llm = llm.with_structured_output(BundleSchema)
 
             prompt = ChatPromptTemplate.from_messages([("human", _BUNDLE_PROMPT)])
@@ -226,6 +235,8 @@ class LLMService:
                 if skills else "- Vary types: literal comprehension, inference, vocabulary"
             )
 
+            tags_line = f"User tags: {', '.join(tags)}" if tags else ""
+
             bundle: BundleSchema = chain.invoke({
                 "tema": tema,
                 "nivel": nivel_codigo,
@@ -233,6 +244,7 @@ class LLMService:
                 "skills_line": skills_line,
                 "skills_reading_note": skills_reading_note,
                 "skills_questions_note": skills_questions_note,
+                "tags_line": tags_line,
             })
 
         except Exception as exc:

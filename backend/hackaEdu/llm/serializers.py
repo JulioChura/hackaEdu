@@ -36,3 +36,9 @@ class GenerateBundleSerializer(serializers.Serializer):
         allow_empty=True,
         help_text="Lista de skills a mejorar"
     )
+    tags = serializers.ListField(
+        child=serializers.CharField(max_length=100),
+        required=False,
+        allow_empty=True,
+        help_text="Optional tags describing what the user wants to practice (eg: 'past simple', 'vocabulary', 'speaking')"
+    )
