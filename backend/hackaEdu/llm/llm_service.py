@@ -15,6 +15,7 @@ from llm.metrics import WORDS_PER_LEVEL, DEFAULT_QUESTIONS
 
 from django.db import transaction
 from langchain_ollama import ChatOllama
+LLM_MODEL_NAME = "llava:latest"
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field, field_validator
 
@@ -218,7 +219,7 @@ class LLMService:
 
         # --- Construir y ejecutar cadena LCEL ---
         try:
-            llm = ChatOllama(model="qwen2.5:3b", temperature=0.7)
+            llm = ChatOllama(model=LLM_MODEL_NAME, temperature=0.7)
             structured_llm = llm.with_structured_output(BundleSchema)
 
             prompt = ChatPromptTemplate.from_messages([("human", _BUNDLE_PROMPT)])
