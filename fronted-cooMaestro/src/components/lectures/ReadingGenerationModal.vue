@@ -1,5 +1,7 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, computed } from 'vue'
+import { categoriesService } from '@/services/categories.service'
+import { llmService } from '@/services/llm.service'
 
 const props = defineProps({
   open: {
@@ -8,12 +10,164 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'reading-generated'])
 
+// UI State
 const activeTab = ref('prompt')
+const categories = ref([])
+const selectedCategory = ref(null)
+const loadingCategories = ref(false)
+const isGenerating = ref(false)
+
+// Form data
+const formData = ref({
+  tema: '',
+  nivel: 'B1',
+  cantidad_preguntas: 5,
+  tags: []
+})
+const tagInput = ref('')
 
 const setActiveTab = (tab) => {
   activeTab.value = tab
+}
+
+const selectCategory = (category) => {
+  selectedCategory.value = category
+}
+
+const selectLevel = (level) => {
+  formData.value.nivel = level
+}
+
+// Tags management
+const addTag = () => {
+  const tag = tagInput.value.trim()
+  if (tag && !formData.value.tags.includes(tag)) {
+    formData.value.tags.push(tag)
+    tagInput.value = ''
+  }
+}
+
+const removeTag = (index) => {
+  formData.value.tags.splice(index, 1)
+}
+
+const handleTagKeydown = (event) => {
+  if (event.key === 'Enter') {
+    event.preventDefault()
+    addTag()
+  }
+}
+
+// Form validation
+const isFormValid = computed(() => {
+  return formData.value.tema.trim() !== '' && selectedCategory.value !== null
+})
+
+// Generate reading
+const handleGenerate = async () => {
+  if (!isFormValid.value) {
+    alert('Por favor completa el tema y selecciona una categoría')
+    return
+  }
+
+  try {
+    isGenerating.value = true
+
+    const payload = {
+      tema: formData.value.tema.trim(),
+      nivel: formData.value.nivel,
+      categoria: selectedCategory.value.codigo,
+      modalidad: 'IA_GENERADA',
+      cantidad_preguntas: formData.value.cantidad_preguntas,
+      tags: formData.value.tags
+    }
+
+    console.log('Generating reading with payload:', payload)
+    
+    const response = await llmService.createReadingWithQuestions(payload)
+    
+    console.log('Reading generated:', response.data)
+    
+    // Emitir evento de éxito
+    emit('reading-generated', response.data)
+    
+    // Cerrar el modal
+    emit('close')
+    
+    // Limpiar formulario
+    resetForm()
+    
+  } catch (error) {
+    console.error('Error generating reading:', error)
+    alert(error.response?.data?.error || 'Error al generar la lectura. Por favor intenta de nuevo.')
+  } finally {
+    isGenerating.value = false
+  }
+}
+
+const resetForm = () => {
+  formData.value = {
+    tema: '',
+    nivel: 'B1',
+    cantidad_preguntas: 5,
+    tags: []
+  }
+  tagInput.value = ''
+  selectedCategory.value = categories.value[0] || null
+}
+
+// Cargar categorías cuando se abre el modal
+watch(() => props.open, async (isOpen) => {
+  if (isOpen && categories.value.length === 0) {
+    await loadCategories()
+  }
+})
+
+const loadCategories = async () => {
+  try {
+    loadingCategories.value = true
+    const response = await categoriesService.getAll()
+    console.log('Categories response:', response.data)
+    // El backend devuelve un objeto paginado con 'results'
+    categories.value = response.data.results || response.data || []
+    console.log('Categories loaded:', categories.value)
+    // Pre-seleccionar la primera categoría si existe
+    if (categories.value.length > 0 && !selectedCategory.value) {
+      selectedCategory.value = categories.value[0]
+    }
+  } catch (error) {
+    console.error('Error loading categories:', error)
+    categories.value = []
+  } finally {
+    loadingCategories.value = false
+  }
+}
+
+// Mapeo de iconos por categoría (puedes ajustar según tus necesidades)
+const getCategoryIcon = (categoria) => {
+  if (!categoria) return 'folder'
+  
+  const iconMap = {
+    'technology': 'memory',
+    'tecnologia': 'memory',
+    'ciencia': 'science',
+    'historia': 'account_balance',
+    'arte': 'palette',
+    'negocios': 'business_center',
+    'literatura': 'menu_book',
+    'salud': 'health_and_safety',
+    'deportes': 'sports_soccer',
+    'viajes': 'flight',
+    'politica': 'gavel',
+    'cuentos': 'auto_stories',
+    'cultura': 'language',
+    'educacion': 'school',
+    'general': 'category'
+  }
+  const codigo = (categoria.codigo || '').toLowerCase()
+  return iconMap[codigo] || 'folder'
 }
 </script>
 
@@ -66,20 +220,50 @@ const setActiveTab = (tab) => {
 
       <div class="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
         <section>
-          <label class="block text-sm font-semibold text-slate-900 dark:text-slate-200 mb-4">Choose Category</label>
-          <div class="grid grid-cols-3 gap-4">
-            <button class="flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-primary bg-primary/5 transition-all">
-              <span class="material-symbols-outlined text-primary text-3xl">memory</span>
-              <span class="text-sm font-medium text-primary">Technology</span>
+          <label class="block text-sm font-semibold text-slate-900 dark:text-slate-200 mb-4">
+            Choose Category
+            <span class="text-xs text-slate-400 ml-2">({{ categories.length }} available)</span>
+          </label>
+          
+          <!-- Loading state -->
+          <div v-if="loadingCategories" class="grid grid-cols-3 gap-4">
+            <div v-for="n in 6" :key="n" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 dark:border-slate-700 animate-pulse">
+              <div class="w-8 h-8 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+              <div class="w-16 h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+            </div>
+          </div>
+
+          <!-- Categories grid -->
+          <div v-else-if="categories.length > 0" class="grid grid-cols-3 gap-4">
+            <button
+              v-for="category in categories"
+              :key="category.codigo"
+              class="flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all"
+              :class="selectedCategory?.codigo === category.codigo 
+                ? 'border-primary bg-primary/5'
+                : 'border-slate-200 dark:border-slate-700 hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-slate-800'"
+              @click="selectCategory(category)"
+            >
+              <span 
+                class="material-symbols-outlined text-3xl"
+                :class="selectedCategory?.codigo === category.codigo 
+                  ? 'text-primary'
+                  : 'text-slate-600 dark:text-slate-400'"
+              >{{ getCategoryIcon(category) }}</span>
+              <span 
+                class="text-sm font-medium text-center leading-tight"
+                :class="selectedCategory?.codigo === category.codigo 
+                  ? 'text-primary'
+                  : 'text-slate-700 dark:text-slate-300'"
+              >{{ category.nombre }}</span>
             </button>
-            <button class="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-              <span class="material-symbols-outlined text-slate-600 dark:text-slate-400 text-3xl">account_balance</span>
-              <span class="text-sm font-medium text-slate-700 dark:text-slate-300">History</span>
-            </button>
-            <button class="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-              <span class="material-symbols-outlined text-slate-600 dark:text-slate-400 text-3xl">science</span>
-              <span class="text-sm font-medium text-slate-700 dark:text-slate-300">Science</span>
-            </button>
+          </div>
+
+          <!-- Empty state -->
+          <div v-else class="text-center py-8">
+            <span class="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600">category</span>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2">No categories available</p>
+            <p class="text-xs text-slate-400 mt-1">Check console for errors</p>
           </div>
         </section>
 
@@ -91,6 +275,7 @@ const setActiveTab = (tab) => {
             </div>
             <textarea
               id="prompt"
+              v-model="formData.tema"
               rows="4"
               class="w-full rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-900/50 focus:border-primary focus:ring-2 focus:ring-primary/30 placeholder:text-slate-400 text-slate-700 dark:text-slate-300 text-sm p-4 resize-none transition-shadow hover:shadow-sm"
               placeholder="Describe a specific topic, paste an article link, or ask for a summary of a complex concept..."
@@ -128,65 +313,62 @@ const setActiveTab = (tab) => {
         </section>
 
         <section>
-          <label class="block text-sm font-semibold text-slate-900 dark:text-slate-200 mb-2">Skills to improve</label>
+          <label class="block text-sm font-semibold text-slate-900 dark:text-slate-200 mb-2">Skills to improve (tags)</label>
           <div class="flex flex-wrap gap-2 p-3 min-h-[52px] bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg focus-within:ring-2 focus-within:ring-primary/30 focus-within:border-primary transition-all">
-            <span class="inline-flex items-center gap-1 px-3 py-1 bg-primary text-white text-xs font-semibold rounded-full group cursor-default">
-              Inferential Level
-              <button class="hover:bg-white/20 rounded-full leading-none flex items-center justify-center p-0.5">
-                <span class="material-symbols-outlined text-xs">close</span>
-              </button>
-            </span>
-            <span class="inline-flex items-center gap-1 px-3 py-1 bg-primary text-white text-xs font-semibold rounded-full group cursor-default">
-              Academic Vocab
-              <button class="hover:bg-white/20 rounded-full leading-none flex items-center justify-center p-0.5">
+            <span
+              v-for="(tag, index) in formData.tags"
+              :key="index"
+              class="inline-flex items-center gap-1 px-3 py-1 bg-primary text-white text-xs font-semibold rounded-full group cursor-default"
+            >
+              {{ tag }}
+              <button @click="removeTag(index)" class="hover:bg-white/20 rounded-full leading-none flex items-center justify-center p-0.5">
                 <span class="material-symbols-outlined text-xs">close</span>
               </button>
             </span>
             <input
+              v-model="tagInput"
+              @keydown="handleTagKeydown"
               type="text"
               class="flex-1 bg-transparent border-none p-0 text-sm focus:ring-0 placeholder:text-slate-400 min-w-[120px]"
               placeholder="Type and press Enter..."
             />
           </div>
+          <p class="mt-2 text-xs text-slate-500 italic flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">info</span>
+            Example: "simple past", "vocabulary:technology", "level:inferential"
+          </p>
         </section>
 
         <section>
           <div class="flex items-center justify-between mb-3">
             <label class="block text-sm font-semibold text-slate-900 dark:text-slate-200">Target Level (CEFR)</label>
-            <span class="text-xs text-primary font-medium">Your current level: A2</span>
+            <span class="text-xs text-slate-400">Selected: <span class="text-primary font-semibold">{{ formData.nivel }}</span></span>
           </div>
           <div class="flex gap-2">
-            <button class="flex-1 py-3 px-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-bold hover:border-primary/50 hover:bg-primary/5 transition-all text-sm">
-              A1
-            </button>
-            <button class="flex-1 py-3 px-2 rounded-lg border-2 border-primary bg-primary/10 text-primary font-bold text-sm shadow-sm">
-              A2
-            </button>
-            <button class="flex-1 py-3 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/50 text-slate-400 dark:text-slate-600 font-bold flex flex-col items-center gap-1 grayscale opacity-70 cursor-not-allowed group relative">
-              <span class="text-sm">B1</span>
-              <span class="material-symbols-outlined text-[16px]">lock</span>
-              <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded whitespace-nowrap hidden group-hover:block transition-all">Complete A2 to unlock</div>
-            </button>
-            <button class="flex-1 py-3 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/50 text-slate-400 dark:text-slate-600 font-bold flex flex-col items-center gap-1 grayscale opacity-70 cursor-not-allowed text-sm">
-              B2
-              <span class="material-symbols-outlined text-[16px]">lock</span>
-            </button>
-            <button class="flex-1 py-3 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/50 text-slate-400 dark:text-slate-600 font-bold flex flex-col items-center gap-1 grayscale opacity-70 cursor-not-allowed text-sm">
-              C1
-              <span class="material-symbols-outlined text-[16px]">lock</span>
-            </button>
-            <button class="flex-1 py-3 px-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/50 text-slate-400 dark:text-slate-600 font-bold flex flex-col items-center gap-1 grayscale opacity-70 cursor-not-allowed text-sm">
-              C2
-              <span class="material-symbols-outlined text-[16px]">lock</span>
+            <button
+              v-for="level in ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']"
+              :key="level"
+              @click="selectLevel(level)"
+              class="flex-1 py-3 px-2 rounded-lg border-2 font-bold text-sm transition-all"
+              :class="formData.nivel === level 
+                ? 'border-primary bg-primary/10 text-primary shadow-sm' 
+                : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-primary/50 hover:bg-primary/5'"
+            >
+              {{ level }}
             </button>
           </div>
         </section>
       </div>
 
       <footer class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
-        <button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
-          <span class="material-symbols-outlined">auto_awesome</span>
-          Generate Reading with AI
+        <button
+          @click="handleGenerate"
+          :disabled="!isFormValid || isGenerating"
+          class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-primary/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary"
+        >
+          <span v-if="isGenerating" class="material-symbols-outlined animate-spin">progress_activity</span>
+          <span v-else class="material-symbols-outlined">auto_awesome</span>
+          {{ isGenerating ? 'Generating...' : 'Generate Reading with AI' }}
         </button>
         <p class="text-center mt-3 text-[11px] text-slate-400">
           AI can occasionally generate inaccurate information. Please verify important facts.
