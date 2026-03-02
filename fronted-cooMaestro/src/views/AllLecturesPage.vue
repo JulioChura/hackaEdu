@@ -1,11 +1,13 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import MainDashboard from '@/components/layout/MainDashboard.vue'
 import LectureFilters from '@/components/lectures/LectureFilters.vue'
 import LectureCard from '@/components/lectures/LectureCard.vue'
 import ReadingGenerationModal from '@/components/lectures/ReadingGenerationModal.vue'
 import { authService } from '@/services/auth.service'
+import { LecturesService } from '@/services/lectures.service'
+import { dashboardService } from '@/services/dashboard.service'
 
 const router = useRouter()
 
@@ -27,64 +29,60 @@ const activeTab = ref('all')
 const selectedLevel = ref('all')
 const searchQuery = ref('')
 const showGenerateModal = ref(false)
+const loading = ref(false)
+const error = ref('')
+const userLevel = ref('B1')
 
-// Mock data
-const allLectures = ref([
-  {
-    id: 1,
-    category: 'Grammar Master',
-    title: 'Past Tense & Irregular Verbs',
-    level: 'B1',
-    status: 'in-progress',
-    progress: 75,
-    thumbnail: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=200&h=200&fit=crop'
-  },
-  {
-    id: 2,
-    category: 'Vocabulary Builder',
-    title: 'Daily Life & Social Scenarios',
-    level: 'A2',
-    status: 'in-progress',
-    progress: 40,
-    thumbnail: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=200&h=200&fit=crop'
-  },
-  {
-    id: 3,
-    category: 'Listening Practice',
-    title: 'Understanding Native Accents',
-    level: 'B2',
-    status: 'in-progress',
-    progress: 15,
-    thumbnail: 'https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=200&h=200&fit=crop'
-  },
-  {
-    id: 4,
-    category: 'Business Communication',
-    title: 'Negotiation Strategies',
-    level: 'C1',
-    status: 'not-started',
-    progress: 0,
-    thumbnail: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=200&h=200&fit=crop'
-  },
-  {
-    id: 5,
-    category: 'Science & Technology',
-    title: 'Artificial Intelligence in Modern Society',
-    level: 'B2',
-    status: 'completed',
-    progress: 100,
-    thumbnail: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=200&h=200&fit=crop'
-  },
-  {
-    id: 6,
-    category: 'Culture & Society',
-    title: 'Global Trends in Modern Culture',
-    level: 'C2',
-    status: 'completed',
-    progress: 100,
-    thumbnail: 'https://images.unsplash.com/photo-1516321318423-f06f70504c0a?w=200&h=200&fit=crop'
+const allLectures = ref([])
+
+const normalizeImageUrl = (url) => {
+  if (!url) return 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=200&h=200&fit=crop'
+  if (url.startsWith('http://') || url.startsWith('https://')) return url
+  return `http://localhost:8000${url}`
+}
+
+const mapLecture = (lecture) => ({
+  id: lecture.id,
+  category: lecture.categoria_nombre || 'General',
+  title: lecture.titulo || 'Untitled Reading',
+  level: lecture.nivel_codigo || 'B1',
+  status: lecture.estado_usuario || 'not-started',
+  progress: Number(lecture.progreso_usuario ?? 0),
+  thumbnail: normalizeImageUrl(lecture.imagen_url_final || lecture.imagen_url),
+})
+
+const fetchLectures = async () => {
+  loading.value = true
+  error.value = ''
+
+  try {
+    const response = await LecturesService.getMine()
+    const lectures = Array.isArray(response.data) ? response.data : (response.data.results || [])
+    allLectures.value = lectures.map(mapLecture)
+  } catch (apiError) {
+    console.error('Error loading user lectures:', apiError)
+    error.value = 'No se pudieron cargar tus lecturas'
+    allLectures.value = []
+  } finally {
+    loading.value = false
   }
-])
+}
+
+const fetchUserLevel = async () => {
+  try {
+    const response = await dashboardService.getFullDashboard()
+    const raw = response.data.progressData?.currentLevel || 'B1'
+    const rawStr = String(raw || 'B1')
+    // Extract CEFR code (A1, A2, B1, B2, C1, C2) if backend returns a full label
+    const match = rawStr.match(/(A1|A2|B1|B2|C1|C2)/i)
+    const code = match ? match[0].toUpperCase() : rawStr.toUpperCase().trim()
+    userLevel.value = code
+    console.log('User level loaded (raw):', rawStr, '→ parsed:', userLevel.value)
+  } catch (err) {
+    console.error('Error loading user level:', err)
+    userLevel.value = 'B1'
+  }
+}
 
 // Computed
 const filteredLectures = computed(() => {
@@ -100,8 +98,8 @@ const filteredLectures = computed(() => {
     if (searchQuery.value) {
       const query = searchQuery.value.toLowerCase()
       return (
-        lecture.title.toLowerCase().includes(query) ||
-        lecture.category.toLowerCase().includes(query)
+        (lecture.title || '').toLowerCase().includes(query) ||
+        (lecture.category || '').toLowerCase().includes(query)
       )
     }
     
@@ -140,6 +138,10 @@ const handleCloseGenerateModal = () => {
   showGenerateModal.value = false
 }
 
+const handleReadingGenerated = async () => {
+  await fetchLectures()
+}
+
 // MainDashboard handlers
 const handleNavigate = (routeName) => {
   router.push({ name: routeName });
@@ -165,6 +167,10 @@ const handleLogout = async () => {
   authService.logout();
   router.push({ name: 'Login' });
 }
+
+onMounted(async () => {
+  await Promise.all([fetchUserLevel(), fetchLectures()])
+})
 </script>
 
 <template>
@@ -218,7 +224,16 @@ const handleLogout = async () => {
       </div>
 
       <!-- Lectures List -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <div v-if="loading" class="py-12 text-center">
+        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-3"></div>
+        <p class="text-slate-500 dark:text-slate-400">Cargando lecturas...</p>
+      </div>
+
+      <div v-else-if="error" class="py-12 text-center">
+        <p class="text-red-500 font-medium">{{ error }}</p>
+      </div>
+
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <LectureCard
           v-for="lecture in filteredLectures"
           :key="lecture.id"
@@ -245,6 +260,11 @@ const handleLogout = async () => {
       </div>
     </div>
 
-    <ReadingGenerationModal :open="showGenerateModal" @close="handleCloseGenerateModal" />
+    <ReadingGenerationModal
+      :open="showGenerateModal"
+      :user-level="userLevel"
+      @close="handleCloseGenerateModal"
+      @reading-generated="handleReadingGenerated"
+    />
   </MainDashboard>
 </template>

@@ -15,7 +15,7 @@ from llm.metrics import WORDS_PER_LEVEL, DEFAULT_QUESTIONS
 
 from django.db import transaction
 from langchain_ollama import ChatOllama
-LLM_MODEL_NAME = "llava:latest"
+LLM_MODEL_NAME = "qwen2.5:3b"
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field, field_validator
 

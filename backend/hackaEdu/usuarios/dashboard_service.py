@@ -17,6 +17,8 @@ from usuarios.serializers import DashboardStudentDataSerializer
 from niveles.serializers import DashboardProgressDataSerializer
 from ranking.serializers import DashboardStreakDataSerializer, DashboardRankingDataSerializer
 from logros.serializers import DashboardAchievementsDataSerializer
+from contenido.models import Lectura
+from evaluacion.models import Sesion
 
 
 class DashboardService:
@@ -31,8 +33,13 @@ class DashboardService:
     @staticmethod
     def get_progress_data(user):
         """Obtiene datos de progreso serializados"""
-        progress_obj = get_user_progress(user) or user
-        serializer = DashboardProgressDataSerializer(progress_obj)
+        # Always serialize from the `user` object. The serializer methods
+        # access `obj.progresion` and handle missing progression. Passing a
+        # `ProgresionNivel` instance caused attribute lookups like
+        # `obj.progresion` to fail and return the default 'A1'. Ensure the
+        # progression is loaded but serialize from the user.
+        _ = get_user_progress(user)
+        serializer = DashboardProgressDataSerializer(user)
         return serializer.data
     
     @staticmethod
@@ -69,14 +76,42 @@ class DashboardService:
     
     @staticmethod
     def get_active_courses(user):
-        """
-        Obtiene cursos activos del usuario.
-        
-        TODO: Implementar lógica de asignación de cursos/lecturas a usuarios
-        """
-        # Por ahora retorna lista vacía
-        # Cuando tengas relación entre usuario y lectura, implementarlo aquí
-        return []
+        """Obtiene lecturas creadas por el usuario con progreso estimado por sesión."""
+        lecturas = (
+            Lectura.objects
+            .filter(usuario_creador=user)
+            .select_related('categoria')
+            .order_by('-fecha_creacion')[:5]
+        )
+
+        active_courses = []
+
+        for lectura in lecturas:
+            sesion = (
+                Sesion.objects
+                .filter(usuario=user, lectura=lectura)
+                .order_by('-fecha')
+                .first()
+            )
+
+            if sesion and sesion.total_preguntas > 0:
+                if sesion.estado == 'COMPLETADA':
+                    progreso = 100
+                else:
+                    respuestas_count = sesion.respuestas.count()
+                    progreso = min(99, round((respuestas_count / sesion.total_preguntas) * 100))
+            else:
+                progreso = 0
+
+            active_courses.append({
+                'courseId': lectura.id,
+                'courseTitle': lectura.titulo,
+                'courseCategory': lectura.categoria.nombre if lectura.categoria else 'General',
+                'courseThumbnail': lectura.imagen_url or '',
+                'courseProgress': progreso,
+            })
+
+        return active_courses
     
     @staticmethod
     def get_full_dashboard(user):

@@ -7,12 +7,12 @@ class PerfilUsuario(models.Model):
     
     Cada usuario tiene un perfil que guarda:
       - Rol en la plataforma (Usuario, Premium, Moderador)
-      - Nivel CEFR actual
       - Puntos totales acumulados
       - Lecturas completadas
     
-    NOTA: Para acceso al admin panel, usar CustomUser.is_staff y is_superuser
-          El campo 'rol' es para lógica de negocio (premium, moderador, etc.)
+    NOTA 1: El nivel del usuario está en ProgresionNivel.nivel_actual (fuente única de verdad)
+    NOTA 2: Para acceso al admin panel, usar CustomUser.is_staff y is_superuser
+            El campo 'rol' es para lógica de negocio (premium, moderador, etc.)
     """
     
     ROL_CHOICES = [
@@ -23,7 +23,7 @@ class PerfilUsuario(models.Model):
     
     usuario = models.OneToOneField('auth_custom.CustomUser', on_delete=models.CASCADE, related_name='perfil_hackaedu', verbose_name='usuario')
     rol = models.CharField('rol', max_length=20, choices=ROL_CHOICES, default='USUARIO', help_text='Rol de negocio. Para admin usar is_staff')
-    nivel_cefr = models.ForeignKey('niveles.NivelCEFR', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='nivel CEFR')
+    # nivel_cefr ELIMINADO - Usar user.progresion.nivel_actual como fuente única de verdad
     puntos_totales = models.IntegerField('puntos totales', default=0)
     lecturas_completadas = models.IntegerField('lecturas completadas', default=0)
     

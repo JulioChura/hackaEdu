@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref, watch, computed } from 'vue'
 import { categoriesService } from '@/services/categories.service'
 import { llmService } from '@/services/llm.service'
@@ -7,6 +7,10 @@ const props = defineProps({
   open: {
     type: Boolean,
     default: false
+  },
+  userLevel: {
+    type: String,
+    default: 'B1'
   }
 })
 
@@ -27,6 +31,28 @@ const formData = ref({
   tags: []
 })
 const tagInput = ref('')
+
+// CEFR levels in order
+const allLevels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+
+// Get available levels (user level and below)
+const availableLevels = computed(() => {
+  // Normalize user level to uppercase and trim
+  const normalizedLevel = (props.userLevel || 'B1').toString().toUpperCase().trim()
+  const userLevelIndex = allLevels.indexOf(normalizedLevel)
+  
+  console.log('ReadingGenerationModal - User level:', props.userLevel, '→ Normalized:', normalizedLevel, '→ Index:', userLevelIndex)
+  
+  // If invalid level, default to B1 (not all levels)
+  if (userLevelIndex === -1) {
+    console.warn(`Invalid user level "${props.userLevel}", defaulting to B1`)
+    return ['A1', 'A2', 'B1']
+  }
+  
+  const available = allLevels.slice(0, userLevelIndex + 1)
+  console.log('Available levels:', available)
+  return available
+})
 
 const setActiveTab = (tab) => {
   activeTab.value = tab
@@ -110,7 +136,7 @@ const handleGenerate = async () => {
 const resetForm = () => {
   formData.value = {
     tema: '',
-    nivel: 'B1',
+    nivel: props.userLevel || 'B1',
     cantidad_preguntas: 5,
     tags: []
   }
@@ -118,10 +144,16 @@ const resetForm = () => {
   selectedCategory.value = categories.value[0] || null
 }
 
-// Cargar categorías cuando se abre el modal
+// Cargar categorías y resetear nivel cuando se abre el modal
 watch(() => props.open, async (isOpen) => {
-  if (isOpen && categories.value.length === 0) {
-    await loadCategories()
+  if (isOpen) {
+    if (categories.value.length === 0) {
+      await loadCategories()
+    }
+    // Set user's level as default when modal opens
+    if (formData.value.tema === '') {
+      formData.value.nivel = props.userLevel || 'B1'
+    }
   }
 })
 
@@ -353,9 +385,13 @@ const getCategoryIcon = (categoria) => {
             <label class="block text-sm font-semibold text-slate-900 dark:text-slate-200">Target Level (CEFR)</label>
             <span class="text-xs text-slate-400">Selected: <span class="text-primary font-semibold">{{ formData.nivel }}</span></span>
           </div>
+          <div class="text-xs text-amber-600 dark:text-amber-400 mb-2 flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">lock</span>
+            You can select up to your current level ({{ userLevel }})
+          </div>
           <div class="flex gap-2">
             <button
-              v-for="level in ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']"
+              v-for="level in availableLevels"
               :key="level"
               @click="selectLevel(level)"
               class="flex-1 py-3 px-2 rounded-lg border-2 font-bold text-sm transition-all"

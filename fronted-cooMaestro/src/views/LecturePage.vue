@@ -6,6 +6,7 @@ import ReadingEditor from '@/components/testLecture/ReadingEditor.vue'
 import QuestionsList from '@/components/testLecture/QuestionsList.vue'
 import ActionBar from '@/components/testLecture/ActionBar.vue'
 import { authService } from '@/services/auth.service'
+import { LecturesService } from '@/services/lectures.service'
 
 const route = useRoute()
 const router = useRouter()
@@ -25,6 +26,7 @@ const unreadNotificationsCount = ref(3)
 const loading = ref(true)
 const isSubmitting = ref(false)
 const showFeedback = ref(false)
+const sessionId = ref(null)
 
 // Timer
 const timeRemaining = ref(900) // 15 minutos
@@ -50,43 +52,27 @@ const loadLecture = async () => {
   loading.value = true
   
   try {
-    // TODO: Llamar API real
-    // const lectureId = route.params.id
-    // const response = await lectureService.getLecture(lectureId)
-    
-    // Mock data por ahora
+    const lectureId = route.params.id
+    const response = await LecturesService.startSession(lectureId)
+    const sessionData = response.data
+
+    sessionId.value = sessionData.id
+    timeRemaining.value = sessionData.tiempo_restante_segundos ?? 900
+
     lectureData.value = {
-      id: 1,
-      titulo: 'The Impact of Artificial Intelligence on Modern Education',
-      contenido: `Artificial intelligence (AI) is transforming education in profound ways. From personalized learning paths to automated grading systems, AI technologies are helping teachers and students achieve better outcomes.
-
-One of the most significant benefits of AI in education is personalization. Traditionally, teachers have struggled to meet the individual needs of every student in a large classroom. AI-powered platforms can analyze a student's performance in real-time and adjust the difficulty level of materials accordingly.
-
-However, the rise of AI also brings challenges. Ethical considerations regarding data privacy and the potential for algorithmic bias must be addressed. Furthermore, there is a growing debate about the role of human teachers in an increasingly automated environment. While AI can handle administrative tasks and basic instruction, the mentorship and emotional support provided by educators remain irreplaceable.
-
-As we look to the future, the goal is not to replace teachers with machines but to create a collaborative environment where AI acts as a powerful assistant, enabling a more inclusive and effective educational experience for all learners worldwide.`,
-      nivel: 'B1',
-      palabras: 245,
-      preguntas: [
-        {
-          texto: "What is cited as one of the most significant benefits of AI in education?",
-          opciones: ["Personalized learning", "Replacing human teachers", "Lowering school budgets", "Increasing homework volume"],
-          respuesta_correcta: "Personalized learning"
-        },
-        {
-          texto: "Which concern is NOT mentioned regarding the rise of AI?",
-          opciones: ["Data privacy", "Algorithmic bias", "Teacher's role", "Cost of internet access"],
-          respuesta_correcta: "Cost of internet access"
-        },
-        {
-          texto: "What role should AI take according to the concluding paragraph?",
-          opciones: ["Lead administrator", "Powerful assistant", "Total replacement", "Strict examiner"],
-          respuesta_correcta: "Powerful assistant"
-        }
-      ]
+      id: sessionData.lectura?.id,
+      titulo: sessionData.lectura?.titulo || '',
+      contenido: sessionData.lectura?.contenido || '',
+      nivel: sessionData.lectura?.nivel_codigo || 'B1',
+      palabras: sessionData.lectura?.palabras_count || 0,
+      preguntas: sessionData.preguntas || []
     }
+
+    startTimer()
   } catch (error) {
     console.error('Error loading lecture:', error)
+    alert('Error loading lecture. Please try again.')
+    router.push({ name: 'AllLectures' })
   } finally {
     loading.value = false
   }
@@ -123,14 +109,24 @@ const handleSubmit = async () => {
   isSubmitting.value = true
 
   try {
-    // TODO: Enviar respuestas al backend
-    // const response = await lectureService.submitAnswers({
-    //   lectureId: lectureData.value.id,
-    //   answers: userAnswers.value
-    // })
-    
-    // Simular delay
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    const respuestas = Object.entries(userAnswers.value).map(([questionIndex, answer]) => {
+      const question = lectureData.value.preguntas[Number(questionIndex)]
+      return {
+        pregunta_id: question?.id,
+        respuesta: answer,
+      }
+    }).filter((item) => !!item.pregunta_id)
+
+    if (sessionId.value) {
+      const response = await LecturesService.finalizeSession(
+        sessionId.value,
+        respuestas,
+        timeRemaining.value
+      )
+      if (response.data?.preguntas?.length) {
+        lectureData.value.preguntas = response.data.preguntas
+      }
+    }
     
     showFeedback.value = true
   } catch (error) {
@@ -179,7 +175,6 @@ const handleLogout = async () => {
 
 onMounted(() => {
   loadLecture()
-  startTimer()
 })
 
 onBeforeUnmount(() => {

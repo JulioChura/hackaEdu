@@ -4,8 +4,9 @@ from .models import PerfilUsuario, ProgresionNivel, PreferenciasUsuario
 
 @admin.register(PerfilUsuario)
 class PerfilUsuarioAdmin(admin.ModelAdmin):
-    list_display = ('usuario', 'rol', 'nivel_cefr', 'puntos_totales', 'lecturas_completadas')
-    list_filter = ('rol', 'nivel_cefr')
+    # `nivel_cefr` removed from `PerfilUsuario` model - use progression data instead
+    list_display = ('usuario', 'rol', 'puntos_totales', 'lecturas_completadas')
+    list_filter = ('rol',)
     search_fields = ('usuario__email', 'usuario__nombre', 'usuario__apellido')
     readonly_fields = ('usuario',)
 
