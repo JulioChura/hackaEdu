@@ -313,27 +313,36 @@ const getCategoryIcon = (categoria) => {
         </section>
 
         <section>
-          <label class="block text-sm font-semibold text-slate-900 dark:text-slate-200 mb-2">Skills to improve (tags)</label>
+          <label class="block text-sm font-semibold text-slate-900 dark:text-slate-200 mb-2">
+            Skills to improve (tags)
+            <span v-if="formData.tags.length > 0" class="text-xs text-slate-400 font-normal ml-2">({{ formData.tags.length }})</span>
+          </label>
           <div class="flex flex-wrap gap-2 p-3 min-h-[52px] bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg focus-within:ring-2 focus-within:ring-primary/30 focus-within:border-primary transition-all">
-            <span
-              v-for="(tag, index) in formData.tags"
-              :key="index"
-              class="inline-flex items-center gap-1 px-3 py-1 bg-primary text-white text-xs font-semibold rounded-full group cursor-default"
-            >
-              {{ tag }}
-              <button @click="removeTag(index)" class="hover:bg-white/20 rounded-full leading-none flex items-center justify-center p-0.5">
-                <span class="material-symbols-outlined text-xs">close</span>
-              </button>
-            </span>
+            <transition-group name="tag">
+              <span
+                v-for="(tag, index) in formData.tags"
+                :key="tag"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-primary to-primary/90 text-white text-xs font-semibold rounded-full shadow-sm hover:shadow transition-all cursor-default animate-in"
+              >
+                {{ tag }}
+                <button 
+                  @click="removeTag(index)" 
+                  class="hover:bg-white/20 rounded-full leading-none flex items-center justify-center w-4 h-4 transition-colors group"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[14px] group-hover:rotate-90 transition-transform duration-200">close</span>
+                </button>
+              </span>
+            </transition-group>
             <input
               v-model="tagInput"
               @keydown="handleTagKeydown"
               type="text"
-              class="flex-1 bg-transparent border-none p-0 text-sm focus:ring-0 placeholder:text-slate-400 min-w-[120px]"
+              class="flex-1 bg-transparent border-none p-0 text-sm focus:ring-0 placeholder:text-slate-400 min-w-[120px] outline-none"
               placeholder="Type and press Enter..."
             />
           </div>
-          <p class="mt-2 text-xs text-slate-500 italic flex items-center gap-1">
+          <p class="mt-2 text-xs text-slate-500 dark:text-slate-400 italic flex items-center gap-1">
             <span class="material-symbols-outlined text-[14px]">info</span>
             Example: "simple past", "vocabulary:technology", "level:inferential"
           </p>
@@ -390,5 +399,40 @@ const getCategoryIcon = (categoria) => {
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #e2e8f0;
   border-radius: 10px;
+}
+
+/* Tag animations */
+.tag-enter-active {
+  animation: tagIn 0.3s ease-out;
+}
+
+.tag-leave-active {
+  animation: tagOut 0.2s ease-in;
+}
+
+@keyframes tagIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes tagOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+.tag-move {
+  transition: transform 0.3s ease;
 }
 </style>
