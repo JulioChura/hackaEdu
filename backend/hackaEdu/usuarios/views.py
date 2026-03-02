@@ -45,7 +45,26 @@ class DashboardViewSet(viewsets.ViewSet):
     def active_courses(self, request):
         """Obtener cursos activos (lecturas) del estudiante"""
         data = DashboardService.get_active_courses(request.user)
-        return Response(data)
+
+        # Asegurar que las URLs de thumbnail sean absolutas para que el frontend
+        # (que puede estar en otro host/puerto) pueda cargarlas directamente.
+        processed = []
+        for item in data:
+            thumb = item.get('courseThumbnail') or ''
+            if thumb.startswith('http://') or thumb.startswith('https://'):
+                item['courseThumbnail'] = thumb
+            elif thumb.startswith('/'):
+                item['courseThumbnail'] = request.build_absolute_uri(thumb)
+            elif thumb:
+                # Path relativo sin leading slash
+                item['courseThumbnail'] = request.build_absolute_uri('/' + thumb)
+            else:
+                # Fallback genérico
+                item['courseThumbnail'] = request.build_absolute_uri('/media/categorias/general.avif')
+
+            processed.append(item)
+
+        return Response(processed)
     
     # ENDPOINT: GET /usuarios/dashboard/ranking/
     @action(detail=False, methods=['get'])
@@ -66,6 +85,24 @@ class DashboardViewSet(viewsets.ViewSet):
     def full(self, request):
         """Obtener TODOS los datos del dashboard en una sola llamada"""
         data = DashboardService.get_full_dashboard(request.user)
+
+        # Procesar thumbnails en activeCourses para devolver URLs absolutas
+        active = data.get('activeCourses') or []
+        processed = []
+        for item in active:
+            thumb = item.get('courseThumbnail') or ''
+            if thumb.startswith('http://') or thumb.startswith('https://'):
+                item['courseThumbnail'] = thumb
+            elif thumb.startswith('/'):
+                item['courseThumbnail'] = request.build_absolute_uri(thumb)
+            elif thumb:
+                item['courseThumbnail'] = request.build_absolute_uri('/' + thumb)
+            else:
+                item['courseThumbnail'] = request.build_absolute_uri('/media/categorias/general.avif')
+
+            processed.append(item)
+
+        data['activeCourses'] = processed
         return Response(data)
 
 

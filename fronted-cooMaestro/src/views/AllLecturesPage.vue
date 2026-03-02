@@ -59,6 +59,7 @@ const fetchLectures = async () => {
     const response = await LecturesService.getMine()
     const lectures = Array.isArray(response.data) ? response.data : (response.data.results || [])
     allLectures.value = lectures.map(mapLecture)
+    console.log('Lectures loaded:', allLectures.value)
   } catch (apiError) {
     console.error('Error loading user lectures:', apiError)
     error.value = 'No se pudieron cargar tus lecturas'

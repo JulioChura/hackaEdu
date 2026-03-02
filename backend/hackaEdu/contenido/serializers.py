@@ -1,19 +1,23 @@
 from rest_framework import serializers
 from .models import Lectura, Categoria, Modalidad, Pregunta
 from evaluacion.models import Sesion
+from django.conf import settings
 
-
-CATEGORIA_IMAGEN_MAP = {
-    'Ciencia': '/media/categorias/ciencia.jpg',
-    'Literatura': '/media/categorias/literatura.jpg',
-    'Historia': '/media/categorias/historia.jpg',
-    'Tecnología': '/media/categorias/tecnologia.jpg',
-    'Arte': '/media/categorias/arte.jpg',
-    'Negocios': '/media/categorias/negocios.jpg',
-    'Viajes': '/media/categorias/viajes.jpg',
-    'Salud': '/media/categorias/salud.jpg',
-    'Deportes': '/media/categorias/deportes.jpg',
-    'Política': '/media/categorias/politica.jpg',
+# Mapeo explícito categoría -> archivo en media/categorias
+# Usa claves en minúsculas; los nombres de archivo existen en la carpeta:
+# ciencia.webp, cuentos.webp, cultura.webp, deportes.webp, educacion.webp,
+# general.avif, negocios.jpg, salud.avif, tecnologia.jpg, viajes.jpg
+CATEGORY_IMAGE_MAP = {
+    'ciencia': '/media/categorias/ciencia.webp',
+    'cuentos': '/media/categorias/cuentos.webp',
+    'cultura': '/media/categorias/cultura.webp',
+    'deportes': '/media/categorias/deportes.webp',
+    'educacion': '/media/categorias/educacion.webp',
+    'general': '/media/categorias/general.avif',
+    'negocios': '/media/categorias/negocios.jpg',
+    'salud': '/media/categorias/salud.avif',
+    'tecnologia': '/media/categorias/tecnologia.jpg',
+    'viajes': '/media/categorias/viajes.jpg',
 }
 
 
@@ -78,12 +82,9 @@ class LecturaSerializer(serializers.ModelSerializer):
         if data.get('imagen_url'):
             data['imagen_url_final'] = data['imagen_url']
         else:
-            # Fallback: imagen genérica según categoría
-            categoria_nombre = data.get('categoria_nombre', 'default')
-            data['imagen_url_final'] = CATEGORIA_IMAGEN_MAP.get(
-                categoria_nombre, 
-                '/media/categorias/default.jpg'
-            )
+            # Fallback: usar diccionario explícito con las imágenes disponibles
+            categoria_nombre = (data.get('categoria_nombre') or 'general').strip().lower()
+            data['imagen_url_final'] = CATEGORY_IMAGE_MAP.get(categoria_nombre, '/media/categorias/general.avif')
         
         return data
 

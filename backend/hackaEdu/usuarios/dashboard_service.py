@@ -19,6 +19,7 @@ from ranking.serializers import DashboardStreakDataSerializer, DashboardRankingD
 from logros.serializers import DashboardAchievementsDataSerializer
 from contenido.models import Lectura
 from evaluacion.models import Sesion
+from contenido.serializers import LecturaSerializer
 
 
 class DashboardService:
@@ -103,11 +104,15 @@ class DashboardService:
             else:
                 progreso = 0
 
+            # Use LecturaSerializer to get the same imagen_url_final fallback
+            serialized = LecturaSerializer(lectura, context={}).data
+            thumbnail = serialized.get('imagen_url_final') or serialized.get('imagen_url') or ''
+
             active_courses.append({
                 'courseId': lectura.id,
                 'courseTitle': lectura.titulo,
                 'courseCategory': lectura.categoria.nombre if lectura.categoria else 'General',
-                'courseThumbnail': lectura.imagen_url or '',
+                'courseThumbnail': thumbnail,
                 'courseProgress': progreso,
             })
 
