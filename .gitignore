@@ -38,8 +38,7 @@ dist/
 # IDE
 .vscode/
 .idea/
-# README files
-README*
+
 *.swp
 *.swo
 
