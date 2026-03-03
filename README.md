@@ -208,6 +208,9 @@ Email + Google OAuth integrados sobre CustomUser sin romper modelo relacional.
 ## Generación de Lectura con IA
 ![Generación](./docs/formularioDeGeneracion.webp)
 
+## Lista de lecturas 
+![Lecturas](./docs/formularioDeGeneracion.webp)
+
 ## Test Interactivo
 ![Test](./docs/testLecture.webp)
 
