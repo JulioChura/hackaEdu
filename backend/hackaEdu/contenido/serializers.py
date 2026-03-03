@@ -66,7 +66,10 @@ class LecturaSerializer(serializers.ModelSerializer):
             return 0
 
         if sesion.estado == 'COMPLETADA':
-            return 100
+            if sesion.total_preguntas <= 0:
+                return 0
+            aciertos = sesion.respuestas.filter(es_correcta=True).count()
+            return round((aciertos / sesion.total_preguntas) * 100)
 
         if sesion.total_preguntas <= 0:
             return 0

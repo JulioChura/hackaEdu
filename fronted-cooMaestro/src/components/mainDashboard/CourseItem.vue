@@ -28,11 +28,14 @@
       <div class="flex items-center gap-2 md:gap-3">
         <div class="flex-1 h-1.5 bg-gray-100 dark:bg-zinc-800 rounded-full overflow-hidden">
           <div 
-            class="h-full bg-primary rounded-full transition-all duration-300" 
+            :class="['h-full rounded-full transition-all duration-300', getBarColor()]"
             :style="{ width: courseProgress + '%' }"
           ></div>
         </div>
-        <span class="text-[10px] md:text-xs text-medium-gray font-bold">{{ courseProgress }}%</span>
+        <span class="text-[10px] md:text-xs text-medium-gray font-bold">
+          {{ courseProgress }}%
+          <span v-if="courseStatus === 'completed'" class="block text-[8px] uppercase tracking-wide">score</span>
+        </span>
       </div>
     </div>
 
@@ -70,8 +73,21 @@ const props = defineProps({
     type: Number,
     default: 0,
     validator: (value) => value >= 0 && value <= 100
+  },
+  courseStatus: {
+    type: String,
+    default: 'not-started'
   }
 });
+
+const getBarColor = () => {
+  if (props.courseStatus === 'completed') {
+    if (props.courseProgress >= 80) return 'bg-emerald-500'
+    if (props.courseProgress >= 50) return 'bg-amber-400'
+    return 'bg-red-400'
+  }
+  return 'bg-primary'
+}
 
 const emit = defineEmits(['play-course']);
 

@@ -97,12 +97,16 @@ class DashboardService:
 
             if sesion and sesion.total_preguntas > 0:
                 if sesion.estado == 'COMPLETADA':
-                    progreso = 100
+                    aciertos = sesion.respuestas.filter(es_correcta=True).count()
+                    progreso = round((aciertos / sesion.total_preguntas) * 100)
+                    estado = 'completed'
                 else:
                     respuestas_count = sesion.respuestas.count()
                     progreso = min(99, round((respuestas_count / sesion.total_preguntas) * 100))
+                    estado = 'in-progress'
             else:
                 progreso = 0
+                estado = 'not-started'
 
             # Use LecturaSerializer to get the same imagen_url_final fallback
             serialized = LecturaSerializer(lectura, context={}).data
@@ -114,6 +118,7 @@ class DashboardService:
                 'courseCategory': lectura.categoria.nombre if lectura.categoria else 'General',
                 'courseThumbnail': thumbnail,
                 'courseProgress': progreso,
+                'courseStatus': estado,
             })
 
         return active_courses

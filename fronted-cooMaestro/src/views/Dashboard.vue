@@ -80,6 +80,7 @@
                 :courseCategory="course.courseCategory"
                 :courseThumbnail="course.courseThumbnail"
                 :courseProgress="course.courseProgress"
+                :courseStatus="course.courseStatus"
                 @play-course="handlePlayCourse"
               />
             </div>

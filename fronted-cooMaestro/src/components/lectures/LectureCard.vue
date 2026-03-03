@@ -33,8 +33,12 @@ const getStatusColor = (status) => {
   return colors[status] || 'bg-slate-100 text-slate-600'
 }
 
-const getProgressColor = (status) => {
-  if (status === 'completed') return 'bg-emerald-500'
+const getProgressColor = (status, progress) => {
+  if (status === 'completed') {
+    if (progress >= 80) return 'bg-emerald-500'
+    if (progress >= 50) return 'bg-amber-400'
+    return 'bg-red-400'
+  }
   if (status === 'in-progress') return 'bg-primary'
   return 'bg-slate-300'
 }
@@ -100,13 +104,14 @@ const handlePlayLecture = () => {
           <div 
             :class="[
               'h-full rounded-full transition-all duration-700',
-              getProgressColor(lecture.status)
+              getProgressColor(lecture.status, lecture.progress)
             ]"
             :style="{ width: `${lecture.progress}%` }"
           ></div>
         </div>
         <span class="text-xs font-semibold text-slate-400 tabular-nums min-w-[2.5rem] text-right">
           {{ lecture.progress }}%
+          <span v-if="lecture.status === 'completed'" class="block text-[9px] uppercase tracking-wide">score</span>
         </span>
       </div>
 
