@@ -38,11 +38,11 @@ const canSubmit = () => {
 </script>
 
 <template>
-  <div class="fixed bottom-0 right-0 left-0 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-t border-gray-200 dark:border-zinc-800 p-3 sm:p-4 z-30">
+  <div class="fixed bottom-0 right-0 left-0 lg:left-64 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-t border-gray-200 dark:border-zinc-800 p-3 sm:p-4 z-30">
     <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0">
       <!-- Progress Status -->
       <div class="flex items-center gap-2 sm:gap-4">
-        <div class="flex -space-x-2">
+        <!-- <div class="flex -space-x-2">
           <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white dark:border-zinc-900 bg-gray-200 flex items-center justify-center text-[9px] sm:text-[10px] font-bold">
             {{ answeredCount }}/{{ totalQuestions }}
           </div>
@@ -52,7 +52,7 @@ const canSubmit = () => {
           >
             <span class="material-symbols-outlined text-xs sm:text-sm">check</span>
           </div>
-        </div>
+        </div> -->
         <p class="text-xs sm:text-sm font-medium text-medium-gray">
           <template v-if="showFeedback">
             <span class="font-bold text-primary">{{ correctCount }}</span>/{{ totalQuestions }} correct
