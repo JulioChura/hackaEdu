@@ -217,6 +217,9 @@ Email + Google OAuth integrados sobre CustomUser sin romper modelo relacional.
 ## Ranking Global
 ![Ranking](./docs/ranking.webp)
 
+## Sistema de logros
+![Logros](./docs/logros.webp)
+
 ---
 
 # 🛠 Instalación y Setup
@@ -239,14 +242,6 @@ source .venv/bin/activate  # macOS/Linux
 pip install -r requirements.txt
 ```
 
-### Variables de entorno (.env)
-
-```env
-DEBUG=True
-SECRET_KEY=your-secret
-DATABASE_URL=postgresql://user:password@localhost:5432/hackaEdu
-LLM_MODEL_NAME=qwen2.5:3b
-```
 
 ### Migraciones
 
@@ -306,8 +301,3 @@ Este proyecto demuestra:
 - Enfoque en mantenibilidad y claridad estructural  
 
 ---
-
-## 📬 Contacto
-
-- Email: [tu-email]
-- LinkedIn: [tu-linkedin]
