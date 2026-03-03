@@ -15,6 +15,10 @@ const props = defineProps({
   isSubmitting: {
     type: Boolean,
     default: false
+  },
+  correctCount: {
+    type: Number,
+    default: 0
   }
 })
 
@@ -43,14 +47,19 @@ const canSubmit = () => {
             {{ answeredCount }}/{{ totalQuestions }}
           </div>
           <div
-            v-if="canSubmit()"
+            v-if="canSubmit() || showFeedback"
             class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white dark:border-zinc-900 bg-green-500 flex items-center justify-center text-white"
           >
             <span class="material-symbols-outlined text-xs sm:text-sm">check</span>
           </div>
         </div>
         <p class="text-xs sm:text-sm font-medium text-medium-gray">
-          {{ answeredCount }} of {{ totalQuestions }} answered
+          <template v-if="showFeedback">
+            <span class="font-bold text-primary">{{ correctCount }}</span>/{{ totalQuestions }} correct
+          </template>
+          <template v-else>
+            {{ answeredCount }} of {{ totalQuestions }} answered
+          </template>
         </p>
       </div>
 

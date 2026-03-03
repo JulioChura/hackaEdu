@@ -27,6 +27,7 @@ const loading = ref(true)
 const isSubmitting = ref(false)
 const showFeedback = ref(false)
 const sessionId = ref(null)
+const isReadOnlySession = ref(false)
 
 // Timer
 const timeRemaining = ref(900) // 15 minutos
@@ -46,6 +47,12 @@ const userAnswers = ref({})
 // Computed
 const answeredCount = computed(() => Object.keys(userAnswers.value).length)
 const totalQuestions = computed(() => lectureData.value.preguntas.length)
+const correctCount = computed(() => {
+  if (!showFeedback.value) return 0
+  return lectureData.value.preguntas.reduce((acc, pregunta, idx) => {
+    return userAnswers.value[idx] === pregunta.respuesta_correcta ? acc + 1 : acc
+  }, 0)
+})
 
 // Methods
 const loadLecture = async () => {
@@ -57,7 +64,24 @@ const loadLecture = async () => {
     const sessionData = response.data
 
     sessionId.value = sessionData.id
-    timeRemaining.value = sessionData.tiempo_restante_segundos ?? 900
+    // Si la sesión ya fue completada, mostrar respuestas y tiempo empleado (no permitir rehacer)
+    if (sessionData.estado === 'COMPLETADA') {
+      isReadOnlySession.value = true
+      showFeedback.value = true
+      // Mostrar el tiempo que tardó el usuario en completar
+      timeRemaining.value = sessionData.duracion_segundos ?? 0
+      // Cargar respuestas ya guardadas para mostrar selección
+      const respuestas = sessionData.respuestas || []
+      const preguntas = sessionData.preguntas || []
+      respuestas.forEach((r) => {
+        const qIndex = preguntas.findIndex((p) => p.id === r.pregunta)
+        if (qIndex >= 0) {
+          userAnswers.value[qIndex] = r.respuesta
+        }
+      })
+    } else {
+      timeRemaining.value = sessionData.tiempo_restante_segundos ?? 900
+    }
 
     lectureData.value = {
       id: sessionData.lectura?.id,
@@ -68,7 +92,8 @@ const loadLecture = async () => {
       preguntas: sessionData.preguntas || []
     }
 
-    startTimer()
+    // Iniciar timer solo si la sesión está en curso
+    if (!isReadOnlySession.value) startTimer()
   } catch (error) {
     console.error('Error loading lecture:', error)
     alert('Error loading lecture. Please try again.')
@@ -100,6 +125,7 @@ const handleSelectAnswer = ({ questionIndex, answer }) => {
 }
 
 const handleSubmit = async () => {
+  if (isReadOnlySession.value) return
   if (answeredCount.value !== totalQuestions.value && timeRemaining.value > 0) {
     alert('Please answer all questions before submitting')
     return
@@ -218,6 +244,8 @@ onBeforeUnmount(() => {
       :user-answers="userAnswers"
       :show-feedback="showFeedback"
       :time-remaining="timeRemaining"
+      :read-only="isReadOnlySession"
+      :correct-count="correctCount"
       @select-answer="handleSelectAnswer"
     />
 
@@ -227,6 +255,7 @@ onBeforeUnmount(() => {
         :total-questions="totalQuestions"
         :show-feedback="showFeedback"
         :is-submitting="isSubmitting"
+        :correct-count="correctCount"
         @submit="handleSubmit"
         @exit="handleExit"
       />

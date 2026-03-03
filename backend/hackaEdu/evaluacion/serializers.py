@@ -37,6 +37,7 @@ class SesionSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'usuario', 'lectura', 'estado', 'total_preguntas',
             'puntaje_total', 'tiempo_total_segundos', 'tiempo_restante_segundos',
+            'fecha_fin_plazo',
             'skills_objetivo', 'fecha', 'fecha_inicio', 'fecha_fin', 'duracion_segundos'
         ]
         read_only_fields = ['usuario', 'puntaje_total', 'fecha', 'fecha_inicio', 'fecha_fin', 'duracion_segundos']
@@ -55,6 +56,7 @@ class SesionDetailSerializer(serializers.ModelSerializer):
             'id', 'usuario', 'lectura', 'estado', 'total_preguntas',
             'puntaje_total', 'puntajes_por_criterio', 'recomendaciones_ia',
             'tiempo_total_segundos', 'tiempo_restante_segundos',
+            'fecha_fin_plazo',
             'fecha', 'fecha_inicio', 'fecha_fin', 'duracion_segundos',
             'skills_objetivo', 'preguntas', 'respuestas'
         ]
@@ -65,3 +67,16 @@ class SesionDetailSerializer(serializers.ModelSerializer):
         if obj.estado == 'COMPLETADA':
             return PreguntaSerializer(queryset, many=True).data
         return PreguntaPublicSerializer(queryset, many=True).data
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        # Calcular tiempo restante dinámicamente usando fecha_fin_plazo si está disponible
+        fecha_fin_plazo = instance.fecha_fin_plazo
+        if fecha_fin_plazo and instance.estado in ['INICIADA', 'EN_PROGRESO']:
+            from django.utils import timezone
+            remaining = int((fecha_fin_plazo - timezone.now()).total_seconds())
+            data['tiempo_restante_segundos'] = max(0, remaining)
+        else:
+            # dejar el valor almacenado
+            data['tiempo_restante_segundos'] = instance.tiempo_restante_segundos
+        return data

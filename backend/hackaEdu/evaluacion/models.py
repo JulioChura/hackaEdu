@@ -23,6 +23,7 @@ class Sesion(models.Model):
     fecha = models.DateTimeField('fecha', auto_now_add=True)
     fecha_inicio = models.DateTimeField('fecha inicio', null=True, blank=True)
     fecha_fin = models.DateTimeField('fecha fin', null=True, blank=True)
+    fecha_fin_plazo = models.DateTimeField('fecha fin plazo', null=True, blank=True)
     duracion_segundos = models.IntegerField('duración en segundos', default=0)
     tiempo_total_segundos = models.IntegerField('tiempo total en segundos', default=900)
     tiempo_restante_segundos = models.IntegerField('tiempo restante en segundos', default=900)

@@ -11,6 +11,7 @@ from .selectors import (
     get_lectura_by_id,
     get_session_by_id_user,
 )
+from datetime import timedelta
 
 
 class SessionService:
@@ -32,12 +33,14 @@ class SessionService:
         total_preguntas = lectura.preguntas.count()
         tiempo_total = int(tiempo_total_segundos)
 
+        now = timezone.now()
         sesion = Sesion.objects.create(
             usuario=user,
             lectura=lectura,
             total_preguntas=total_preguntas,
             estado='INICIADA',
-            fecha_inicio=timezone.now(),
+            fecha_inicio=now,
+            fecha_fin_plazo=now + timedelta(seconds=tiempo_total),
             tiempo_total_segundos=tiempo_total,
             tiempo_restante_segundos=tiempo_total,
             skills_objetivo=skills_objetivo
@@ -46,7 +49,20 @@ class SessionService:
 
     @staticmethod
     def obtener_sesion(user, sesion_id):
-        return get_session_by_id_user(sesion_id, user)
+        sesion = get_session_by_id_user(sesion_id, user)
+        if not sesion:
+            return None
+
+        # Si la sesión todavía está activa pero la fecha límite ya pasó, finalizarla automáticamente
+        if sesion.estado in ['INICIADA', 'EN_PROGRESO'] and sesion.fecha_fin_plazo:
+            now = timezone.now()
+            if now >= sesion.fecha_fin_plazo:
+                # finalizar sin respuestas adicionales (se utilizarán las guardadas)
+                SessionService.finalizar_sesion(user, sesion.id, respuestas=[], tiempo_restante_segundos=0)
+                # recargar sesión finalizada
+                sesion = get_session_by_id_user(sesion_id, user)
+
+        return sesion
 
     @staticmethod
     def obtener_estado(user, lectura_id):

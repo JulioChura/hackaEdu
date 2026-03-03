@@ -7,6 +7,10 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
+  readOnly: {
+    type: Boolean,
+    default: false
+  },
   userAnswers: {
     type: Object,
     default: () => ({})
@@ -18,12 +22,17 @@ const props = defineProps({
   timeRemaining: {
     type: Number,
     default: 900
+  },
+  correctCount: {
+    type: Number,
+    default: 0
   }
 })
 
 const emit = defineEmits(['select-answer'])
 
 const handleSelectAnswer = (payload) => {
+  if (props.readOnly) return
   emit('select-answer', payload)
 }
 
@@ -33,6 +42,9 @@ const answeredCount = computed(() => {
 
 const progressPercentage = computed(() => {
   if (props.questions.length === 0) return 0
+  if (props.showFeedback) {
+    return Math.round((props.correctCount / props.questions.length) * 100)
+  }
   return Math.round((answeredCount.value / props.questions.length) * 100)
 })
 
@@ -61,7 +73,12 @@ const timeColor = computed(() => {
               Answer the Questions
             </h2>
             <p class="text-xs sm:text-sm text-medium-gray mt-1">
-              {{ answeredCount }} of {{ questions.length }} questions answered
+              <template v-if="showFeedback">
+                <span class="font-bold text-primary">{{ correctCount }}</span> of {{ questions.length }} correct
+              </template>
+              <template v-else>
+                {{ answeredCount }} of {{ questions.length }} questions answered
+              </template>
             </p>
           </div>
           
@@ -76,11 +93,29 @@ const timeColor = computed(() => {
         </div>
         
         <!-- Progress Bar -->
-        <div class="mt-4 h-2 bg-gray-200 dark:bg-zinc-800 rounded-full overflow-hidden">
-          <div 
-            class="h-full bg-primary transition-all duration-300"
-            :style="{ width: `${progressPercentage}%` }"
-          ></div>
+        <div class="mt-4">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-[10px] sm:text-xs text-medium-gray font-medium uppercase tracking-wider">
+              {{ showFeedback ? 'Score' : 'Progress' }}
+            </span>
+            <span
+              :class="[
+                'text-[10px] sm:text-xs font-bold',
+                showFeedback ? 'text-green-600 dark:text-green-400' : 'text-primary'
+              ]"
+            >
+              {{ progressPercentage }}%
+            </span>
+          </div>
+          <div class="h-2 bg-gray-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+            <div
+              :class="[
+                'h-full transition-all duration-500',
+                showFeedback ? 'bg-green-500' : 'bg-primary'
+              ]"
+              :style="{ width: `${progressPercentage}%` }"
+            ></div>
+          </div>
         </div>
       </div>
 
@@ -93,6 +128,7 @@ const timeColor = computed(() => {
           :index="index"
           :selected-answer="userAnswers[index]"
           :show-feedback="showFeedback"
+          :read-only="readOnly"
           @select="handleSelectAnswer"
         />
       </div>

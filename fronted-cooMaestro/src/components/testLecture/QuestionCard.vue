@@ -18,11 +18,17 @@ const props = defineProps({
     type: Boolean,
     default: false
   }
+  ,
+  readOnly: {
+    type: Boolean,
+    default: false
+  }
 })
 
 const emit = defineEmits(['select'])
 
 const selectOption = (option) => {
+  if (props.readOnly) return
   if (!props.showFeedback) {
     emit('select', { questionIndex: props.index, answer: option })
   }
