@@ -220,6 +220,9 @@ Email + Google OAuth integrados sobre CustomUser sin romper modelo relacional.
 ## Sistema de logros
 ![Logros](./docs/logros.webp)
 
+## Aplicación responsive
+![Responsivo](./docs/dashboardResponsive.webp)
+
 ---
 
 # 🛠 Instalación y Setup
