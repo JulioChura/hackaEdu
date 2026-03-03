@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'contenido',
     'evaluacion',
     'habilidades',
-    #'llm',
+    'llm',
     'logros',
     'niveles',
     'usuarios',

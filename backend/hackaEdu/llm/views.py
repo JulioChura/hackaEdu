@@ -37,7 +37,7 @@ class LLMViewSet(viewsets.ViewSet):
         nivel = serializer.validated_data['nivel']
         categoria = serializer.validated_data['categoria']
         modalidad = serializer.validated_data['modalidad']
-        cantidad = serializer.validated_data.get('cantidad_preguntas', 5)
+        cantidad = serializer.validated_data.get('cantidad_preguntas')  # None → el servicio usa nivel.cantidad_preguntas
         skills = serializer.validated_data.get('skills', [])
         tags = serializer.validated_data.get('tags', [])
         

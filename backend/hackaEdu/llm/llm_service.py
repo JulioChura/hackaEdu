@@ -11,10 +11,16 @@ from __future__ import annotations
 
 import logging
 from typing import Annotated, Optional, List
-from llm.metrics import WORDS_PER_LEVEL, DEFAULT_QUESTIONS
+from llm.metrics import WORDS_PER_LEVEL, DEFAULT_QUESTIONS, DEFAULT_POINTS_PER_QUESTION, MAX_QUESTIONS, MIN_QUESTIONS
+
+# Build the per-level word-count line once at import time so the prompt stays clean
+_WORDS_LINE = ", ".join(f"{k}→{v}w" for k, v in WORDS_PER_LEVEL.items())
 
 from django.db import transaction
-from langchain_ollama import ChatOllama
+try:
+    from langchain_ollama import ChatOllama
+except ImportError:  # package not installed in this env
+    ChatOllama = None  # type: ignore
 LLM_MODEL_NAME = "qwen2.5:3b"
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field, field_validator
@@ -110,22 +116,36 @@ class BundleSchema(BaseModel):
 _BUNDLE_PROMPT = """\
 You are an experienced English teacher creating reading comprehension material for ESL students.
 
-Everything — the reading passage AND all questions and answer options — must be written in ENGLISH.
+LANGUAGE RULE — CRITICAL: Everything must be written in ENGLISH.
+This means: the reading passage, every question, every answer option, every piece of text.
+DO NOT write a single sentence in Spanish or any other language. ENGLISH ONLY.
 
 Task: Generate a reading passage and exactly {cantidad} multiple-choice comprehension questions.
 
-Topic: {tema}
+Topic: {tema}  ← Use this as your subject. The topic keyword may be in any language, but your ENTIRE output must be in ENGLISH.
 CEFR Level: {nivel}
 {skills_line}
 Tags: {tags_line}
 
 === READING PASSAGE ===
-- Write in English, fluent and natural for CEFR level {nivel}
-- Approximate word count: A1→300w, A2→400w, B1→500w, B2→600w, C1→700w, C2→800w
+- Write in ENGLISH, fluent and natural for CEFR level {nivel}
+- TARGET word count: {target_words} words. This is a HARD MINIMUM — you MUST write at least {target_words} words.
+  If you stop before reaching {target_words} words, the task is INCOMPLETE. Keep writing until you hit the target.
+- Reference targets by level: {words_line}
+- Structure the passage in clear paragraphs of 4-6 sentences each.
+- Separate every paragraph with a blank line (\n\n). Do NOT write the entire passage as one block of text.
+- Use at least 5-7 paragraphs to reach the word target.
 - The passage must relate to the topic: {tema}
 {skills_reading_note}
 - DO NOT include CEFR tags, tokens or placeholders like <|B1|>
-- Put the complete passage text in the 'contenido' field
+- Put the complete passage text in the 'contenido' field. Include the \n\n paragraph breaks inside that field.
+
+MARKDOWN FORMATTING for the passage (apply AFTER meeting all length/structure requirements above):
+- Use **bold** to highlight 2-4 key terms or important concepts per paragraph.
+- Use *italics* for titles of books, films, places or scientific terms.
+- After the opening paragraph you MAY add a short ## subtitle to introduce a new section (e.g. ## The Challenge).
+- You MAY use a short bullet list (- item) for natural enumerations of 3+ items.
+- Do NOT wrap the passage in a code fence or markdown fence.
 
 === COMPREHENSION QUESTIONS ===
 - Generate EXACTLY {cantidad} questions IN ENGLISH
@@ -143,7 +163,7 @@ Tag handling rules (model responsibility):
 
 The JSON response MUST include two extra arrays at top level: `tags_applied` and `tags_ignored` (each an array of strings). For ignored tags include a short reason after the tag, separated by ' - '.
 
-Respond ONLY with the JSON object. No extra text, no markdown fences.
+Respond ONLY with the raw JSON object. Do NOT wrap the JSON in markdown fences (no ```json). The 'contenido' field value is plain Markdown text — that is correct and expected.
 """
 
 
@@ -189,7 +209,7 @@ class LLMService:
         nivel_codigo: str,
         categoria_codigo: str,
         modalidad_codigo: str,
-        cantidad_preguntas: int = 5,
+        cantidad_preguntas: Optional[int] = None,
         skills: Optional[list[str]] = None,
         tags: Optional[List[str]] = None,
     ) -> dict:
@@ -217,12 +237,26 @@ class LLMService:
         if not nivel:
             return {"success": False, "error": f"Nivel CEFR '{nivel_codigo}' no encontrado"}
 
+        # Cantidad de preguntas: parámetro explícito > BD (nivel.cantidad_preguntas) > DEFAULT_QUESTIONS
+        cantidad_real = cantidad_preguntas if cantidad_preguntas is not None else (
+            nivel.cantidad_preguntas if nivel.cantidad_preguntas else DEFAULT_QUESTIONS
+        )
+        cantidad_real = max(MIN_QUESTIONS, min(MAX_QUESTIONS, cantidad_real))
+
         # --- Construir y ejecutar cadena LCEL ---
         try:
             llm = ChatOllama(model=LLM_MODEL_NAME, temperature=0.7)
             structured_llm = llm.with_structured_output(BundleSchema)
 
-            prompt = ChatPromptTemplate.from_messages([("human", _BUNDLE_PROMPT)])
+            prompt = ChatPromptTemplate.from_messages([
+                ("system", (
+                    "You are an English teacher. "
+                    "You ALWAYS respond exclusively in ENGLISH regardless of the language used in the instructions or topic. "
+                    "Every word of your output — title, passage, questions, answer options — must be in ENGLISH. "
+                    "Never write in Spanish, French, or any other language. ENGLISH ONLY."
+                )),
+                ("human", _BUNDLE_PROMPT),
+            ])
 
             chain = prompt | structured_llm
 
@@ -241,7 +275,9 @@ class LLMService:
             bundle: BundleSchema = chain.invoke({
                 "tema": tema,
                 "nivel": nivel_codigo,
-                "cantidad": cantidad_preguntas,
+                "cantidad": cantidad_real,
+                "target_words": WORDS_PER_LEVEL.get(nivel_codigo, 350),
+                "words_line": _WORDS_LINE,
                 "skills_line": skills_line,
                 "skills_reading_note": skills_reading_note,
                 "skills_questions_note": skills_questions_note,
@@ -251,6 +287,20 @@ class LLMService:
         except Exception as exc:
             logger.exception("Error llamando al LLM")
             return {"success": False, "error": f"LLM error: {exc.__class__.__name__}: {exc}"}
+
+        # Log real word count so we can verify the model is meeting the target
+        real_words = len(bundle.lectura.contenido.split())
+        target = WORDS_PER_LEVEL.get(nivel_codigo, 350)
+        if real_words < target:
+            logger.warning("Texto corto: %d palabras generadas, mínimo esperado %d (nivel %s)", real_words, target, nivel_codigo)
+        else:
+            logger.info("Texto OK: %d palabras para nivel %s (mínimo %d)", real_words, nivel_codigo, target)
+
+        # El LLM puede generar de más o de menos — recortamos al número exacto solicitado
+        generadas = len(bundle.preguntas)
+        if generadas != cantidad_real:
+            logger.info("LLM generó %d preguntas, se esperaban %d — usando las primeras %d", generadas, cantidad_real, min(generadas, cantidad_real))
+            bundle.preguntas = bundle.preguntas[:cantidad_real]
 
         # --- Persistir en BD ---
         distribucion_db = nivel.distribucion_criterios or {}
@@ -277,6 +327,7 @@ class LLMService:
                         tipo="MULTIPLE",
                         opciones=p.opciones,
                         respuesta_correcta=p.respuesta_correcta,
+                        puntos_directos=DEFAULT_POINTS_PER_QUESTION,
                         orden=idx + 1,
                     )
                     preguntas_guardadas.append(pregunta)

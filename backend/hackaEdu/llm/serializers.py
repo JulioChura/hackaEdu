@@ -9,7 +9,7 @@ class GenerateBundleSerializer(serializers.Serializer):
     """Serializer para generar lectura + preguntas en una sola llamada"""
 
     tema = serializers.CharField(
-        max_length=200,
+        max_length=2000,
         help_text="Tema de la lectura (ej: inteligencia artificial)"
     )
     nivel = serializers.ChoiceField(
@@ -25,10 +25,12 @@ class GenerateBundleSerializer(serializers.Serializer):
         help_text="Codigo de modalidad (Modalidad.codigo)"
     )
     cantidad_preguntas = serializers.IntegerField(
-        default=5,
+        required=False,
+        allow_null=True,
+        default=None,
         min_value=1,
         max_value=10,
-        help_text="Cantidad de preguntas (1-10)"
+        help_text="Cantidad de preguntas (1-10). Si se omite, se usa el valor configurado en el nivel CEFR."
     )
     skills = serializers.ListField(
         child=serializers.CharField(max_length=100),

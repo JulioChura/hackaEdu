@@ -1,7 +1,10 @@
 from django.shortcuts import render
 
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_ollama.llms import OllamaLLM
+try:
+    from langchain_ollama.llms import OllamaLLM
+except ImportError:
+    OllamaLLM = None  # type: ignore
 
 template = """Question: {question}
 

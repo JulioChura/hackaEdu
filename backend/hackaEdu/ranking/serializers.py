@@ -76,45 +76,43 @@ class DashboardRankingDataSerializer(serializers.Serializer):
 
 class DashboardStreakDataSerializer(serializers.Serializer):
     """
-    Datos de racha de días para dashboard
-    
-    Estructura esperada:
-    {
-        currentStreak: 5,
-        completedDaysThisWeek: [true, true, true, true, true, false, false]
-    }
+    Datos de racha de días para dashboard.
+    Espera recibir el objeto `user` (CustomUser).
     """
     currentStreak = serializers.SerializerMethodField()
     completedDaysThisWeek = serializers.SerializerMethodField()
-    
+
     def get_currentStreak(self, obj):
         """Días consecutivos actuales"""
         try:
             return obj.racha.dias_consecutivos
-        except:
+        except Exception:
             return 0
-    
+
     def get_completedDaysThisWeek(self, obj):
-        """Array de 7 días de la semana [lunes, martes, ..., domingo]"""
+        """
+        Array de 7 bools [lunes, martes, ..., domingo] de la semana actual.
+        True = el usuario completó al menos una sesión ese día.
+        """
         from django.utils import timezone
         from datetime import timedelta
-        
-        # Obtener últimos 7 días
+        from evaluacion.models import Sesion
+
         hoy = timezone.now().date()
-        
+        # Inicio de la semana actual (lunes)
+        inicio_semana = hoy - timedelta(days=hoy.weekday())
+
         completados = []
-        try:
-            # Aquí necesitarías una tabla que registre lecturas por día
-            # Por ahora retornamos array de 7 elementos basados en ultima_lectura_fecha
-            racha = obj.racha
-            for i in range(7):
-                dia = hoy - timedelta(days=6-i)
-                # Si la última lectura fue hace X días, la incluimos
-                completados.append(dia == racha.ultima_lectura_fecha or False)
-        except:
-            completados = [False] * 7
-        
+        for i in range(7):
+            dia = inicio_semana + timedelta(days=i)
+            tuvo_sesion = Sesion.objects.filter(
+                usuario=obj,
+                estado='COMPLETADA',
+                fecha__date=dia,
+            ).exists()
+            completados.append(tuvo_sesion)
+
         return completados
-    
+
     class Meta:
         fields = ['currentStreak', 'completedDaysThisWeek']

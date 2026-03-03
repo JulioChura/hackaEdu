@@ -5,29 +5,46 @@ Los selectors son funciones puras que solo leen datos de BD.
 No tienen efectos secundarios.
 """
 
-from .models import LogroUsuario
+from .models import Logro, LogroUsuario
 
 
 def get_user_achievements(user, limit=None):
     """
-    Obtiene los logros obtenidos por el usuario.
-    
-    Args:
-        user: Usuario del que se quieren obtener los logros
-        limit: Número máximo de logros a retornar (None = todos)
-    
-    Returns:
-        QuerySet de LogroUsuario ordenados por fecha de obtención (más recientes primero)
-    
-    Optimización:
-    - select_related('logro') para evitar N+1 queries
-    - Ordenado por fecha de obtención descendente
+    Obtiene los logros YA OBTENIDOS por el usuario.
     """
     queryset = LogroUsuario.objects.filter(
         usuario=user
     ).select_related('logro').order_by('-fecha_obtencion')
-    
+
     if limit:
         queryset = queryset[:limit]
-    
+
     return queryset
+
+
+def get_all_achievements_for_user(user):
+    """
+    Retorna todos los logros con estado de desbloqueo para el usuario.
+
+    Returns:
+        list of dicts:
+          {
+            'logro': Logro,
+            'unlocked': bool,
+            'fecha_obtencion': datetime | None,
+          }
+    """
+    unlocked_map = {
+        lu.logro_id: lu.fecha_obtencion
+        for lu in LogroUsuario.objects.filter(usuario=user)
+    }
+
+    result = []
+    for logro in Logro.objects.all().order_by('nombre'):
+        result.append({
+            'logro': logro,
+            'unlocked': logro.codigo in unlocked_map,
+            'fecha_obtencion': unlocked_map.get(logro.codigo),
+        })
+
+    return result

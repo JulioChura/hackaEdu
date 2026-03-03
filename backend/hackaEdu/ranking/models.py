@@ -21,23 +21,30 @@ class RachaUsuario(models.Model):
         return f'{self.usuario.username} - {self.dias_consecutivos} días 🔥'
     
     def calcular_racha(self):
-        """Actualiza la racha según acceso y lecturas del usuario"""
+        """Actualiza la racha según la actividad de lectura del usuario."""
         hoy = timezone.now().date()
-        
-        # Si no hay último acceso, es primer acceso
+
         if not self.ultimo_acceso:
+            # Primer acceso registrado
             self.ultimo_acceso = hoy
             self.dias_consecutivos = 1
             self.save()
             return
-        
+
         diferencia_dias = (hoy - self.ultimo_acceso).days
-        
-        # Si pasó más de 1 día sin acceso, reset racha
-        if diferencia_dias > 1:
-            self.dias_consecutivos = 0
-        
-        # Actualizar último acceso
+
+        if diferencia_dias == 0:
+            # Ya se contó hoy, solo guardar ultima_lectura_fecha si cambió
+            self.save(update_fields=['ultima_lectura_fecha'])
+            return
+
+        if diferencia_dias == 1:
+            # Día consecutivo → incrementar racha
+            self.dias_consecutivos += 1
+        else:
+            # Rompió la racha → reiniciar
+            self.dias_consecutivos = 1
+
         self.ultimo_acceso = hoy
         self.save()
     
@@ -99,7 +106,7 @@ class Ranking(models.Model):
         from usuarios.models import ProgresionNivel
         
         # Obtener todos los usuarios ordenados por puntos totales
-        progresiones = ProgresionNivel.objects.select_related('usuario').order_by('-puntos_totales', 'fecha_actualizacion')
+        progresiones = ProgresionNivel.objects.select_related('usuario').order_by('-puntos_acumulativos', 'fecha_actualizacion')
         
         for idx, progresion in enumerate(progresiones, 1):
             ranking, created = Ranking.objects.get_or_create(usuario=progresion.usuario)

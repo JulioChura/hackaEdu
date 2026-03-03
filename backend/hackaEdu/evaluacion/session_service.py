@@ -12,6 +12,7 @@ from .selectors import (
     get_session_by_id_user,
 )
 from datetime import timedelta
+from niveles.config import LEVEL_ORDER, POINTS_TO_LEVEL_UP, POINTS_MULTIPLIER
 
 
 class SessionService:
@@ -127,8 +128,76 @@ class SessionService:
                 ]
             )
 
+            # Propagar puntos y actualizar racha
+            SessionService._post_session_updates(user, sesion)
+
         return sesion, None
 
+    @staticmethod
+    def _post_session_updates(user, sesion):
+        """
+        Actualiza progresión de nivel, puntos y racha tras completar una sesión.
+        Se ejecuta dentro de la transacción de finalizar_sesion.
+        """
+        from usuarios.models import ProgresionNivel, PerfilUsuario
+        from ranking.models import RachaUsuario, Ranking
+
+        # ── 1. Puntos y nivel ──────────────────────────────────────────────────
+        try:
+            progresion = ProgresionNivel.objects.select_related('nivel_actual').get(usuario=user)
+            nivel = progresion.nivel_actual
+            # Multiplicador: desde BD primero, config como fallback
+            multiplicador = float(nivel.multiplicador_puntos) if nivel.multiplicador_puntos else \
+                POINTS_MULTIPLIER.get(nivel.codigo, 1.0)
+            puntos_ganados = round(float(sesion.puntaje_total) * multiplicador)
+
+            progresion.puntos_acumulativos += puntos_ganados
+            progresion.puntos_en_nivel += puntos_ganados
+            progresion.lecturas_completadas_en_nivel += 1
+
+            # Umbral de nivel: desde BD primero, config como fallback
+            umbral = nivel.puntos_requeridos if nivel.puntos_requeridos else \
+                POINTS_TO_LEVEL_UP.get(nivel.codigo, 9999)
+            if progresion.puntos_en_nivel >= umbral:
+                progresion.listo_para_ascenso = True
+
+            progresion.save(update_fields=[
+                'puntos_acumulativos', 'puntos_en_nivel',
+                'lecturas_completadas_en_nivel', 'listo_para_ascenso',
+            ])
+
+            # ── 2. Perfil (puntos totales + lecturas completadas) ────────────────
+            try:
+                perfil = user.perfil_hackaedu
+                perfil.puntos_totales = progresion.puntos_acumulativos
+                perfil.lecturas_completadas += 1
+                perfil.save(update_fields=['puntos_totales', 'lecturas_completadas'])
+            except Exception:
+                pass
+
+        except ProgresionNivel.DoesNotExist:
+            pass
+
+        # ── 3. Racha diaria ────────────────────────────────────────────────────
+        try:
+            hoy = timezone.now().date()
+            racha, _ = RachaUsuario.objects.get_or_create(usuario=user)
+            racha.ultima_lectura_fecha = hoy
+            racha.calcular_racha()  # actualiza ultimo_acceso y dias_consecutivos
+        except Exception:
+            pass
+
+        # ── 4. Recalcular posición en ranking global ────────────────────────────
+        try:
+            Ranking.recalcular_ranking_global()
+        except Exception:
+            pass
+        # ── 5. Verificar y otorgar logros ───────────────────────────────────────────
+        try:
+            from logros.services import check_and_award_logros
+            check_and_award_logros(user)
+        except Exception:
+            pass
     @staticmethod
     def _upsert_respuestas(sesion, respuestas):
         for item in respuestas or []:

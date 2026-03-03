@@ -38,7 +38,10 @@ urlpatterns = [
     
     # API LLM (Generar lecturas, preguntas, evaluar respuestas)
     path('api/llm/', include('llm.urls')),
-    
+
+    # API Logros (Achievements)
+    path('logros/', include('logros.urls')),
+
     # Allauth (para social auth si es necesario)
     path('accounts/', include('allauth.urls')),
 ]

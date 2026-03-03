@@ -46,8 +46,8 @@ class DashboardService:
     @staticmethod
     def get_streak_data(user):
         """Obtiene datos de racha serializados"""
-        streak_obj = get_user_streak(user) or user
-        serializer = DashboardStreakDataSerializer(streak_obj)
+        # Siempre pasar el user para que el serializer pueda consultar Sesion por día
+        serializer = DashboardStreakDataSerializer(user)
         return serializer.data
     
     @staticmethod
@@ -59,10 +59,9 @@ class DashboardService:
     
     @staticmethod
     def get_achievements_data(user):
-        """Obtiene logros del usuario serializados"""
+        """Obtiene los 3 logros más recientes del usuario para el dashboard"""
         logros = get_user_achievements(user, limit=3)
-        
-        # Transformar a lista de dicts con la estructura esperada
+
         achievements = []
         for logro_usuario in logros:
             logro = logro_usuario.logro
@@ -70,9 +69,10 @@ class DashboardService:
                 'achievementId': logro.codigo,
                 'title': logro.nombre,
                 'description': logro.descripcion,
-                'iconName': logro.icono or 'star'
+                'emoji': logro.icono or '⭐',
+                'iconName': logro.icono or '⭐',  # backward compat
             })
-        
+
         return achievements
     
     @staticmethod
