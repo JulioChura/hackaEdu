@@ -52,5 +52,8 @@ INICIO_RAPIDO.md
 ARQUITECTURA.md
 ER_DIAGRAM_VISUAL.md
 CHECKLIST.md
-backend/hackaEdu/README_BACKEND.md*.md
-*.md
+backend/hackaEdu/README_BACKEND.md
+
+# Permitir READMEs para documentación del proyecto
+!README.md
+!**/README.md
