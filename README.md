@@ -209,7 +209,7 @@ Email + Google OAuth integrados sobre CustomUser sin romper modelo relacional.
 ![Generación](./docs/formularioDeGeneracion.webp)
 
 ## Lista de lecturas 
-![Lecturas](./docs/formularioDeGeneracion.webp)
+![Lecturas](./docs/lecturas.webp)
 
 ## Test Interactivo
 ![Test](./docs/testLecture.webp)
