@@ -1,4 +1,13 @@
 <script setup>
+import { computed } from 'vue'
+import { marked } from 'marked'
+
+// Configure marked for clean, safe output
+marked.setOptions({
+  breaks: true,   // single line-break → <br>
+  gfm: true,      // GitHub Flavoured Markdown
+})
+
 const props = defineProps({
   title: {
     type: String,
@@ -21,6 +30,9 @@ const props = defineProps({
     default: () => []
   }
 })
+
+// Parse markdown → HTML; fall back to plain text if content has no markdown
+const renderedContent = computed(() => marked.parse(props.content || ''))
 </script>
 
 <template>
@@ -59,10 +71,9 @@ const props = defineProps({
       <!-- Contenido de lectura -->
       <div class="bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm p-4 sm:p-6 lg:p-8">
         <div 
-          class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap"
-          v-html="content"
-        >
-        </div>
+          class="prose prose-slate dark:prose-invert prose-headings:font-bold prose-headings:text-charcoal dark:prose-headings:text-white prose-p:leading-relaxed prose-a:text-primary hover:prose-a:text-primary-dark prose-strong:text-charcoal dark:prose-strong:text-white prose-blockquote:border-primary prose-blockquote:text-slate-text prose-code:text-primary prose-code:bg-primary/10 prose-code:rounded prose-code:px-1 prose-code:before:content-none prose-code:after:content-none max-w-none"
+          v-html="renderedContent"
+        />
       </div>
     </div>
   </div>

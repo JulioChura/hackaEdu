@@ -222,6 +222,19 @@ onBeforeUnmount(() => {
     @open-notifications="handleNotificationsClick"
     @logout="handleLogout"
   >
+    <!-- ── Back button (top-left, always visible) ─────────────────────── -->
+    <div class="px-4 pt-2 pb-0 lg:px-0 lg:pt-3">
+      <button
+        @click="handleExit"
+        class="inline-flex items-center gap-1.5 text-slate-400 hover:text-primary transition-colors group text-sm font-semibold"
+      >
+        <span
+          class="material-symbols-outlined text-lg leading-none group-hover:-translate-x-0.5 transition-transform"
+        >arrow_back</span>
+        <span>Back</span>
+      </button>
+    </div>
+
     <div v-if="loading" class="flex items-center justify-center min-h-[60vh]">
       <div class="text-center">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>

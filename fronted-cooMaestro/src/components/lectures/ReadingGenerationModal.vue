@@ -27,7 +27,6 @@ const isGenerating = ref(false)
 const formData = ref({
   tema: '',
   nivel: 'B1',
-  cantidad_preguntas: 5,
   tags: []
 })
 const tagInput = ref('')
@@ -106,7 +105,7 @@ const handleGenerate = async () => {
       nivel: formData.value.nivel,
       categoria: selectedCategory.value.codigo,
       modalidad: 'IA_GENERADA',
-      cantidad_preguntas: formData.value.cantidad_preguntas,
+      // cantidad_preguntas omitido → backend usa nivel.cantidad_preguntas de BD
       tags: formData.value.tags
     }
 
@@ -137,7 +136,6 @@ const resetForm = () => {
   formData.value = {
     tema: '',
     nivel: props.userLevel || 'B1',
-    cantidad_preguntas: 5,
     tags: []
   }
   tagInput.value = ''

@@ -1,8 +1,8 @@
 <script setup>
 defineProps({
   level: {
-    type: Number,
-    default: 4
+    type: [Number, String],
+    default: 'B1'
   },
   unlockedCount: {
     type: Number,

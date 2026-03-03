@@ -15,10 +15,8 @@
           class="flex items-center gap-3 md:gap-4"
         >
           <!-- Achievement Icon -->
-          <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent shrink-0">
-            <span class="material-symbols-outlined text-xl md:text-2xl fill-icon">
-              {{ achievement.iconName }}
-            </span>
+          <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-accent/10 flex items-center justify-center shrink-0 text-xl md:text-2xl">
+            {{ achievement.emoji || achievement.iconName }}
           </div>
 
           <!-- Achievement Info -->
